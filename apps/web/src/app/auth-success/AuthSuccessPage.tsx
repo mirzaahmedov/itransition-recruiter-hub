@@ -13,10 +13,7 @@ const AuthSuccessPage = () => {
   useEffect(() => {
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      switch (userRole) {
-        case UserRole.CANDIDATE:
-          navigate("/users");
-      }
+      navigate("/users");
     } else {
       navigate("/sign-in");
       localStorage.removeItem("accessToken");
