@@ -6,7 +6,7 @@ const SignInPage = () => {
 
   const togglePasswordHidden = () => setIsPasswordHidden((prev) => !prev);
   const handleLoginGoogle = () => {
-    window.location.href = `${import.meta.env.API_HOST}/auth/google`;
+    window.location.href = `${import.meta.env.VITE_API_HOST}/auth/google`;
   };
 
   return (
