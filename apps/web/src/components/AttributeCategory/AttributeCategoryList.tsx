@@ -11,7 +11,7 @@ export const AttributeCategoryList: FC<{
   categoryId: string;
   onCategoryChange: (id: string) => void;
 }> = ({ categoryId, onCategoryChange }) => {
-  const [editingCategory, setEditingCategory] = useState<AttributeCategory>();
+  const [editingCategory] = useState<AttributeCategory>();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [categoryName, setCategoryName] = useState("");
 

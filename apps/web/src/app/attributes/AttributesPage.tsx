@@ -5,7 +5,7 @@ import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { createAttribute, fetchAttributes } from "./api";
 import { PlusIcon } from "@phosphor-icons/react";
 import { FloatingDialog } from "@/components/FloatingDialog";
-import { useEffect, useMemo, useState, type SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { AttributeType } from "@/types/prisma/enums";
 import { Select } from "@/components/Select";
 import { rowDataWithFallback } from "@/lib/table/utils";
