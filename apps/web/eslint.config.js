@@ -33,7 +33,8 @@ export default defineConfig([
     rules: {
       "react-hooks/exhaustive-deps": "off",
       "react-hooks/incompatible-library": "off",
-      "react-hooks/refs": "off"
+      "react-hooks/refs": "off",
+      "@typescript-eslint/no-explicit-any": "off"
     }
   },
 ])

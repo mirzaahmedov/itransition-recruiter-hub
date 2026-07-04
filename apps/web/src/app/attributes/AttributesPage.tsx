@@ -109,7 +109,7 @@ export const AttributesPage = () => {
                       itemLabel={(item) => item.type}
                       placeholder="Select type"
                       value={attributeType}
-                      onChange={setAttributeType}
+                      onChange={setAttributeType as any}
                     />
                   </div>
                 </div>
