@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: corporate, business;
+}
+
+@theme {
+  --color-base-divider: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+@utility icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+@utility icon-md {
+  width: 1.5rem;
+  height: 1.5rem;
+}

@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CANDIDATE
+  RECRUITER
+  ADMINISTRATOR
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  googleId  String?  @unique
+  role      UserRole
+
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+model AttributeCategory {
+  id              String   @id @default(cuid())
+  name            String?
+  createdAt       DateTime @default(now())
+  attributes      Attribute[]
+
+  @@map("attribute_category")
+}
+
+enum AttributeType {
+  TEXT
+  MARKDOWN
+  IMAGE
+  NUMERIC
+  DATE
+  DATEPERIOD
+  BOOLEAN
+  CHOICE
+}
+
+model Attribute {
+  id              String   @id @default(cuid())
+  name            String
+  type            AttributeType
+  categoryId      String
+  category        AttributeCategory @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime @default(now())
+  choices         AttributeChoice[]
+  values          AttributeValue[]
+
+  @@map("attributes")
+}
+
+model AttributeChoice {
+  id              String @id @default(cuid())
+  value           String
+  attribute       Attribute @relation(fields: [attributeId], references: [id])
+  attributeId     String
+  createdAt       DateTime @default(now())
+
+  @@map("attribute_choices")
+}
+
+model AttributeValue {
+  id              String @id @default(cuid())
+  
+  attributeId     String
+  attribute       Attribute @relation(fields: [attributeId], references: [id])
+  cvId            String
+  cv              CV @relation(fields: [cvId], references: [id])
+
+  textValue       String?
+  numberValue     Float?
+  booleanValue    Boolean?
+  dateValue       DateTime?
+  startDateValue  DateTime?
+  endDateValue    DateTime?
+  createdAt       DateTime @default(now())
+
+
+  @@unique([attributeId, cvId])
+  @@map("attribute_values")
+}
+
+model Post {
+  id              String @id @default(cuid())
+  name            String
+
+  @@map("posts")
+}
+
+model CV {
+  id              String @id @default(cuid())
+  name            String
+  email           String
+  
+  attribute_values AttributeValue[]
+
+  @@map("cvs")
+}

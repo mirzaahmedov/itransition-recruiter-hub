@@ -1,0 +1,41 @@
+{
+  "name": "recruiter-hub",
+  "version": "1.0.0",
+  "description": "Course project for itransition internship",
+  "main": "index.js",
+  "private": true,
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "11.0.0",
+      "onFail": "ignore"
+    }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "keywords": [
+    "recruiter",
+    "hub"
+  ],
+  "author": "mirzaahmedov.dev@gmail.com",
+  "license": "ISC",
+  "scripts": {
+    "dev": "turbo watch dev",
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.6.0",
+    "rimraf": "^6.1.3",
+    "turbo": "^2.10.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1"
+  },
+  "dependencies": {
+    "rollup-plugin-dts": "^6.4.1",
+    "zod": "^4.4.3"
+  }
+}
