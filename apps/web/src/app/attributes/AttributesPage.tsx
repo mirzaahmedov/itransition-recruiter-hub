@@ -41,8 +41,8 @@ const columns: ColumnDef<
 
 export const AttributesPage = () => {
   const [categoryId, setCategoryId] = useState("");
-  const [attributeName, setAttributeName] = useState("");
-  const [attributeType, setAttributeType] = useState<AttributeType>(AttributeType.TEXT);
+  const [attributeName] = useState("");
+  const [attributeType] = useState<AttributeType>(AttributeType.TEXT);
 
   const queryClient = useQueryClient();
 
@@ -93,6 +93,8 @@ export const AttributesPage = () => {
       },
     );
   };
+
+  console.log({ handleSubmit });
 
   return (
     <div className="h-full flex">
