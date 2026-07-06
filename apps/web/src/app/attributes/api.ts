@@ -1,10 +1,18 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { Attribute } from "@/types/prisma/browser";
-import type { AttributeCreateInput } from "@/types/prisma/models";
+import type { AttributeCreateInput, AttributeGetPayload } from "@/types/prisma/models";
 
 export async function fetchAttributes(categoryId: string) {
-  const res = await privateApi.get<ApiResponse<Attribute[]>>("/attributes", {
+  const res = await privateApi.get<
+    ApiResponse<
+      AttributeGetPayload<{
+        include: {
+          choices: true;
+        };
+      }>[]
+    >
+  >("/attributes", {
     params: {
       categoryId,
     },

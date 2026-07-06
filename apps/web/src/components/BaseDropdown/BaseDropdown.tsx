@@ -12,6 +12,7 @@ export const BaseDropdown = forwardRef<
   const { isOpen, context, refs, floatingStyles, getFloatingProps } = control;
 
   const ref = useMergeRefs([menuRef, refs.setFloating]);
+
   return (
     <>
       {isOpen && (

@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import type { Request, Response } from 'express';
 import { IGoogleUser } from './strategies/google.strategy';
 import { AuthUser } from './decorators/auth-user.decorator';
-import type { User } from '@rh/core';
+import type { User } from '@rh/database/client';
 import { ok } from '@/models/api';
 
 @Controller('auth')

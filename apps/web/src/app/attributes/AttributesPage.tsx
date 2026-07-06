@@ -1,20 +1,41 @@
 import { AttributeCategoryList } from "@/components/AttributeCategory/AttributeCategoryList";
 import { GenericTable } from "@/components/GenericTable/GenericTable";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { createAttribute, fetchAttributes } from "./api";
-import { PlusIcon } from "@phosphor-icons/react";
-import { FloatingDialog } from "@/components/FloatingDialog";
-import { useState, type SubmitEvent } from "react";
-import { AttributeType } from "@/types/prisma/enums";
-import { Select } from "@/components/Select";
 import { rowDataWithFallback } from "@/lib/table/utils";
+import { AttributeType } from "@/types/prisma/enums";
+import type { AttributeGetPayload } from "@/types/prisma/models";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
+import { useState, type SubmitEvent } from "react";
 import toast from "react-hot-toast";
+import { createAttribute, fetchAttributes } from "./api";
 
-const columns = [
+import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
+
+const columns: ColumnDef<
+  AttributeGetPayload<{
+    include: {
+      choices: true;
+    };
+  }>
+>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+  },
+  {
+    accessorKey: "choices",
+    header: "Choices",
+    cell({ row }) {
+      return row.original.choices.length;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created At",
   },
 ];
 
@@ -78,52 +99,7 @@ export const AttributesPage = () => {
       <AttributeCategoryList categoryId={categoryId} onCategoryChange={setCategoryId} />
       <div className="flex-1 flex flex-col">
         <div className="px-5 py-2 border-b border-base-divider">
-          <FloatingDialog
-            render={() => (
-              <form className="flex flex-col" onSubmit={handleSubmit}>
-                <div className="flex items-end gap-2">
-                  <div>
-                    <label htmlFor="name">Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      className="input"
-                      value={attributeName}
-                      onChange={(e) => setAttributeName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Select
-                      items={[
-                        { type: AttributeType.TEXT },
-                        { type: AttributeType.MARKDOWN },
-                        { type: AttributeType.NUMERIC },
-                        { type: AttributeType.IMAGE },
-                        { type: AttributeType.BOOLEAN },
-                        { type: AttributeType.CHOICE },
-                        { type: AttributeType.DATE },
-                        { type: AttributeType.DATEPERIOD },
-                      ]}
-                      itemValue={(item) => item.type}
-                      itemLabel={(item) => item.type}
-                      placeholder="Select type"
-                      value={attributeType}
-                      onChange={setAttributeType as any}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end mt-4">
-                  <button className="btn btn-primary">Save</button>
-                </div>
-              </form>
-            )}
-          >
-            <button disabled={!categoryId} className="btn btn-primary">
-              <PlusIcon /> Create
-            </button>
-          </FloatingDialog>
+          <AttibuteCreateDialog onSubmit={console.log} />
         </div>
         <div className="flex-1">
           <GenericTable instance={table} />

@@ -4,7 +4,7 @@ import { UpdateAttributeChoiceDto } from './dto/update-attribute-choice.dto';
 
 @Injectable()
 export class AttributeChoiceService {
-  create(createAttributeChoiceDto: CreateAttributeChoiceDto) {
+  create(_dto: CreateAttributeChoiceDto) {
     return 'This action adds a new attributeChoice';
   }
 
@@ -16,7 +16,7 @@ export class AttributeChoiceService {
     return `This action returns a #${id} attributeChoice`;
   }
 
-  update(id: number, updateAttributeChoiceDto: UpdateAttributeChoiceDto) {
+  update(id: number, _dto: UpdateAttributeChoiceDto) {
     return `This action updates a #${id} attributeChoice`;
   }
 

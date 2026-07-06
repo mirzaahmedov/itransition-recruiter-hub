@@ -1,8 +1,8 @@
-import { PrismaService } from '@/prisma.service';
+import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IGoogleUser } from './strategies/google.strategy';
-import { UserRole } from '@rh/core';
+import { UserRole } from '@rh/database/enums';
 
 @Injectable()
 export class AuthService {

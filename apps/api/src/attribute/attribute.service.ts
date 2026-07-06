@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/prisma.service';
-import { AttributeCreateInput, AttributeUpdateInput } from '@rh/core';
+import { PrismaService } from '@/prisma/prisma.service';
+import {
+  AttributeCreateInput,
+  AttributeUpdateInput,
+} from '@rh/database/models';
 
 @Injectable()
 export class AttributeService {
@@ -12,10 +15,13 @@ export class AttributeService {
     });
   }
 
-  async findAll(categoryId?: string) {
+  async findAll(categoryId: string) {
     return await this.prisma.attribute.findMany({
       where: {
         categoryId,
+      },
+      include: {
+        choices: true,
       },
     });
   }

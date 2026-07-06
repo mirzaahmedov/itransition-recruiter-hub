@@ -1,4 +1,4 @@
-import { UserRole } from '@rh/core';
+import { UserRole } from '@rh/database/enums';
 import z from 'zod';
 
 export const UserUpdateRoleSchema = z.object({

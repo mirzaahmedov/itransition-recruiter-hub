@@ -11,7 +11,7 @@ import { AttributeCategoryService } from './attribute-category.service';
 import type {
   AttributeCategoryCreateInput,
   AttributeCategoryUpdateInput,
-} from '@rh/core';
+} from '@rh/database/models';
 import { ok } from '@/models/api';
 
 @Controller('attribute-categories')

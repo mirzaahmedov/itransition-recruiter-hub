@@ -1,0 +1,61 @@
+{
+  "name": "@rh/database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "./client": {
+      "types": "./dist/generated/client.d.ts",
+      "import": "./dist/generated/client.js",
+      "require": "./dist/generated/client.cjs"
+    },
+    "./browser": {
+      "types": "./dist/generated/browser.d.ts",
+      "import": "./dist/generated/browser.js",
+      "require": "./dist/generated/browser.cjs"
+    },
+    "./enums": {
+      "types": "./dist/generated/enums.d.ts",
+      "import": "./dist/generated/enums.js",
+      "require": "./dist/generated/enums.cjs"
+    },
+    "./models": {
+      "types": "./dist/generated/models.d.ts",
+      "import": "./dist/generated/models.js",
+      "require": "./dist/generated/models.cjs"
+    },
+    "./commonInputTypes": {
+      "types": "./dist/generated/commonInputTypes.d.ts",
+      "import": "./dist/generated/commonInputTypes.js",
+      "require": "./dist/generated/commonInputTypes.cjs"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "prisma generate && tsup",
+    "dev": "prisma generate && tsup --watch",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "clean": "rimraf -rf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "prisma": "^7.8.0",
+    "tsup": "^8.5.1"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "pg": "^8.22.0"
+  }
+}

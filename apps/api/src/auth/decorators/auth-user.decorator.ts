@@ -1,4 +1,4 @@
-import type { User } from '@rh/core';
+import type { User } from '@rh/database/client';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
 

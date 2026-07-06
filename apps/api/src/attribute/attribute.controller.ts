@@ -9,7 +9,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { AttributeService } from './attribute.service';
-import type { AttributeCreateInput, AttributeUpdateInput } from '@rh/core';
+import type {
+  AttributeCreateInput,
+  AttributeUpdateInput,
+} from '@rh/database/models';
 import { ok } from '@/models/api';
 
 @Controller('attributes')
@@ -22,8 +25,9 @@ export class AttributeController {
   }
 
   @Get()
-  findAll(@Query() categoryId: string) {
-    return ok(this.attributeService.findAll(categoryId));
+  async findAll(@Query('categoryId') categoryId: string) {
+    const attrs = await this.attributeService.findAll(categoryId);
+    return ok(attrs);
   }
 
   @Get(':id')

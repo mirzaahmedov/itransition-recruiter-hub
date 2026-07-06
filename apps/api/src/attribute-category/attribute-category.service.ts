@@ -1,8 +1,8 @@
 import {
   AttributeCategoryCreateInput,
   AttributeCategoryUpdateInput,
-} from '@rh/core';
-import { PrismaService } from '@/prisma.service';
+} from '@rh/database/models';
+import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

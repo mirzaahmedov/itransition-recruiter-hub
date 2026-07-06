@@ -1,5 +1,5 @@
-import { UserRole } from '@rh/core';
-import { PrismaService } from '@/prisma.service';
+import { UserRole } from '@rh/database/enums';
+import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -11,8 +11,8 @@ export class UserService {
     return users;
   }
 
-  async bulkUpdateRoles(userIds: string[], role: UserRole) {
-    const users = await this.prisma.user.updateMany({
+  async bulkUpdateRoles(userIds: string[], role: UserRole): Promise<void> {
+    await this.prisma.user.updateMany({
       where: {
         id: {
           in: userIds,
@@ -22,6 +22,5 @@ export class UserService {
         role,
       },
     });
-    return users;
   }
 }
