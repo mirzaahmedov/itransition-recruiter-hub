@@ -22,7 +22,7 @@
   "author": "mirzaahmedov.dev@gmail.com",
   "license": "ISC",
   "scripts": {
-    "dev": "turbo watch dev",
+    "dev": "turbo run dev",
     "build": "turbo run build"
   },
   "devDependencies": {

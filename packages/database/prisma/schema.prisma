@@ -53,14 +53,15 @@ enum AttributeType {
 }
 
 model Attribute {
-  id              String   @id @default(cuid())
-  name            String
-  type            AttributeType
-  categoryId      String
-  category        AttributeCategory @relation(fields: [categoryId], references: [id])
-  createdAt       DateTime @default(now())
-  choices         AttributeChoice[]
-  values          AttributeValue[]
+  id                    String   @id @default(cuid())
+  name                  String
+  type                  AttributeType
+  categoryId            String
+  category              AttributeCategory @relation(fields: [categoryId], references: [id])
+  createdAt             DateTime @default(now())
+  choices               AttributeChoice[]
+  values                AttributeValue[]
+  positionAttributes    PositionAttribute[]
 
   @@map("attributes")
 }
@@ -72,6 +73,7 @@ model AttributeChoice {
   attributeId     String
   createdAt       DateTime @default(now())
 
+  @@unique([attributeId, value])
   @@map("attribute_choices")
 }
 
@@ -96,11 +98,29 @@ model AttributeValue {
   @@map("attribute_values")
 }
 
-model Post {
-  id              String @id @default(cuid())
-  name            String
+model AccessRule {
+  id                String @id @default(cuid())
+  position          Position @relation(fields: [positionId], references: [id])
+  positionId        String
+}
 
-  @@map("posts")
+model PositionAttribute {
+  id                String @id @default(cuid())
+  attribute         Attribute @relation(fields: [attributeId], references: [id])
+  attributeId       String
+  position          Position @relation(fields: [positionId], references: [id])
+  positionId        String
+}
+
+model Position {
+  id               String @id @default(cuid())
+  title            String
+  description      String
+
+  accessRules      AccessRule[]
+  attributes       PositionAttribute[]
+
+  @@map("positions")
 }
 
 model CV {

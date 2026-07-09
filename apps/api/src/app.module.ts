@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { AttributeCategoryModule } from './attribute-category/attribute-category.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { AttributeChoiceModule } from './attribute-choice/attribute-choice.module';
+import { PositionModule } from './position/position.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AttributeChoiceModule } from './attribute-choice/attribute-choice.modul
     AttributeCategoryModule,
     AttributeModule,
     AttributeChoiceModule,
+    PositionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

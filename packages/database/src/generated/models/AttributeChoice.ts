@@ -187,6 +187,7 @@ export type AttributeChoiceOrderByWithRelationInput = {
 
 export type AttributeChoiceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  attributeId_value?: Prisma.AttributeChoiceAttributeIdValueCompoundUniqueInput
   AND?: Prisma.AttributeChoiceWhereInput | Prisma.AttributeChoiceWhereInput[]
   OR?: Prisma.AttributeChoiceWhereInput[]
   NOT?: Prisma.AttributeChoiceWhereInput | Prisma.AttributeChoiceWhereInput[]
@@ -194,7 +195,7 @@ export type AttributeChoiceWhereUniqueInput = Prisma.AtLeast<{
   attributeId?: Prisma.StringFilter<"AttributeChoice"> | string
   createdAt?: Prisma.DateTimeFilter<"AttributeChoice"> | Date | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
-}, "id">
+}, "id" | "attributeId_value">
 
 export type AttributeChoiceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -272,6 +273,11 @@ export type AttributeChoiceListRelationFilter = {
 
 export type AttributeChoiceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type AttributeChoiceAttributeIdValueCompoundUniqueInput = {
+  attributeId: string
+  value: string
 }
 
 export type AttributeChoiceCountOrderByAggregateInput = {

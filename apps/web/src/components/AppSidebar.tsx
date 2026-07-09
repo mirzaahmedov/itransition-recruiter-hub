@@ -1,4 +1,4 @@
-import { BriefcaseIcon, GearIcon, ReadCvLogoIcon, UserFocusIcon, UsersIcon } from "@phosphor-icons/react";
+import { BriefcaseIcon, ReadCvLogoIcon, TagIcon, UserFocusIcon, UsersIcon } from "@phosphor-icons/react";
 import { NavLink } from "react-router-dom";
 
 export const AppSidebar = () => {
@@ -26,7 +26,7 @@ export const AppSidebar = () => {
               CVs
             </NavLink>
             <NavLink to="/attributes" className={({ isActive }) => (isActive ? "menu-active" : "")}>
-              <GearIcon className="icon" />
+              <TagIcon className="icon" />
               Attributes
             </NavLink>
           </li>

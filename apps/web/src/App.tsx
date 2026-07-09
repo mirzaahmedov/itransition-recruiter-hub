@@ -9,6 +9,7 @@ import { NotFoundPage } from "./app/not-found/NotFoundPage";
 import SignInPage from "./app/sign-in/SignInPage";
 import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
+import PositionsPage from "./app/positions/PositionsPage";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
           {
             path: "/users",
             element: <UsersPage />,
+          },
+          {
+            path: "/positions",
+            element: <PositionsPage />,
           },
           {
             path: "/attributes",

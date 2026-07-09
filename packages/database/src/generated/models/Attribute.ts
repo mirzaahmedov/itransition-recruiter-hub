@@ -185,6 +185,7 @@ export type AttributeWhereInput = {
   category?: Prisma.XOR<Prisma.AttributeCategoryScalarRelationFilter, Prisma.AttributeCategoryWhereInput>
   choices?: Prisma.AttributeChoiceListRelationFilter
   values?: Prisma.AttributeValueListRelationFilter
+  positionAttributes?: Prisma.PositionAttributeListRelationFilter
 }
 
 export type AttributeOrderByWithRelationInput = {
@@ -196,6 +197,7 @@ export type AttributeOrderByWithRelationInput = {
   category?: Prisma.AttributeCategoryOrderByWithRelationInput
   choices?: Prisma.AttributeChoiceOrderByRelationAggregateInput
   values?: Prisma.AttributeValueOrderByRelationAggregateInput
+  positionAttributes?: Prisma.PositionAttributeOrderByRelationAggregateInput
 }
 
 export type AttributeWhereUniqueInput = Prisma.AtLeast<{
@@ -210,6 +212,7 @@ export type AttributeWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.XOR<Prisma.AttributeCategoryScalarRelationFilter, Prisma.AttributeCategoryWhereInput>
   choices?: Prisma.AttributeChoiceListRelationFilter
   values?: Prisma.AttributeValueListRelationFilter
+  positionAttributes?: Prisma.PositionAttributeListRelationFilter
 }, "id">
 
 export type AttributeOrderByWithAggregationInput = {
@@ -242,6 +245,7 @@ export type AttributeCreateInput = {
   category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
   values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeUncheckedCreateInput = {
@@ -252,6 +256,7 @@ export type AttributeUncheckedCreateInput = {
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
   values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeUpdateInput = {
@@ -262,6 +267,7 @@ export type AttributeUpdateInput = {
   category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
   values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeUncheckedUpdateInput = {
@@ -272,6 +278,7 @@ export type AttributeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
   values?: Prisma.AttributeValueUncheckedUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeCreateManyInput = {
@@ -410,6 +417,20 @@ export type AttributeUpdateOneRequiredWithoutValuesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AttributeUpdateToOneWithWhereWithoutValuesInput, Prisma.AttributeUpdateWithoutValuesInput>, Prisma.AttributeUncheckedUpdateWithoutValuesInput>
 }
 
+export type AttributeCreateNestedOneWithoutPositionAttributesInput = {
+  create?: Prisma.XOR<Prisma.AttributeCreateWithoutPositionAttributesInput, Prisma.AttributeUncheckedCreateWithoutPositionAttributesInput>
+  connectOrCreate?: Prisma.AttributeCreateOrConnectWithoutPositionAttributesInput
+  connect?: Prisma.AttributeWhereUniqueInput
+}
+
+export type AttributeUpdateOneRequiredWithoutPositionAttributesNestedInput = {
+  create?: Prisma.XOR<Prisma.AttributeCreateWithoutPositionAttributesInput, Prisma.AttributeUncheckedCreateWithoutPositionAttributesInput>
+  connectOrCreate?: Prisma.AttributeCreateOrConnectWithoutPositionAttributesInput
+  upsert?: Prisma.AttributeUpsertWithoutPositionAttributesInput
+  connect?: Prisma.AttributeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AttributeUpdateToOneWithWhereWithoutPositionAttributesInput, Prisma.AttributeUpdateWithoutPositionAttributesInput>, Prisma.AttributeUncheckedUpdateWithoutPositionAttributesInput>
+}
+
 export type AttributeCreateWithoutCategoryInput = {
   id?: string
   name: string
@@ -417,6 +438,7 @@ export type AttributeCreateWithoutCategoryInput = {
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
   values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeUncheckedCreateWithoutCategoryInput = {
@@ -426,6 +448,7 @@ export type AttributeUncheckedCreateWithoutCategoryInput = {
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
   values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeCreateOrConnectWithoutCategoryInput = {
@@ -472,6 +495,7 @@ export type AttributeCreateWithoutChoicesInput = {
   createdAt?: Date | string
   category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
   values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeUncheckedCreateWithoutChoicesInput = {
@@ -481,6 +505,7 @@ export type AttributeUncheckedCreateWithoutChoicesInput = {
   categoryId: string
   createdAt?: Date | string
   values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeCreateOrConnectWithoutChoicesInput = {
@@ -506,6 +531,7 @@ export type AttributeUpdateWithoutChoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
   values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeUncheckedUpdateWithoutChoicesInput = {
@@ -515,6 +541,7 @@ export type AttributeUncheckedUpdateWithoutChoicesInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   values?: Prisma.AttributeValueUncheckedUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeCreateWithoutValuesInput = {
@@ -524,6 +551,7 @@ export type AttributeCreateWithoutValuesInput = {
   createdAt?: Date | string
   category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeUncheckedCreateWithoutValuesInput = {
@@ -533,6 +561,7 @@ export type AttributeUncheckedCreateWithoutValuesInput = {
   categoryId: string
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeCreateOrConnectWithoutValuesInput = {
@@ -558,6 +587,7 @@ export type AttributeUpdateWithoutValuesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeUncheckedUpdateWithoutValuesInput = {
@@ -567,6 +597,63 @@ export type AttributeUncheckedUpdateWithoutValuesInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
+}
+
+export type AttributeCreateWithoutPositionAttributesInput = {
+  id?: string
+  name: string
+  type: $Enums.AttributeType
+  createdAt?: Date | string
+  category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
+  choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
+  values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
+}
+
+export type AttributeUncheckedCreateWithoutPositionAttributesInput = {
+  id?: string
+  name: string
+  type: $Enums.AttributeType
+  categoryId: string
+  createdAt?: Date | string
+  choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
+  values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutAttributeInput
+}
+
+export type AttributeCreateOrConnectWithoutPositionAttributesInput = {
+  where: Prisma.AttributeWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttributeCreateWithoutPositionAttributesInput, Prisma.AttributeUncheckedCreateWithoutPositionAttributesInput>
+}
+
+export type AttributeUpsertWithoutPositionAttributesInput = {
+  update: Prisma.XOR<Prisma.AttributeUpdateWithoutPositionAttributesInput, Prisma.AttributeUncheckedUpdateWithoutPositionAttributesInput>
+  create: Prisma.XOR<Prisma.AttributeCreateWithoutPositionAttributesInput, Prisma.AttributeUncheckedCreateWithoutPositionAttributesInput>
+  where?: Prisma.AttributeWhereInput
+}
+
+export type AttributeUpdateToOneWithWhereWithoutPositionAttributesInput = {
+  where?: Prisma.AttributeWhereInput
+  data: Prisma.XOR<Prisma.AttributeUpdateWithoutPositionAttributesInput, Prisma.AttributeUncheckedUpdateWithoutPositionAttributesInput>
+}
+
+export type AttributeUpdateWithoutPositionAttributesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
+  choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
+}
+
+export type AttributeUncheckedUpdateWithoutPositionAttributesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.AttributeValueUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeCreateManyCategoryInput = {
@@ -583,6 +670,7 @@ export type AttributeUpdateWithoutCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
   values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeUncheckedUpdateWithoutCategoryInput = {
@@ -592,6 +680,7 @@ export type AttributeUncheckedUpdateWithoutCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
   values?: Prisma.AttributeValueUncheckedUpdateManyWithoutAttributeNestedInput
+  positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeUncheckedUpdateManyWithoutCategoryInput = {
@@ -609,11 +698,13 @@ export type AttributeUncheckedUpdateManyWithoutCategoryInput = {
 export type AttributeCountOutputType = {
   choices: number
   values: number
+  positionAttributes: number
 }
 
 export type AttributeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   choices?: boolean | AttributeCountOutputTypeCountChoicesArgs
   values?: boolean | AttributeCountOutputTypeCountValuesArgs
+  positionAttributes?: boolean | AttributeCountOutputTypeCountPositionAttributesArgs
 }
 
 /**
@@ -640,6 +731,13 @@ export type AttributeCountOutputTypeCountValuesArgs<ExtArgs extends runtime.Type
   where?: Prisma.AttributeValueWhereInput
 }
 
+/**
+ * AttributeCountOutputType without action
+ */
+export type AttributeCountOutputTypeCountPositionAttributesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PositionAttributeWhereInput
+}
+
 
 export type AttributeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -650,6 +748,7 @@ export type AttributeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.Attribute$choicesArgs<ExtArgs>
   values?: boolean | Prisma.Attribute$valuesArgs<ExtArgs>
+  positionAttributes?: boolean | Prisma.Attribute$positionAttributesArgs<ExtArgs>
   _count?: boolean | Prisma.AttributeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attribute"]>
 
@@ -684,6 +783,7 @@ export type AttributeInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.Attribute$choicesArgs<ExtArgs>
   values?: boolean | Prisma.Attribute$valuesArgs<ExtArgs>
+  positionAttributes?: boolean | Prisma.Attribute$positionAttributesArgs<ExtArgs>
   _count?: boolean | Prisma.AttributeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AttributeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -699,6 +799,7 @@ export type $AttributePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     category: Prisma.$AttributeCategoryPayload<ExtArgs>
     choices: Prisma.$AttributeChoicePayload<ExtArgs>[]
     values: Prisma.$AttributeValuePayload<ExtArgs>[]
+    positionAttributes: Prisma.$PositionAttributePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1103,6 +1204,7 @@ export interface Prisma__AttributeClient<T, Null = never, ExtArgs extends runtim
   category<T extends Prisma.AttributeCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__AttributeCategoryClient<runtime.Types.Result.GetResult<Prisma.$AttributeCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   choices<T extends Prisma.Attribute$choicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$choicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeChoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   values<T extends Prisma.Attribute$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  positionAttributes<T extends Prisma.Attribute$positionAttributesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$positionAttributesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1583,6 +1685,30 @@ export type Attribute$valuesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.AttributeValueScalarFieldEnum | Prisma.AttributeValueScalarFieldEnum[]
+}
+
+/**
+ * Attribute.positionAttributes
+ */
+export type Attribute$positionAttributesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PositionAttribute
+   */
+  select?: Prisma.PositionAttributeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PositionAttribute
+   */
+  omit?: Prisma.PositionAttributeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PositionAttributeInclude<ExtArgs> | null
+  where?: Prisma.PositionAttributeWhereInput
+  orderBy?: Prisma.PositionAttributeOrderByWithRelationInput | Prisma.PositionAttributeOrderByWithRelationInput[]
+  cursor?: Prisma.PositionAttributeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PositionAttributeScalarFieldEnum | Prisma.PositionAttributeScalarFieldEnum[]
 }
 
 /**

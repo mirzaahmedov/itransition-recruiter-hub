@@ -1,5 +1,5 @@
 import { AttributeType } from "@rh/database/enums";
-import z from "zod";
+import { z } from "zod";
 import { ZodIssueCode } from "zod/v3";
 
 export const AttributeCreateSchema = z
@@ -15,6 +15,7 @@ export const AttributeCreateSchema = z
       AttributeType.DATEPERIOD,
       AttributeType.CHOICE,
     ]),
+    categoryId: z.string(),
     choices: z
       .array(
         z.object({

@@ -65,10 +65,20 @@ export type AttributeChoice = Prisma.AttributeChoiceModel
  */
 export type AttributeValue = Prisma.AttributeValueModel
 /**
- * Model Post
+ * Model AccessRule
  * 
  */
-export type Post = Prisma.PostModel
+export type AccessRule = Prisma.AccessRuleModel
+/**
+ * Model PositionAttribute
+ * 
+ */
+export type PositionAttribute = Prisma.PositionAttributeModel
+/**
+ * Model Position
+ * 
+ */
+export type Position = Prisma.PositionModel
 /**
  * Model CV
  * 

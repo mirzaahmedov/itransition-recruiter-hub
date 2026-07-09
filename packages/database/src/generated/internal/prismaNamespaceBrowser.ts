@@ -56,7 +56,9 @@ export const ModelName = {
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
   AttributeValue: 'AttributeValue',
-  Post: 'Post',
+  AccessRule: 'AccessRule',
+  PositionAttribute: 'PositionAttribute',
+  Position: 'Position',
   CV: 'CV'
 } as const
 
@@ -135,12 +137,30 @@ export const AttributeValueScalarFieldEnum = {
 export type AttributeValueScalarFieldEnum = (typeof AttributeValueScalarFieldEnum)[keyof typeof AttributeValueScalarFieldEnum]
 
 
-export const PostScalarFieldEnum = {
+export const AccessRuleScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  positionId: 'positionId'
 } as const
 
-export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+export type AccessRuleScalarFieldEnum = (typeof AccessRuleScalarFieldEnum)[keyof typeof AccessRuleScalarFieldEnum]
+
+
+export const PositionAttributeScalarFieldEnum = {
+  id: 'id',
+  attributeId: 'attributeId',
+  positionId: 'positionId'
+} as const
+
+export type PositionAttributeScalarFieldEnum = (typeof PositionAttributeScalarFieldEnum)[keyof typeof PositionAttributeScalarFieldEnum]
+
+
+export const PositionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type PositionScalarFieldEnum = (typeof PositionScalarFieldEnum)[keyof typeof PositionScalarFieldEnum]
 
 
 export const CVScalarFieldEnum = {

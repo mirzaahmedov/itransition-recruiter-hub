@@ -1,29 +1,30 @@
-import { flexRender, type Table } from "@tanstack/react-table";
+import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 
 type GenericTableProps<T> = {
-  instance: Table<T>;
+  instance: TanstackTable<T>;
 };
 export const GenericTable = <T,>({ instance }: GenericTableProps<T>) => {
   return (
-    <table className="table table-zebra">
-      <thead>
+    <Table>
+      <TableHeader>
         {instance.getHeaderGroups().map((group) => (
-          <tr key={group.id}>
+          <TableRow key={group.id}>
             {group.headers.map((header) => (
-              <th key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</th>
+              <TableHead key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
             ))}
-          </tr>
+          </TableRow>
         ))}
-      </thead>
-      <tbody>
+      </TableHeader>
+      <TableBody>
         {instance.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
+          <TableRow key={row.id}>
             {row.getVisibleCells().map((column) => (
-              <td key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</td>
+              <TableCell key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</TableCell>
             ))}
-          </tr>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 };

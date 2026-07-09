@@ -1,17 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import {
-  AttributeCreateInput,
-  AttributeUpdateInput,
-} from '@rh/database/models';
+import { AttributeUpdateInput } from '@rh/database/models';
+import { AttributeCreatePayload } from '@rh/shared';
 
 @Injectable()
 export class AttributeService {
   constructor(private prisma: PrismaService) {}
 
-  async create(payload: AttributeCreateInput) {
+  async create(payload: AttributeCreatePayload) {
     return await this.prisma.attribute.create({
-      data: payload,
+      data: {
+        name: payload.name,
+        type: payload.type,
+        category: {
+          connect: {
+            id: payload.categoryId,
+          },
+        },
+        choices: {
+          create: payload.choices,
+        },
+      },
     });
   }
 
