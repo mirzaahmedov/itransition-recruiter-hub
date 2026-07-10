@@ -258,10 +258,6 @@ export type UserProfileScalarRelationFilter = {
   isNot?: Prisma.UserProfileWhereInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type UserProfileCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.UserProfileCreateWithoutUserInput, Prisma.UserProfileUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.UserProfileCreateOrConnectWithoutUserInput

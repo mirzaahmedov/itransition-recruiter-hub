@@ -19,11 +19,23 @@ enum UserRole {
   ADMINISTRATOR
 }
 
+model Category {
+  id        String @id
+  name      String
+  sortOrder Int
+  
+  attrs     Attribute[]
+
+  @@map("categories")
+}
+
 model UserProfile {
   id        String @id @default(cuid())
   userId    String @unique
   user      User @relation(fields: [userId], references: [id])
   attrs     AttributeValue[]
+
+  @@map("user_profiles")
 }
 
 model User {
@@ -38,15 +50,6 @@ model User {
   createdAt DateTime @default(now())
 
   @@map("users")
-}
-
-model AttributeCategory {
-  id              String   @id @default(cuid())
-  name            String?
-  createdAt       DateTime @default(now())
-  attributes      Attribute[]
-
-  @@map("attribute_category")
 }
 
 enum AttributeType {
@@ -65,7 +68,7 @@ model Attribute {
   name                  String
   type                  AttributeType
   categoryId            String
-  category              AttributeCategory @relation(fields: [categoryId], references: [id])
+  category              Category @relation(fields: [categoryId], references: [id])
   createdAt             DateTime @default(now())
   choices               AttributeChoice[]
   values                AttributeValue[]

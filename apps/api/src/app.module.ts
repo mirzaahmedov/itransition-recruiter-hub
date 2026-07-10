@@ -6,7 +6,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { AttributeCategoryModule } from './attribute-category/attribute-category.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { AttributeChoiceModule } from './attribute-choice/attribute-choice.module';
 import { PositionModule } from './position/position.module';
@@ -27,7 +26,6 @@ import { CategoryModule } from './category/category.module';
     }),
     AuthModule,
     UserModule,
-    AttributeCategoryModule,
     AttributeModule,
     AttributeChoiceModule,
     PositionModule,

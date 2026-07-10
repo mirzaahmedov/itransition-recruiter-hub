@@ -3,6 +3,7 @@ import { PrismaClient } from '@rh/database/client';
 import { createPrismaAdapter } from '@rh/database';
 import fs from 'fs';
 import path from 'path';
+import { seedDatabase } from '@/seed';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -18,5 +19,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   async onModuleInit() {
     await this.$connect();
+    seedDatabase(this);
   }
 }

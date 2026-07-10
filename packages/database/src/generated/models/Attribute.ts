@@ -182,7 +182,7 @@ export type AttributeWhereInput = {
   type?: Prisma.EnumAttributeTypeFilter<"Attribute"> | $Enums.AttributeType
   categoryId?: Prisma.StringFilter<"Attribute"> | string
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
-  category?: Prisma.XOR<Prisma.AttributeCategoryScalarRelationFilter, Prisma.AttributeCategoryWhereInput>
+  category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   choices?: Prisma.AttributeChoiceListRelationFilter
   values?: Prisma.AttributeValueListRelationFilter
   positionAttributes?: Prisma.PositionAttributeListRelationFilter
@@ -194,7 +194,7 @@ export type AttributeOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  category?: Prisma.AttributeCategoryOrderByWithRelationInput
+  category?: Prisma.CategoryOrderByWithRelationInput
   choices?: Prisma.AttributeChoiceOrderByRelationAggregateInput
   values?: Prisma.AttributeValueOrderByRelationAggregateInput
   positionAttributes?: Prisma.PositionAttributeOrderByRelationAggregateInput
@@ -209,7 +209,7 @@ export type AttributeWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.EnumAttributeTypeFilter<"Attribute"> | $Enums.AttributeType
   categoryId?: Prisma.StringFilter<"Attribute"> | string
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
-  category?: Prisma.XOR<Prisma.AttributeCategoryScalarRelationFilter, Prisma.AttributeCategoryWhereInput>
+  category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   choices?: Prisma.AttributeChoiceListRelationFilter
   values?: Prisma.AttributeValueListRelationFilter
   positionAttributes?: Prisma.PositionAttributeListRelationFilter
@@ -242,7 +242,7 @@ export type AttributeCreateInput = {
   name: string
   type: $Enums.AttributeType
   createdAt?: Date | string
-  category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
+  category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
   values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
@@ -264,7 +264,7 @@ export type AttributeUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
   values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
@@ -493,7 +493,7 @@ export type AttributeCreateWithoutChoicesInput = {
   name: string
   type: $Enums.AttributeType
   createdAt?: Date | string
-  category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
+  category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
@@ -529,7 +529,7 @@ export type AttributeUpdateWithoutChoicesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
@@ -549,7 +549,7 @@ export type AttributeCreateWithoutValuesInput = {
   name: string
   type: $Enums.AttributeType
   createdAt?: Date | string
-  category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
+  category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
@@ -585,7 +585,7 @@ export type AttributeUpdateWithoutValuesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
@@ -605,7 +605,7 @@ export type AttributeCreateWithoutPositionAttributesInput = {
   name: string
   type: $Enums.AttributeType
   createdAt?: Date | string
-  category: Prisma.AttributeCategoryCreateNestedOneWithoutAttributesInput
+  category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
   values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput
 }
@@ -641,7 +641,7 @@ export type AttributeUpdateWithoutPositionAttributesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  category?: Prisma.AttributeCategoryUpdateOneRequiredWithoutAttributesNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
   values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput
 }
@@ -745,7 +745,7 @@ export type AttributeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   type?: boolean
   categoryId?: boolean
   createdAt?: boolean
-  category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.Attribute$choicesArgs<ExtArgs>
   values?: boolean | Prisma.Attribute$valuesArgs<ExtArgs>
   positionAttributes?: boolean | Prisma.Attribute$positionAttributesArgs<ExtArgs>
@@ -758,7 +758,7 @@ export type AttributeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   type?: boolean
   categoryId?: boolean
   createdAt?: boolean
-  category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attribute"]>
 
 export type AttributeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -767,7 +767,7 @@ export type AttributeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   type?: boolean
   categoryId?: boolean
   createdAt?: boolean
-  category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attribute"]>
 
 export type AttributeSelectScalar = {
@@ -780,23 +780,23 @@ export type AttributeSelectScalar = {
 
 export type AttributeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "categoryId" | "createdAt", ExtArgs["result"]["attribute"]>
 export type AttributeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.Attribute$choicesArgs<ExtArgs>
   values?: boolean | Prisma.Attribute$valuesArgs<ExtArgs>
   positionAttributes?: boolean | Prisma.Attribute$positionAttributesArgs<ExtArgs>
   _count?: boolean | Prisma.AttributeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AttributeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }
 export type AttributeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  category?: boolean | Prisma.AttributeCategoryDefaultArgs<ExtArgs>
+  category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }
 
 export type $AttributePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Attribute"
   objects: {
-    category: Prisma.$AttributeCategoryPayload<ExtArgs>
+    category: Prisma.$CategoryPayload<ExtArgs>
     choices: Prisma.$AttributeChoicePayload<ExtArgs>[]
     values: Prisma.$AttributeValuePayload<ExtArgs>[]
     positionAttributes: Prisma.$PositionAttributePayload<ExtArgs>[]
@@ -1201,7 +1201,7 @@ readonly fields: AttributeFieldRefs;
  */
 export interface Prisma__AttributeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  category<T extends Prisma.AttributeCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__AttributeCategoryClient<runtime.Types.Result.GetResult<Prisma.$AttributeCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   choices<T extends Prisma.Attribute$choicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$choicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeChoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   values<T extends Prisma.Attribute$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   positionAttributes<T extends Prisma.Attribute$positionAttributesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$positionAttributesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
