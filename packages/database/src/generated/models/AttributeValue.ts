@@ -37,7 +37,6 @@ export type AttributeValueSumAggregateOutputType = {
 export type AttributeValueMinAggregateOutputType = {
   id: string | null
   attributeId: string | null
-  cvId: string | null
   textValue: string | null
   numberValue: number | null
   booleanValue: boolean | null
@@ -45,12 +44,13 @@ export type AttributeValueMinAggregateOutputType = {
   startDateValue: Date | null
   endDateValue: Date | null
   createdAt: Date | null
+  choiceId: string | null
+  profileId: string | null
 }
 
 export type AttributeValueMaxAggregateOutputType = {
   id: string | null
   attributeId: string | null
-  cvId: string | null
   textValue: string | null
   numberValue: number | null
   booleanValue: boolean | null
@@ -58,12 +58,13 @@ export type AttributeValueMaxAggregateOutputType = {
   startDateValue: Date | null
   endDateValue: Date | null
   createdAt: Date | null
+  choiceId: string | null
+  profileId: string | null
 }
 
 export type AttributeValueCountAggregateOutputType = {
   id: number
   attributeId: number
-  cvId: number
   textValue: number
   numberValue: number
   booleanValue: number
@@ -71,6 +72,8 @@ export type AttributeValueCountAggregateOutputType = {
   startDateValue: number
   endDateValue: number
   createdAt: number
+  choiceId: number
+  profileId: number
   _all: number
 }
 
@@ -86,7 +89,6 @@ export type AttributeValueSumAggregateInputType = {
 export type AttributeValueMinAggregateInputType = {
   id?: true
   attributeId?: true
-  cvId?: true
   textValue?: true
   numberValue?: true
   booleanValue?: true
@@ -94,12 +96,13 @@ export type AttributeValueMinAggregateInputType = {
   startDateValue?: true
   endDateValue?: true
   createdAt?: true
+  choiceId?: true
+  profileId?: true
 }
 
 export type AttributeValueMaxAggregateInputType = {
   id?: true
   attributeId?: true
-  cvId?: true
   textValue?: true
   numberValue?: true
   booleanValue?: true
@@ -107,12 +110,13 @@ export type AttributeValueMaxAggregateInputType = {
   startDateValue?: true
   endDateValue?: true
   createdAt?: true
+  choiceId?: true
+  profileId?: true
 }
 
 export type AttributeValueCountAggregateInputType = {
   id?: true
   attributeId?: true
-  cvId?: true
   textValue?: true
   numberValue?: true
   booleanValue?: true
@@ -120,6 +124,8 @@ export type AttributeValueCountAggregateInputType = {
   startDateValue?: true
   endDateValue?: true
   createdAt?: true
+  choiceId?: true
+  profileId?: true
   _all?: true
 }
 
@@ -212,7 +218,6 @@ export type AttributeValueGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type AttributeValueGroupByOutputType = {
   id: string
   attributeId: string
-  cvId: string
   textValue: string | null
   numberValue: number | null
   booleanValue: boolean | null
@@ -220,6 +225,8 @@ export type AttributeValueGroupByOutputType = {
   startDateValue: Date | null
   endDateValue: Date | null
   createdAt: Date
+  choiceId: string | null
+  profileId: string
   _count: AttributeValueCountAggregateOutputType | null
   _avg: AttributeValueAvgAggregateOutputType | null
   _sum: AttributeValueSumAggregateOutputType | null
@@ -248,7 +255,6 @@ export type AttributeValueWhereInput = {
   NOT?: Prisma.AttributeValueWhereInput | Prisma.AttributeValueWhereInput[]
   id?: Prisma.StringFilter<"AttributeValue"> | string
   attributeId?: Prisma.StringFilter<"AttributeValue"> | string
-  cvId?: Prisma.StringFilter<"AttributeValue"> | string
   textValue?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
   numberValue?: Prisma.FloatNullableFilter<"AttributeValue"> | number | null
   booleanValue?: Prisma.BoolNullableFilter<"AttributeValue"> | boolean | null
@@ -256,14 +262,16 @@ export type AttributeValueWhereInput = {
   startDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
   endDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AttributeValue"> | Date | string
+  choiceId?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
+  profileId?: Prisma.StringFilter<"AttributeValue"> | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
-  cv?: Prisma.XOR<Prisma.CVScalarRelationFilter, Prisma.CVWhereInput>
+  choice?: Prisma.XOR<Prisma.AttributeChoiceNullableScalarRelationFilter, Prisma.AttributeChoiceWhereInput> | null
+  profile?: Prisma.XOR<Prisma.UserProfileScalarRelationFilter, Prisma.UserProfileWhereInput>
 }
 
 export type AttributeValueOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   attributeId?: Prisma.SortOrder
-  cvId?: Prisma.SortOrder
   textValue?: Prisma.SortOrderInput | Prisma.SortOrder
   numberValue?: Prisma.SortOrderInput | Prisma.SortOrder
   booleanValue?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -271,18 +279,20 @@ export type AttributeValueOrderByWithRelationInput = {
   startDateValue?: Prisma.SortOrderInput | Prisma.SortOrder
   endDateValue?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  choiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileId?: Prisma.SortOrder
   attribute?: Prisma.AttributeOrderByWithRelationInput
-  cv?: Prisma.CVOrderByWithRelationInput
+  choice?: Prisma.AttributeChoiceOrderByWithRelationInput
+  profile?: Prisma.UserProfileOrderByWithRelationInput
 }
 
 export type AttributeValueWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  attributeId_cvId?: Prisma.AttributeValueAttributeIdCvIdCompoundUniqueInput
+  attributeId_profileId?: Prisma.AttributeValueAttributeIdProfileIdCompoundUniqueInput
   AND?: Prisma.AttributeValueWhereInput | Prisma.AttributeValueWhereInput[]
   OR?: Prisma.AttributeValueWhereInput[]
   NOT?: Prisma.AttributeValueWhereInput | Prisma.AttributeValueWhereInput[]
   attributeId?: Prisma.StringFilter<"AttributeValue"> | string
-  cvId?: Prisma.StringFilter<"AttributeValue"> | string
   textValue?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
   numberValue?: Prisma.FloatNullableFilter<"AttributeValue"> | number | null
   booleanValue?: Prisma.BoolNullableFilter<"AttributeValue"> | boolean | null
@@ -290,14 +300,16 @@ export type AttributeValueWhereUniqueInput = Prisma.AtLeast<{
   startDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
   endDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AttributeValue"> | Date | string
+  choiceId?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
+  profileId?: Prisma.StringFilter<"AttributeValue"> | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
-  cv?: Prisma.XOR<Prisma.CVScalarRelationFilter, Prisma.CVWhereInput>
-}, "id" | "attributeId_cvId">
+  choice?: Prisma.XOR<Prisma.AttributeChoiceNullableScalarRelationFilter, Prisma.AttributeChoiceWhereInput> | null
+  profile?: Prisma.XOR<Prisma.UserProfileScalarRelationFilter, Prisma.UserProfileWhereInput>
+}, "id" | "attributeId_profileId">
 
 export type AttributeValueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   attributeId?: Prisma.SortOrder
-  cvId?: Prisma.SortOrder
   textValue?: Prisma.SortOrderInput | Prisma.SortOrder
   numberValue?: Prisma.SortOrderInput | Prisma.SortOrder
   booleanValue?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -305,6 +317,8 @@ export type AttributeValueOrderByWithAggregationInput = {
   startDateValue?: Prisma.SortOrderInput | Prisma.SortOrder
   endDateValue?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  choiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileId?: Prisma.SortOrder
   _count?: Prisma.AttributeValueCountOrderByAggregateInput
   _avg?: Prisma.AttributeValueAvgOrderByAggregateInput
   _max?: Prisma.AttributeValueMaxOrderByAggregateInput
@@ -318,7 +332,6 @@ export type AttributeValueScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AttributeValueScalarWhereWithAggregatesInput | Prisma.AttributeValueScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AttributeValue"> | string
   attributeId?: Prisma.StringWithAggregatesFilter<"AttributeValue"> | string
-  cvId?: Prisma.StringWithAggregatesFilter<"AttributeValue"> | string
   textValue?: Prisma.StringNullableWithAggregatesFilter<"AttributeValue"> | string | null
   numberValue?: Prisma.FloatNullableWithAggregatesFilter<"AttributeValue"> | number | null
   booleanValue?: Prisma.BoolNullableWithAggregatesFilter<"AttributeValue"> | boolean | null
@@ -326,6 +339,8 @@ export type AttributeValueScalarWhereWithAggregatesInput = {
   startDateValue?: Prisma.DateTimeNullableWithAggregatesFilter<"AttributeValue"> | Date | string | null
   endDateValue?: Prisma.DateTimeNullableWithAggregatesFilter<"AttributeValue"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AttributeValue"> | Date | string
+  choiceId?: Prisma.StringNullableWithAggregatesFilter<"AttributeValue"> | string | null
+  profileId?: Prisma.StringWithAggregatesFilter<"AttributeValue"> | string
 }
 
 export type AttributeValueCreateInput = {
@@ -338,13 +353,13 @@ export type AttributeValueCreateInput = {
   endDateValue?: Date | string | null
   createdAt?: Date | string
   attribute: Prisma.AttributeCreateNestedOneWithoutValuesInput
-  cv: Prisma.CVCreateNestedOneWithoutAttribute_valuesInput
+  choice?: Prisma.AttributeChoiceCreateNestedOneWithoutValuesInput
+  profile: Prisma.UserProfileCreateNestedOneWithoutAttrsInput
 }
 
 export type AttributeValueUncheckedCreateInput = {
   id?: string
   attributeId: string
-  cvId: string
   textValue?: string | null
   numberValue?: number | null
   booleanValue?: boolean | null
@@ -352,6 +367,8 @@ export type AttributeValueUncheckedCreateInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
+  choiceId?: string | null
+  profileId: string
 }
 
 export type AttributeValueUpdateInput = {
@@ -364,13 +381,13 @@ export type AttributeValueUpdateInput = {
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attribute?: Prisma.AttributeUpdateOneRequiredWithoutValuesNestedInput
-  cv?: Prisma.CVUpdateOneRequiredWithoutAttribute_valuesNestedInput
+  choice?: Prisma.AttributeChoiceUpdateOneWithoutValuesNestedInput
+  profile?: Prisma.UserProfileUpdateOneRequiredWithoutAttrsNestedInput
 }
 
 export type AttributeValueUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
-  cvId?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -378,12 +395,13 @@ export type AttributeValueUncheckedUpdateInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type AttributeValueCreateManyInput = {
   id?: string
   attributeId: string
-  cvId: string
   textValue?: string | null
   numberValue?: number | null
   booleanValue?: boolean | null
@@ -391,6 +409,8 @@ export type AttributeValueCreateManyInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
+  choiceId?: string | null
+  profileId: string
 }
 
 export type AttributeValueUpdateManyMutationInput = {
@@ -407,7 +427,6 @@ export type AttributeValueUpdateManyMutationInput = {
 export type AttributeValueUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
-  cvId?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -415,6 +434,8 @@ export type AttributeValueUncheckedUpdateManyInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type AttributeValueListRelationFilter = {
@@ -427,15 +448,14 @@ export type AttributeValueOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type AttributeValueAttributeIdCvIdCompoundUniqueInput = {
+export type AttributeValueAttributeIdProfileIdCompoundUniqueInput = {
   attributeId: string
-  cvId: string
+  profileId: string
 }
 
 export type AttributeValueCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   attributeId?: Prisma.SortOrder
-  cvId?: Prisma.SortOrder
   textValue?: Prisma.SortOrder
   numberValue?: Prisma.SortOrder
   booleanValue?: Prisma.SortOrder
@@ -443,6 +463,8 @@ export type AttributeValueCountOrderByAggregateInput = {
   startDateValue?: Prisma.SortOrder
   endDateValue?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  choiceId?: Prisma.SortOrder
+  profileId?: Prisma.SortOrder
 }
 
 export type AttributeValueAvgOrderByAggregateInput = {
@@ -452,7 +474,6 @@ export type AttributeValueAvgOrderByAggregateInput = {
 export type AttributeValueMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   attributeId?: Prisma.SortOrder
-  cvId?: Prisma.SortOrder
   textValue?: Prisma.SortOrder
   numberValue?: Prisma.SortOrder
   booleanValue?: Prisma.SortOrder
@@ -460,12 +481,13 @@ export type AttributeValueMaxOrderByAggregateInput = {
   startDateValue?: Prisma.SortOrder
   endDateValue?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  choiceId?: Prisma.SortOrder
+  profileId?: Prisma.SortOrder
 }
 
 export type AttributeValueMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   attributeId?: Prisma.SortOrder
-  cvId?: Prisma.SortOrder
   textValue?: Prisma.SortOrder
   numberValue?: Prisma.SortOrder
   booleanValue?: Prisma.SortOrder
@@ -473,10 +495,54 @@ export type AttributeValueMinOrderByAggregateInput = {
   startDateValue?: Prisma.SortOrder
   endDateValue?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  choiceId?: Prisma.SortOrder
+  profileId?: Prisma.SortOrder
 }
 
 export type AttributeValueSumOrderByAggregateInput = {
   numberValue?: Prisma.SortOrder
+}
+
+export type AttributeValueCreateNestedManyWithoutProfileInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutProfileInput, Prisma.AttributeValueUncheckedCreateWithoutProfileInput> | Prisma.AttributeValueCreateWithoutProfileInput[] | Prisma.AttributeValueUncheckedCreateWithoutProfileInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutProfileInput | Prisma.AttributeValueCreateOrConnectWithoutProfileInput[]
+  createMany?: Prisma.AttributeValueCreateManyProfileInputEnvelope
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+}
+
+export type AttributeValueUncheckedCreateNestedManyWithoutProfileInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutProfileInput, Prisma.AttributeValueUncheckedCreateWithoutProfileInput> | Prisma.AttributeValueCreateWithoutProfileInput[] | Prisma.AttributeValueUncheckedCreateWithoutProfileInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutProfileInput | Prisma.AttributeValueCreateOrConnectWithoutProfileInput[]
+  createMany?: Prisma.AttributeValueCreateManyProfileInputEnvelope
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+}
+
+export type AttributeValueUpdateManyWithoutProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutProfileInput, Prisma.AttributeValueUncheckedCreateWithoutProfileInput> | Prisma.AttributeValueCreateWithoutProfileInput[] | Prisma.AttributeValueUncheckedCreateWithoutProfileInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutProfileInput | Prisma.AttributeValueCreateOrConnectWithoutProfileInput[]
+  upsert?: Prisma.AttributeValueUpsertWithWhereUniqueWithoutProfileInput | Prisma.AttributeValueUpsertWithWhereUniqueWithoutProfileInput[]
+  createMany?: Prisma.AttributeValueCreateManyProfileInputEnvelope
+  set?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  disconnect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  delete?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  update?: Prisma.AttributeValueUpdateWithWhereUniqueWithoutProfileInput | Prisma.AttributeValueUpdateWithWhereUniqueWithoutProfileInput[]
+  updateMany?: Prisma.AttributeValueUpdateManyWithWhereWithoutProfileInput | Prisma.AttributeValueUpdateManyWithWhereWithoutProfileInput[]
+  deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+}
+
+export type AttributeValueUncheckedUpdateManyWithoutProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutProfileInput, Prisma.AttributeValueUncheckedCreateWithoutProfileInput> | Prisma.AttributeValueCreateWithoutProfileInput[] | Prisma.AttributeValueUncheckedCreateWithoutProfileInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutProfileInput | Prisma.AttributeValueCreateOrConnectWithoutProfileInput[]
+  upsert?: Prisma.AttributeValueUpsertWithWhereUniqueWithoutProfileInput | Prisma.AttributeValueUpsertWithWhereUniqueWithoutProfileInput[]
+  createMany?: Prisma.AttributeValueCreateManyProfileInputEnvelope
+  set?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  disconnect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  delete?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  update?: Prisma.AttributeValueUpdateWithWhereUniqueWithoutProfileInput | Prisma.AttributeValueUpdateWithWhereUniqueWithoutProfileInput[]
+  updateMany?: Prisma.AttributeValueUpdateManyWithWhereWithoutProfileInput | Prisma.AttributeValueUpdateManyWithWhereWithoutProfileInput[]
+  deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
 }
 
 export type AttributeValueCreateNestedManyWithoutAttributeInput = {
@@ -521,6 +587,48 @@ export type AttributeValueUncheckedUpdateManyWithoutAttributeNestedInput = {
   deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
 }
 
+export type AttributeValueCreateNestedManyWithoutChoiceInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutChoiceInput, Prisma.AttributeValueUncheckedCreateWithoutChoiceInput> | Prisma.AttributeValueCreateWithoutChoiceInput[] | Prisma.AttributeValueUncheckedCreateWithoutChoiceInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutChoiceInput | Prisma.AttributeValueCreateOrConnectWithoutChoiceInput[]
+  createMany?: Prisma.AttributeValueCreateManyChoiceInputEnvelope
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+}
+
+export type AttributeValueUncheckedCreateNestedManyWithoutChoiceInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutChoiceInput, Prisma.AttributeValueUncheckedCreateWithoutChoiceInput> | Prisma.AttributeValueCreateWithoutChoiceInput[] | Prisma.AttributeValueUncheckedCreateWithoutChoiceInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutChoiceInput | Prisma.AttributeValueCreateOrConnectWithoutChoiceInput[]
+  createMany?: Prisma.AttributeValueCreateManyChoiceInputEnvelope
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+}
+
+export type AttributeValueUpdateManyWithoutChoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutChoiceInput, Prisma.AttributeValueUncheckedCreateWithoutChoiceInput> | Prisma.AttributeValueCreateWithoutChoiceInput[] | Prisma.AttributeValueUncheckedCreateWithoutChoiceInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutChoiceInput | Prisma.AttributeValueCreateOrConnectWithoutChoiceInput[]
+  upsert?: Prisma.AttributeValueUpsertWithWhereUniqueWithoutChoiceInput | Prisma.AttributeValueUpsertWithWhereUniqueWithoutChoiceInput[]
+  createMany?: Prisma.AttributeValueCreateManyChoiceInputEnvelope
+  set?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  disconnect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  delete?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  update?: Prisma.AttributeValueUpdateWithWhereUniqueWithoutChoiceInput | Prisma.AttributeValueUpdateWithWhereUniqueWithoutChoiceInput[]
+  updateMany?: Prisma.AttributeValueUpdateManyWithWhereWithoutChoiceInput | Prisma.AttributeValueUpdateManyWithWhereWithoutChoiceInput[]
+  deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+}
+
+export type AttributeValueUncheckedUpdateManyWithoutChoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutChoiceInput, Prisma.AttributeValueUncheckedCreateWithoutChoiceInput> | Prisma.AttributeValueCreateWithoutChoiceInput[] | Prisma.AttributeValueUncheckedCreateWithoutChoiceInput[]
+  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutChoiceInput | Prisma.AttributeValueCreateOrConnectWithoutChoiceInput[]
+  upsert?: Prisma.AttributeValueUpsertWithWhereUniqueWithoutChoiceInput | Prisma.AttributeValueUpsertWithWhereUniqueWithoutChoiceInput[]
+  createMany?: Prisma.AttributeValueCreateManyChoiceInputEnvelope
+  set?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  disconnect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  delete?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+  update?: Prisma.AttributeValueUpdateWithWhereUniqueWithoutChoiceInput | Prisma.AttributeValueUpdateWithWhereUniqueWithoutChoiceInput[]
+  updateMany?: Prisma.AttributeValueUpdateManyWithWhereWithoutChoiceInput | Prisma.AttributeValueUpdateManyWithWhereWithoutChoiceInput[]
+  deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+}
+
 export type NullableFloatFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -537,46 +645,73 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type AttributeValueCreateNestedManyWithoutCvInput = {
-  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutCvInput, Prisma.AttributeValueUncheckedCreateWithoutCvInput> | Prisma.AttributeValueCreateWithoutCvInput[] | Prisma.AttributeValueUncheckedCreateWithoutCvInput[]
-  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutCvInput | Prisma.AttributeValueCreateOrConnectWithoutCvInput[]
-  createMany?: Prisma.AttributeValueCreateManyCvInputEnvelope
-  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+export type AttributeValueCreateWithoutProfileInput = {
+  id?: string
+  textValue?: string | null
+  numberValue?: number | null
+  booleanValue?: boolean | null
+  dateValue?: Date | string | null
+  startDateValue?: Date | string | null
+  endDateValue?: Date | string | null
+  createdAt?: Date | string
+  attribute: Prisma.AttributeCreateNestedOneWithoutValuesInput
+  choice?: Prisma.AttributeChoiceCreateNestedOneWithoutValuesInput
 }
 
-export type AttributeValueUncheckedCreateNestedManyWithoutCvInput = {
-  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutCvInput, Prisma.AttributeValueUncheckedCreateWithoutCvInput> | Prisma.AttributeValueCreateWithoutCvInput[] | Prisma.AttributeValueUncheckedCreateWithoutCvInput[]
-  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutCvInput | Prisma.AttributeValueCreateOrConnectWithoutCvInput[]
-  createMany?: Prisma.AttributeValueCreateManyCvInputEnvelope
-  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
+export type AttributeValueUncheckedCreateWithoutProfileInput = {
+  id?: string
+  attributeId: string
+  textValue?: string | null
+  numberValue?: number | null
+  booleanValue?: boolean | null
+  dateValue?: Date | string | null
+  startDateValue?: Date | string | null
+  endDateValue?: Date | string | null
+  createdAt?: Date | string
+  choiceId?: string | null
 }
 
-export type AttributeValueUpdateManyWithoutCvNestedInput = {
-  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutCvInput, Prisma.AttributeValueUncheckedCreateWithoutCvInput> | Prisma.AttributeValueCreateWithoutCvInput[] | Prisma.AttributeValueUncheckedCreateWithoutCvInput[]
-  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutCvInput | Prisma.AttributeValueCreateOrConnectWithoutCvInput[]
-  upsert?: Prisma.AttributeValueUpsertWithWhereUniqueWithoutCvInput | Prisma.AttributeValueUpsertWithWhereUniqueWithoutCvInput[]
-  createMany?: Prisma.AttributeValueCreateManyCvInputEnvelope
-  set?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  disconnect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  delete?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  update?: Prisma.AttributeValueUpdateWithWhereUniqueWithoutCvInput | Prisma.AttributeValueUpdateWithWhereUniqueWithoutCvInput[]
-  updateMany?: Prisma.AttributeValueUpdateManyWithWhereWithoutCvInput | Prisma.AttributeValueUpdateManyWithWhereWithoutCvInput[]
-  deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+export type AttributeValueCreateOrConnectWithoutProfileInput = {
+  where: Prisma.AttributeValueWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttributeValueCreateWithoutProfileInput, Prisma.AttributeValueUncheckedCreateWithoutProfileInput>
 }
 
-export type AttributeValueUncheckedUpdateManyWithoutCvNestedInput = {
-  create?: Prisma.XOR<Prisma.AttributeValueCreateWithoutCvInput, Prisma.AttributeValueUncheckedCreateWithoutCvInput> | Prisma.AttributeValueCreateWithoutCvInput[] | Prisma.AttributeValueUncheckedCreateWithoutCvInput[]
-  connectOrCreate?: Prisma.AttributeValueCreateOrConnectWithoutCvInput | Prisma.AttributeValueCreateOrConnectWithoutCvInput[]
-  upsert?: Prisma.AttributeValueUpsertWithWhereUniqueWithoutCvInput | Prisma.AttributeValueUpsertWithWhereUniqueWithoutCvInput[]
-  createMany?: Prisma.AttributeValueCreateManyCvInputEnvelope
-  set?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  disconnect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  delete?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  connect?: Prisma.AttributeValueWhereUniqueInput | Prisma.AttributeValueWhereUniqueInput[]
-  update?: Prisma.AttributeValueUpdateWithWhereUniqueWithoutCvInput | Prisma.AttributeValueUpdateWithWhereUniqueWithoutCvInput[]
-  updateMany?: Prisma.AttributeValueUpdateManyWithWhereWithoutCvInput | Prisma.AttributeValueUpdateManyWithWhereWithoutCvInput[]
-  deleteMany?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+export type AttributeValueCreateManyProfileInputEnvelope = {
+  data: Prisma.AttributeValueCreateManyProfileInput | Prisma.AttributeValueCreateManyProfileInput[]
+  skipDuplicates?: boolean
+}
+
+export type AttributeValueUpsertWithWhereUniqueWithoutProfileInput = {
+  where: Prisma.AttributeValueWhereUniqueInput
+  update: Prisma.XOR<Prisma.AttributeValueUpdateWithoutProfileInput, Prisma.AttributeValueUncheckedUpdateWithoutProfileInput>
+  create: Prisma.XOR<Prisma.AttributeValueCreateWithoutProfileInput, Prisma.AttributeValueUncheckedCreateWithoutProfileInput>
+}
+
+export type AttributeValueUpdateWithWhereUniqueWithoutProfileInput = {
+  where: Prisma.AttributeValueWhereUniqueInput
+  data: Prisma.XOR<Prisma.AttributeValueUpdateWithoutProfileInput, Prisma.AttributeValueUncheckedUpdateWithoutProfileInput>
+}
+
+export type AttributeValueUpdateManyWithWhereWithoutProfileInput = {
+  where: Prisma.AttributeValueScalarWhereInput
+  data: Prisma.XOR<Prisma.AttributeValueUpdateManyMutationInput, Prisma.AttributeValueUncheckedUpdateManyWithoutProfileInput>
+}
+
+export type AttributeValueScalarWhereInput = {
+  AND?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+  OR?: Prisma.AttributeValueScalarWhereInput[]
+  NOT?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
+  id?: Prisma.StringFilter<"AttributeValue"> | string
+  attributeId?: Prisma.StringFilter<"AttributeValue"> | string
+  textValue?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
+  numberValue?: Prisma.FloatNullableFilter<"AttributeValue"> | number | null
+  booleanValue?: Prisma.BoolNullableFilter<"AttributeValue"> | boolean | null
+  dateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
+  startDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
+  endDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"AttributeValue"> | Date | string
+  choiceId?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
+  profileId?: Prisma.StringFilter<"AttributeValue"> | string
 }
 
 export type AttributeValueCreateWithoutAttributeInput = {
@@ -588,12 +723,12 @@ export type AttributeValueCreateWithoutAttributeInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
-  cv: Prisma.CVCreateNestedOneWithoutAttribute_valuesInput
+  choice?: Prisma.AttributeChoiceCreateNestedOneWithoutValuesInput
+  profile: Prisma.UserProfileCreateNestedOneWithoutAttrsInput
 }
 
 export type AttributeValueUncheckedCreateWithoutAttributeInput = {
   id?: string
-  cvId: string
   textValue?: string | null
   numberValue?: number | null
   booleanValue?: boolean | null
@@ -601,6 +736,8 @@ export type AttributeValueUncheckedCreateWithoutAttributeInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
+  choiceId?: string | null
+  profileId: string
 }
 
 export type AttributeValueCreateOrConnectWithoutAttributeInput = {
@@ -629,23 +766,7 @@ export type AttributeValueUpdateManyWithWhereWithoutAttributeInput = {
   data: Prisma.XOR<Prisma.AttributeValueUpdateManyMutationInput, Prisma.AttributeValueUncheckedUpdateManyWithoutAttributeInput>
 }
 
-export type AttributeValueScalarWhereInput = {
-  AND?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
-  OR?: Prisma.AttributeValueScalarWhereInput[]
-  NOT?: Prisma.AttributeValueScalarWhereInput | Prisma.AttributeValueScalarWhereInput[]
-  id?: Prisma.StringFilter<"AttributeValue"> | string
-  attributeId?: Prisma.StringFilter<"AttributeValue"> | string
-  cvId?: Prisma.StringFilter<"AttributeValue"> | string
-  textValue?: Prisma.StringNullableFilter<"AttributeValue"> | string | null
-  numberValue?: Prisma.FloatNullableFilter<"AttributeValue"> | number | null
-  booleanValue?: Prisma.BoolNullableFilter<"AttributeValue"> | boolean | null
-  dateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
-  startDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
-  endDateValue?: Prisma.DateTimeNullableFilter<"AttributeValue"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"AttributeValue"> | Date | string
-}
-
-export type AttributeValueCreateWithoutCvInput = {
+export type AttributeValueCreateWithoutChoiceInput = {
   id?: string
   textValue?: string | null
   numberValue?: number | null
@@ -655,9 +776,10 @@ export type AttributeValueCreateWithoutCvInput = {
   endDateValue?: Date | string | null
   createdAt?: Date | string
   attribute: Prisma.AttributeCreateNestedOneWithoutValuesInput
+  profile: Prisma.UserProfileCreateNestedOneWithoutAttrsInput
 }
 
-export type AttributeValueUncheckedCreateWithoutCvInput = {
+export type AttributeValueUncheckedCreateWithoutChoiceInput = {
   id?: string
   attributeId: string
   textValue?: string | null
@@ -667,37 +789,38 @@ export type AttributeValueUncheckedCreateWithoutCvInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
+  profileId: string
 }
 
-export type AttributeValueCreateOrConnectWithoutCvInput = {
+export type AttributeValueCreateOrConnectWithoutChoiceInput = {
   where: Prisma.AttributeValueWhereUniqueInput
-  create: Prisma.XOR<Prisma.AttributeValueCreateWithoutCvInput, Prisma.AttributeValueUncheckedCreateWithoutCvInput>
+  create: Prisma.XOR<Prisma.AttributeValueCreateWithoutChoiceInput, Prisma.AttributeValueUncheckedCreateWithoutChoiceInput>
 }
 
-export type AttributeValueCreateManyCvInputEnvelope = {
-  data: Prisma.AttributeValueCreateManyCvInput | Prisma.AttributeValueCreateManyCvInput[]
+export type AttributeValueCreateManyChoiceInputEnvelope = {
+  data: Prisma.AttributeValueCreateManyChoiceInput | Prisma.AttributeValueCreateManyChoiceInput[]
   skipDuplicates?: boolean
 }
 
-export type AttributeValueUpsertWithWhereUniqueWithoutCvInput = {
+export type AttributeValueUpsertWithWhereUniqueWithoutChoiceInput = {
   where: Prisma.AttributeValueWhereUniqueInput
-  update: Prisma.XOR<Prisma.AttributeValueUpdateWithoutCvInput, Prisma.AttributeValueUncheckedUpdateWithoutCvInput>
-  create: Prisma.XOR<Prisma.AttributeValueCreateWithoutCvInput, Prisma.AttributeValueUncheckedCreateWithoutCvInput>
+  update: Prisma.XOR<Prisma.AttributeValueUpdateWithoutChoiceInput, Prisma.AttributeValueUncheckedUpdateWithoutChoiceInput>
+  create: Prisma.XOR<Prisma.AttributeValueCreateWithoutChoiceInput, Prisma.AttributeValueUncheckedCreateWithoutChoiceInput>
 }
 
-export type AttributeValueUpdateWithWhereUniqueWithoutCvInput = {
+export type AttributeValueUpdateWithWhereUniqueWithoutChoiceInput = {
   where: Prisma.AttributeValueWhereUniqueInput
-  data: Prisma.XOR<Prisma.AttributeValueUpdateWithoutCvInput, Prisma.AttributeValueUncheckedUpdateWithoutCvInput>
+  data: Prisma.XOR<Prisma.AttributeValueUpdateWithoutChoiceInput, Prisma.AttributeValueUncheckedUpdateWithoutChoiceInput>
 }
 
-export type AttributeValueUpdateManyWithWhereWithoutCvInput = {
+export type AttributeValueUpdateManyWithWhereWithoutChoiceInput = {
   where: Prisma.AttributeValueScalarWhereInput
-  data: Prisma.XOR<Prisma.AttributeValueUpdateManyMutationInput, Prisma.AttributeValueUncheckedUpdateManyWithoutCvInput>
+  data: Prisma.XOR<Prisma.AttributeValueUpdateManyMutationInput, Prisma.AttributeValueUncheckedUpdateManyWithoutChoiceInput>
 }
 
-export type AttributeValueCreateManyAttributeInput = {
+export type AttributeValueCreateManyProfileInput = {
   id?: string
-  cvId: string
+  attributeId: string
   textValue?: string | null
   numberValue?: number | null
   booleanValue?: boolean | null
@@ -705,6 +828,59 @@ export type AttributeValueCreateManyAttributeInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
+  choiceId?: string | null
+}
+
+export type AttributeValueUpdateWithoutProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  dateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attribute?: Prisma.AttributeUpdateOneRequiredWithoutValuesNestedInput
+  choice?: Prisma.AttributeChoiceUpdateOneWithoutValuesNestedInput
+}
+
+export type AttributeValueUncheckedUpdateWithoutProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  attributeId?: Prisma.StringFieldUpdateOperationsInput | string
+  textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  dateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AttributeValueUncheckedUpdateManyWithoutProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  attributeId?: Prisma.StringFieldUpdateOperationsInput | string
+  textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  dateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AttributeValueCreateManyAttributeInput = {
+  id?: string
+  textValue?: string | null
+  numberValue?: number | null
+  booleanValue?: boolean | null
+  dateValue?: Date | string | null
+  startDateValue?: Date | string | null
+  endDateValue?: Date | string | null
+  createdAt?: Date | string
+  choiceId?: string | null
+  profileId: string
 }
 
 export type AttributeValueUpdateWithoutAttributeInput = {
@@ -716,12 +892,12 @@ export type AttributeValueUpdateWithoutAttributeInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cv?: Prisma.CVUpdateOneRequiredWithoutAttribute_valuesNestedInput
+  choice?: Prisma.AttributeChoiceUpdateOneWithoutValuesNestedInput
+  profile?: Prisma.UserProfileUpdateOneRequiredWithoutAttrsNestedInput
 }
 
 export type AttributeValueUncheckedUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  cvId?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -729,11 +905,12 @@ export type AttributeValueUncheckedUpdateWithoutAttributeInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type AttributeValueUncheckedUpdateManyWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  cvId?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   booleanValue?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -741,9 +918,11 @@ export type AttributeValueUncheckedUpdateManyWithoutAttributeInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  choiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type AttributeValueCreateManyCvInput = {
+export type AttributeValueCreateManyChoiceInput = {
   id?: string
   attributeId: string
   textValue?: string | null
@@ -753,9 +932,10 @@ export type AttributeValueCreateManyCvInput = {
   startDateValue?: Date | string | null
   endDateValue?: Date | string | null
   createdAt?: Date | string
+  profileId: string
 }
 
-export type AttributeValueUpdateWithoutCvInput = {
+export type AttributeValueUpdateWithoutChoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   numberValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -765,9 +945,10 @@ export type AttributeValueUpdateWithoutCvInput = {
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attribute?: Prisma.AttributeUpdateOneRequiredWithoutValuesNestedInput
+  profile?: Prisma.UserProfileUpdateOneRequiredWithoutAttrsNestedInput
 }
 
-export type AttributeValueUncheckedUpdateWithoutCvInput = {
+export type AttributeValueUncheckedUpdateWithoutChoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -777,9 +958,10 @@ export type AttributeValueUncheckedUpdateWithoutCvInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type AttributeValueUncheckedUpdateManyWithoutCvInput = {
+export type AttributeValueUncheckedUpdateManyWithoutChoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
   textValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -789,6 +971,7 @@ export type AttributeValueUncheckedUpdateManyWithoutCvInput = {
   startDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDateValue?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -796,7 +979,6 @@ export type AttributeValueUncheckedUpdateManyWithoutCvInput = {
 export type AttributeValueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   attributeId?: boolean
-  cvId?: boolean
   textValue?: boolean
   numberValue?: boolean
   booleanValue?: boolean
@@ -804,14 +986,16 @@ export type AttributeValueSelect<ExtArgs extends runtime.Types.Extensions.Intern
   startDateValue?: boolean
   endDateValue?: boolean
   createdAt?: boolean
+  choiceId?: boolean
+  profileId?: boolean
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
-  cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
+  choice?: boolean | Prisma.AttributeValue$choiceArgs<ExtArgs>
+  profile?: boolean | Prisma.UserProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attributeValue"]>
 
 export type AttributeValueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   attributeId?: boolean
-  cvId?: boolean
   textValue?: boolean
   numberValue?: boolean
   booleanValue?: boolean
@@ -819,14 +1003,16 @@ export type AttributeValueSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   startDateValue?: boolean
   endDateValue?: boolean
   createdAt?: boolean
+  choiceId?: boolean
+  profileId?: boolean
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
-  cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
+  choice?: boolean | Prisma.AttributeValue$choiceArgs<ExtArgs>
+  profile?: boolean | Prisma.UserProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attributeValue"]>
 
 export type AttributeValueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   attributeId?: boolean
-  cvId?: boolean
   textValue?: boolean
   numberValue?: boolean
   booleanValue?: boolean
@@ -834,14 +1020,16 @@ export type AttributeValueSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   startDateValue?: boolean
   endDateValue?: boolean
   createdAt?: boolean
+  choiceId?: boolean
+  profileId?: boolean
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
-  cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
+  choice?: boolean | Prisma.AttributeValue$choiceArgs<ExtArgs>
+  profile?: boolean | Prisma.UserProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attributeValue"]>
 
 export type AttributeValueSelectScalar = {
   id?: boolean
   attributeId?: boolean
-  cvId?: boolean
   textValue?: boolean
   numberValue?: boolean
   booleanValue?: boolean
@@ -849,32 +1037,37 @@ export type AttributeValueSelectScalar = {
   startDateValue?: boolean
   endDateValue?: boolean
   createdAt?: boolean
+  choiceId?: boolean
+  profileId?: boolean
 }
 
-export type AttributeValueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attributeId" | "cvId" | "textValue" | "numberValue" | "booleanValue" | "dateValue" | "startDateValue" | "endDateValue" | "createdAt", ExtArgs["result"]["attributeValue"]>
+export type AttributeValueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attributeId" | "textValue" | "numberValue" | "booleanValue" | "dateValue" | "startDateValue" | "endDateValue" | "createdAt" | "choiceId" | "profileId", ExtArgs["result"]["attributeValue"]>
 export type AttributeValueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
-  cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
+  choice?: boolean | Prisma.AttributeValue$choiceArgs<ExtArgs>
+  profile?: boolean | Prisma.UserProfileDefaultArgs<ExtArgs>
 }
 export type AttributeValueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
-  cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
+  choice?: boolean | Prisma.AttributeValue$choiceArgs<ExtArgs>
+  profile?: boolean | Prisma.UserProfileDefaultArgs<ExtArgs>
 }
 export type AttributeValueIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
-  cv?: boolean | Prisma.CVDefaultArgs<ExtArgs>
+  choice?: boolean | Prisma.AttributeValue$choiceArgs<ExtArgs>
+  profile?: boolean | Prisma.UserProfileDefaultArgs<ExtArgs>
 }
 
 export type $AttributeValuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AttributeValue"
   objects: {
     attribute: Prisma.$AttributePayload<ExtArgs>
-    cv: Prisma.$CVPayload<ExtArgs>
+    choice: Prisma.$AttributeChoicePayload<ExtArgs> | null
+    profile: Prisma.$UserProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     attributeId: string
-    cvId: string
     textValue: string | null
     numberValue: number | null
     booleanValue: boolean | null
@@ -882,6 +1075,8 @@ export type $AttributeValuePayload<ExtArgs extends runtime.Types.Extensions.Inte
     startDateValue: Date | null
     endDateValue: Date | null
     createdAt: Date
+    choiceId: string | null
+    profileId: string
   }, ExtArgs["result"]["attributeValue"]>
   composites: {}
 }
@@ -1277,7 +1472,8 @@ readonly fields: AttributeValueFieldRefs;
 export interface Prisma__AttributeValueClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   attribute<T extends Prisma.AttributeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeDefaultArgs<ExtArgs>>): Prisma.Prisma__AttributeClient<runtime.Types.Result.GetResult<Prisma.$AttributePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  cv<T extends Prisma.CVDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CVDefaultArgs<ExtArgs>>): Prisma.Prisma__CVClient<runtime.Types.Result.GetResult<Prisma.$CVPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  choice<T extends Prisma.AttributeValue$choiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeValue$choiceArgs<ExtArgs>>): Prisma.Prisma__AttributeChoiceClient<runtime.Types.Result.GetResult<Prisma.$AttributeChoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  profile<T extends Prisma.UserProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__UserProfileClient<runtime.Types.Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1309,7 +1505,6 @@ export interface Prisma__AttributeValueClient<T, Null = never, ExtArgs extends r
 export interface AttributeValueFieldRefs {
   readonly id: Prisma.FieldRef<"AttributeValue", 'String'>
   readonly attributeId: Prisma.FieldRef<"AttributeValue", 'String'>
-  readonly cvId: Prisma.FieldRef<"AttributeValue", 'String'>
   readonly textValue: Prisma.FieldRef<"AttributeValue", 'String'>
   readonly numberValue: Prisma.FieldRef<"AttributeValue", 'Float'>
   readonly booleanValue: Prisma.FieldRef<"AttributeValue", 'Boolean'>
@@ -1317,6 +1512,8 @@ export interface AttributeValueFieldRefs {
   readonly startDateValue: Prisma.FieldRef<"AttributeValue", 'DateTime'>
   readonly endDateValue: Prisma.FieldRef<"AttributeValue", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"AttributeValue", 'DateTime'>
+  readonly choiceId: Prisma.FieldRef<"AttributeValue", 'String'>
+  readonly profileId: Prisma.FieldRef<"AttributeValue", 'String'>
 }
     
 
@@ -1715,6 +1912,25 @@ export type AttributeValueDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many AttributeValues to delete.
    */
   limit?: number
+}
+
+/**
+ * AttributeValue.choice
+ */
+export type AttributeValue$choiceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttributeChoice
+   */
+  select?: Prisma.AttributeChoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttributeChoice
+   */
+  omit?: Prisma.AttributeChoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttributeChoiceInclude<ExtArgs> | null
+  where?: Prisma.AttributeChoiceWhereInput
 }
 
 /**

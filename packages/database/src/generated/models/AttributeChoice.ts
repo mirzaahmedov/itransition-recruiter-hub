@@ -175,6 +175,7 @@ export type AttributeChoiceWhereInput = {
   attributeId?: Prisma.StringFilter<"AttributeChoice"> | string
   createdAt?: Prisma.DateTimeFilter<"AttributeChoice"> | Date | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
+  values?: Prisma.AttributeValueListRelationFilter
 }
 
 export type AttributeChoiceOrderByWithRelationInput = {
@@ -183,6 +184,7 @@ export type AttributeChoiceOrderByWithRelationInput = {
   attributeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   attribute?: Prisma.AttributeOrderByWithRelationInput
+  values?: Prisma.AttributeValueOrderByRelationAggregateInput
 }
 
 export type AttributeChoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -195,6 +197,7 @@ export type AttributeChoiceWhereUniqueInput = Prisma.AtLeast<{
   attributeId?: Prisma.StringFilter<"AttributeChoice"> | string
   createdAt?: Prisma.DateTimeFilter<"AttributeChoice"> | Date | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
+  values?: Prisma.AttributeValueListRelationFilter
 }, "id" | "attributeId_value">
 
 export type AttributeChoiceOrderByWithAggregationInput = {
@@ -222,6 +225,7 @@ export type AttributeChoiceCreateInput = {
   value: string
   createdAt?: Date | string
   attribute: Prisma.AttributeCreateNestedOneWithoutChoicesInput
+  values?: Prisma.AttributeValueCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceUncheckedCreateInput = {
@@ -229,6 +233,7 @@ export type AttributeChoiceUncheckedCreateInput = {
   value: string
   attributeId: string
   createdAt?: Date | string
+  values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceUpdateInput = {
@@ -236,6 +241,7 @@ export type AttributeChoiceUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attribute?: Prisma.AttributeUpdateOneRequiredWithoutChoicesNestedInput
+  values?: Prisma.AttributeValueUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceUncheckedUpdateInput = {
@@ -243,6 +249,7 @@ export type AttributeChoiceUncheckedUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  values?: Prisma.AttributeValueUncheckedUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceCreateManyInput = {
@@ -301,6 +308,11 @@ export type AttributeChoiceMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type AttributeChoiceNullableScalarRelationFilter = {
+  is?: Prisma.AttributeChoiceWhereInput | null
+  isNot?: Prisma.AttributeChoiceWhereInput | null
+}
+
 export type AttributeChoiceCreateNestedManyWithoutAttributeInput = {
   create?: Prisma.XOR<Prisma.AttributeChoiceCreateWithoutAttributeInput, Prisma.AttributeChoiceUncheckedCreateWithoutAttributeInput> | Prisma.AttributeChoiceCreateWithoutAttributeInput[] | Prisma.AttributeChoiceUncheckedCreateWithoutAttributeInput[]
   connectOrCreate?: Prisma.AttributeChoiceCreateOrConnectWithoutAttributeInput | Prisma.AttributeChoiceCreateOrConnectWithoutAttributeInput[]
@@ -343,16 +355,34 @@ export type AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput = {
   deleteMany?: Prisma.AttributeChoiceScalarWhereInput | Prisma.AttributeChoiceScalarWhereInput[]
 }
 
+export type AttributeChoiceCreateNestedOneWithoutValuesInput = {
+  create?: Prisma.XOR<Prisma.AttributeChoiceCreateWithoutValuesInput, Prisma.AttributeChoiceUncheckedCreateWithoutValuesInput>
+  connectOrCreate?: Prisma.AttributeChoiceCreateOrConnectWithoutValuesInput
+  connect?: Prisma.AttributeChoiceWhereUniqueInput
+}
+
+export type AttributeChoiceUpdateOneWithoutValuesNestedInput = {
+  create?: Prisma.XOR<Prisma.AttributeChoiceCreateWithoutValuesInput, Prisma.AttributeChoiceUncheckedCreateWithoutValuesInput>
+  connectOrCreate?: Prisma.AttributeChoiceCreateOrConnectWithoutValuesInput
+  upsert?: Prisma.AttributeChoiceUpsertWithoutValuesInput
+  disconnect?: Prisma.AttributeChoiceWhereInput | boolean
+  delete?: Prisma.AttributeChoiceWhereInput | boolean
+  connect?: Prisma.AttributeChoiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AttributeChoiceUpdateToOneWithWhereWithoutValuesInput, Prisma.AttributeChoiceUpdateWithoutValuesInput>, Prisma.AttributeChoiceUncheckedUpdateWithoutValuesInput>
+}
+
 export type AttributeChoiceCreateWithoutAttributeInput = {
   id?: string
   value: string
   createdAt?: Date | string
+  values?: Prisma.AttributeValueCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceUncheckedCreateWithoutAttributeInput = {
   id?: string
   value: string
   createdAt?: Date | string
+  values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceCreateOrConnectWithoutAttributeInput = {
@@ -391,6 +421,50 @@ export type AttributeChoiceScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"AttributeChoice"> | Date | string
 }
 
+export type AttributeChoiceCreateWithoutValuesInput = {
+  id?: string
+  value: string
+  createdAt?: Date | string
+  attribute: Prisma.AttributeCreateNestedOneWithoutChoicesInput
+}
+
+export type AttributeChoiceUncheckedCreateWithoutValuesInput = {
+  id?: string
+  value: string
+  attributeId: string
+  createdAt?: Date | string
+}
+
+export type AttributeChoiceCreateOrConnectWithoutValuesInput = {
+  where: Prisma.AttributeChoiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttributeChoiceCreateWithoutValuesInput, Prisma.AttributeChoiceUncheckedCreateWithoutValuesInput>
+}
+
+export type AttributeChoiceUpsertWithoutValuesInput = {
+  update: Prisma.XOR<Prisma.AttributeChoiceUpdateWithoutValuesInput, Prisma.AttributeChoiceUncheckedUpdateWithoutValuesInput>
+  create: Prisma.XOR<Prisma.AttributeChoiceCreateWithoutValuesInput, Prisma.AttributeChoiceUncheckedCreateWithoutValuesInput>
+  where?: Prisma.AttributeChoiceWhereInput
+}
+
+export type AttributeChoiceUpdateToOneWithWhereWithoutValuesInput = {
+  where?: Prisma.AttributeChoiceWhereInput
+  data: Prisma.XOR<Prisma.AttributeChoiceUpdateWithoutValuesInput, Prisma.AttributeChoiceUncheckedUpdateWithoutValuesInput>
+}
+
+export type AttributeChoiceUpdateWithoutValuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attribute?: Prisma.AttributeUpdateOneRequiredWithoutChoicesNestedInput
+}
+
+export type AttributeChoiceUncheckedUpdateWithoutValuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.StringFieldUpdateOperationsInput | string
+  attributeId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type AttributeChoiceCreateManyAttributeInput = {
   id?: string
   value: string
@@ -401,12 +475,14 @@ export type AttributeChoiceUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  values?: Prisma.AttributeValueUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceUncheckedUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  values?: Prisma.AttributeValueUncheckedUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceUncheckedUpdateManyWithoutAttributeInput = {
@@ -416,6 +492,35 @@ export type AttributeChoiceUncheckedUpdateManyWithoutAttributeInput = {
 }
 
 
+/**
+ * Count Type AttributeChoiceCountOutputType
+ */
+
+export type AttributeChoiceCountOutputType = {
+  values: number
+}
+
+export type AttributeChoiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  values?: boolean | AttributeChoiceCountOutputTypeCountValuesArgs
+}
+
+/**
+ * AttributeChoiceCountOutputType without action
+ */
+export type AttributeChoiceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttributeChoiceCountOutputType
+   */
+  select?: Prisma.AttributeChoiceCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AttributeChoiceCountOutputType without action
+ */
+export type AttributeChoiceCountOutputTypeCountValuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttributeValueWhereInput
+}
+
 
 export type AttributeChoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -423,6 +528,8 @@ export type AttributeChoiceSelect<ExtArgs extends runtime.Types.Extensions.Inter
   attributeId?: boolean
   createdAt?: boolean
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
+  values?: boolean | Prisma.AttributeChoice$valuesArgs<ExtArgs>
+  _count?: boolean | Prisma.AttributeChoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attributeChoice"]>
 
 export type AttributeChoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -451,6 +558,8 @@ export type AttributeChoiceSelectScalar = {
 export type AttributeChoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "attributeId" | "createdAt", ExtArgs["result"]["attributeChoice"]>
 export type AttributeChoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
+  values?: boolean | Prisma.AttributeChoice$valuesArgs<ExtArgs>
+  _count?: boolean | Prisma.AttributeChoiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AttributeChoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
@@ -463,6 +572,7 @@ export type $AttributeChoicePayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "AttributeChoice"
   objects: {
     attribute: Prisma.$AttributePayload<ExtArgs>
+    values: Prisma.$AttributeValuePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -864,6 +974,7 @@ readonly fields: AttributeChoiceFieldRefs;
 export interface Prisma__AttributeChoiceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   attribute<T extends Prisma.AttributeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeDefaultArgs<ExtArgs>>): Prisma.Prisma__AttributeClient<runtime.Types.Result.GetResult<Prisma.$AttributePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  values<T extends Prisma.AttributeChoice$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeChoice$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1295,6 +1406,30 @@ export type AttributeChoiceDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many AttributeChoices to delete.
    */
   limit?: number
+}
+
+/**
+ * AttributeChoice.values
+ */
+export type AttributeChoice$valuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttributeValue
+   */
+  select?: Prisma.AttributeValueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttributeValue
+   */
+  omit?: Prisma.AttributeValueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttributeValueInclude<ExtArgs> | null
+  where?: Prisma.AttributeValueWhereInput
+  orderBy?: Prisma.AttributeValueOrderByWithRelationInput | Prisma.AttributeValueOrderByWithRelationInput[]
+  cursor?: Prisma.AttributeValueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttributeValueScalarFieldEnum | Prisma.AttributeValueScalarFieldEnum[]
 }
 
 /**

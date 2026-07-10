@@ -10,6 +10,7 @@ import SignInPage from "./app/sign-in/SignInPage";
 import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
 import PositionsPage from "./app/positions/PositionsPage";
+import ProfilePage from "./app/profile/ProfilePage";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
+          {
+            path: "/profile",
+            element: <ProfilePage />,
+          },
           {
             path: "/users",
             element: <UsersPage />,

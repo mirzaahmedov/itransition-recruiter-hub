@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/UserProfile.js'
 export type * from './models/User.js'
 export type * from './models/AttributeCategory.js'
 export type * from './models/Attribute.js'

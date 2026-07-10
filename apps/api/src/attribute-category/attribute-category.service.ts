@@ -14,6 +14,15 @@ export class AttributeCategoryService {
     return categories;
   }
 
+  async getAllNestedChilds() {
+    const categories = await this.prisma.attributeCategory.findMany({
+      include: {
+        attributes: true,
+      },
+    });
+    return categories;
+  }
+
   async create(payload: AttributeCategoryCreateInput) {
     const category = await this.prisma.attributeCategory.create({
       data: payload,

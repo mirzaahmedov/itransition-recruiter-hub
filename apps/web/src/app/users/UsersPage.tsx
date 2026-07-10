@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { bulkUpdateRoles, fetchUsers } from "./api";
 import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
-import { UserRole, type User } from "@/types/prisma/browser";
+import { UserRole, type User } from "@rh/database/browser";
 import { useState } from "react";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
 import { FloatingPopover } from "@/components/FloatingPopover";

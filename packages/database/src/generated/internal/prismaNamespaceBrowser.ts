@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  UserProfile: 'UserProfile',
   User: 'User',
   AttributeCategory: 'AttributeCategory',
   Attribute: 'Attribute',
@@ -76,6 +77,14 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const UserProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+} as const
+
+export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -124,14 +133,15 @@ export type AttributeChoiceScalarFieldEnum = (typeof AttributeChoiceScalarFieldE
 export const AttributeValueScalarFieldEnum = {
   id: 'id',
   attributeId: 'attributeId',
-  cvId: 'cvId',
   textValue: 'textValue',
   numberValue: 'numberValue',
   booleanValue: 'booleanValue',
   dateValue: 'dateValue',
   startDateValue: 'startDateValue',
   endDateValue: 'endDateValue',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  choiceId: 'choiceId',
+  profileId: 'profileId'
 } as const
 
 export type AttributeValueScalarFieldEnum = (typeof AttributeValueScalarFieldEnum)[keyof typeof AttributeValueScalarFieldEnum]

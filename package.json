@@ -23,7 +23,9 @@
   "license": "ISC",
   "scripts": {
     "dev": "turbo run dev",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "db:generate": "npm run db:generate -w @rh/database",
+    "db:migrate": "npm run db:migrate -w @rh/database"
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
@@ -36,6 +38,7 @@
     "typescript-eslint": "^8.62.1"
   },
   "dependencies": {
+    "react-number-format": "^5.4.5",
     "rollup-plugin-dts": "^6.4.1",
     "zod": "^4.4.3"
   }

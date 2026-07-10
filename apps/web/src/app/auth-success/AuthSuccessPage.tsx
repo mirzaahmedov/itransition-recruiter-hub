@@ -1,4 +1,4 @@
-import { UserRole } from "@/types/prisma/enums";
+import { UserRole } from "@rh/database/browser";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 

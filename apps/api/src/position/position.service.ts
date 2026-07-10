@@ -12,8 +12,8 @@ export class PositionService {
         title: payload.title,
         description: payload.description,
         attributes: {
-          connect: payload.attributes.map(({ id }) => ({
-            id,
+          create: payload.attributes.map((attr) => ({
+            attributeId: attr.id,
           })),
         },
       },
@@ -21,8 +21,12 @@ export class PositionService {
     return position;
   }
 
-  findAll() {
-    return `This action returns all position`;
+  async findAll() {
+    return await this.prisma.position.findMany({
+      include: {
+        attributes: true,
+      },
+    });
   }
 
   findOne(id: number) {

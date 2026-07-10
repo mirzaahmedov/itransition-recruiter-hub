@@ -166,14 +166,12 @@ export type CVWhereInput = {
   id?: Prisma.StringFilter<"CV"> | string
   name?: Prisma.StringFilter<"CV"> | string
   email?: Prisma.StringFilter<"CV"> | string
-  attribute_values?: Prisma.AttributeValueListRelationFilter
 }
 
 export type CVOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  attribute_values?: Prisma.AttributeValueOrderByRelationAggregateInput
 }
 
 export type CVWhereUniqueInput = Prisma.AtLeast<{
@@ -183,7 +181,6 @@ export type CVWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CVWhereInput | Prisma.CVWhereInput[]
   name?: Prisma.StringFilter<"CV"> | string
   email?: Prisma.StringFilter<"CV"> | string
-  attribute_values?: Prisma.AttributeValueListRelationFilter
 }, "id">
 
 export type CVOrderByWithAggregationInput = {
@@ -208,28 +205,24 @@ export type CVCreateInput = {
   id?: string
   name: string
   email: string
-  attribute_values?: Prisma.AttributeValueCreateNestedManyWithoutCvInput
 }
 
 export type CVUncheckedCreateInput = {
   id?: string
   name: string
   email: string
-  attribute_values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutCvInput
 }
 
 export type CVUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  attribute_values?: Prisma.AttributeValueUpdateManyWithoutCvNestedInput
 }
 
 export type CVUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  attribute_values?: Prisma.AttributeValueUncheckedUpdateManyWithoutCvNestedInput
 }
 
 export type CVCreateManyInput = {
@@ -250,11 +243,6 @@ export type CVUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type CVScalarRelationFilter = {
-  is?: Prisma.CVWhereInput
-  isNot?: Prisma.CVWhereInput
-}
-
 export type CVCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -273,97 +261,12 @@ export type CVMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
 }
 
-export type CVCreateNestedOneWithoutAttribute_valuesInput = {
-  create?: Prisma.XOR<Prisma.CVCreateWithoutAttribute_valuesInput, Prisma.CVUncheckedCreateWithoutAttribute_valuesInput>
-  connectOrCreate?: Prisma.CVCreateOrConnectWithoutAttribute_valuesInput
-  connect?: Prisma.CVWhereUniqueInput
-}
-
-export type CVUpdateOneRequiredWithoutAttribute_valuesNestedInput = {
-  create?: Prisma.XOR<Prisma.CVCreateWithoutAttribute_valuesInput, Prisma.CVUncheckedCreateWithoutAttribute_valuesInput>
-  connectOrCreate?: Prisma.CVCreateOrConnectWithoutAttribute_valuesInput
-  upsert?: Prisma.CVUpsertWithoutAttribute_valuesInput
-  connect?: Prisma.CVWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CVUpdateToOneWithWhereWithoutAttribute_valuesInput, Prisma.CVUpdateWithoutAttribute_valuesInput>, Prisma.CVUncheckedUpdateWithoutAttribute_valuesInput>
-}
-
-export type CVCreateWithoutAttribute_valuesInput = {
-  id?: string
-  name: string
-  email: string
-}
-
-export type CVUncheckedCreateWithoutAttribute_valuesInput = {
-  id?: string
-  name: string
-  email: string
-}
-
-export type CVCreateOrConnectWithoutAttribute_valuesInput = {
-  where: Prisma.CVWhereUniqueInput
-  create: Prisma.XOR<Prisma.CVCreateWithoutAttribute_valuesInput, Prisma.CVUncheckedCreateWithoutAttribute_valuesInput>
-}
-
-export type CVUpsertWithoutAttribute_valuesInput = {
-  update: Prisma.XOR<Prisma.CVUpdateWithoutAttribute_valuesInput, Prisma.CVUncheckedUpdateWithoutAttribute_valuesInput>
-  create: Prisma.XOR<Prisma.CVCreateWithoutAttribute_valuesInput, Prisma.CVUncheckedCreateWithoutAttribute_valuesInput>
-  where?: Prisma.CVWhereInput
-}
-
-export type CVUpdateToOneWithWhereWithoutAttribute_valuesInput = {
-  where?: Prisma.CVWhereInput
-  data: Prisma.XOR<Prisma.CVUpdateWithoutAttribute_valuesInput, Prisma.CVUncheckedUpdateWithoutAttribute_valuesInput>
-}
-
-export type CVUpdateWithoutAttribute_valuesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type CVUncheckedUpdateWithoutAttribute_valuesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-
-/**
- * Count Type CVCountOutputType
- */
-
-export type CVCountOutputType = {
-  attribute_values: number
-}
-
-export type CVCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  attribute_values?: boolean | CVCountOutputTypeCountAttribute_valuesArgs
-}
-
-/**
- * CVCountOutputType without action
- */
-export type CVCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CVCountOutputType
-   */
-  select?: Prisma.CVCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * CVCountOutputType without action
- */
-export type CVCountOutputTypeCountAttribute_valuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AttributeValueWhereInput
-}
 
 
 export type CVSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
-  attribute_values?: boolean | Prisma.CV$attribute_valuesArgs<ExtArgs>
-  _count?: boolean | Prisma.CVCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cV"]>
 
 export type CVSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -385,18 +288,10 @@ export type CVSelectScalar = {
 }
 
 export type CVOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email", ExtArgs["result"]["cV"]>
-export type CVInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  attribute_values?: boolean | Prisma.CV$attribute_valuesArgs<ExtArgs>
-  _count?: boolean | Prisma.CVCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type CVIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type CVIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $CVPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CV"
-  objects: {
-    attribute_values: Prisma.$AttributeValuePayload<ExtArgs>[]
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -795,7 +690,6 @@ readonly fields: CVFieldRefs;
  */
 export interface Prisma__CVClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  attribute_values<T extends Prisma.CV$attribute_valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CV$attribute_valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -845,10 +739,6 @@ export type CVFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
-  /**
    * Filter, which CV to fetch.
    */
   where: Prisma.CVWhereUniqueInput
@@ -867,10 +757,6 @@ export type CVFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
-  /**
    * Filter, which CV to fetch.
    */
   where: Prisma.CVWhereUniqueInput
@@ -888,10 +774,6 @@ export type CVFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the CV
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
   /**
    * Filter, which CV to fetch.
    */
@@ -941,10 +823,6 @@ export type CVFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
-  /**
    * Filter, which CV to fetch.
    */
   where?: Prisma.CVWhereInput
@@ -992,10 +870,6 @@ export type CVFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the CV
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
   /**
    * Filter, which CVS to fetch.
    */
@@ -1045,10 +919,6 @@ export type CVCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
-  /**
    * The data needed to create a CV.
    */
   data: Prisma.XOR<Prisma.CVCreateInput, Prisma.CVUncheckedCreateInput>
@@ -1096,10 +966,6 @@ export type CVUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
    * Omit specific fields from the CV
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
   /**
    * The data needed to update a CV.
    */
@@ -1167,10 +1033,6 @@ export type CVUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
-  /**
    * The filter to search for the CV to update in case it exists.
    */
   where: Prisma.CVWhereUniqueInput
@@ -1197,10 +1059,6 @@ export type CVDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
-  /**
    * Filter which CV to delete.
    */
   where: Prisma.CVWhereUniqueInput
@@ -1221,30 +1079,6 @@ export type CVDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
- * CV.attribute_values
- */
-export type CV$attribute_valuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AttributeValue
-   */
-  select?: Prisma.AttributeValueSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AttributeValue
-   */
-  omit?: Prisma.AttributeValueOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AttributeValueInclude<ExtArgs> | null
-  where?: Prisma.AttributeValueWhereInput
-  orderBy?: Prisma.AttributeValueOrderByWithRelationInput | Prisma.AttributeValueOrderByWithRelationInput[]
-  cursor?: Prisma.AttributeValueWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AttributeValueScalarFieldEnum | Prisma.AttributeValueScalarFieldEnum[]
-}
-
-/**
  * CV without action
  */
 export type CVDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1256,8 +1090,4 @@ export type CVDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
    * Omit specific fields from the CV
    */
   omit?: Prisma.CVOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CVInclude<ExtArgs> | null
 }

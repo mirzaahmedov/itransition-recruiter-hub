@@ -23,6 +23,10 @@ export class AttributeCategoryController {
     return ok(await this.categoryService.getAll());
   }
 
+  async getCategoriesWidthChilds() {
+    return ok(await this.categoryService.getAllNestedChilds());
+  }
+
   @Post()
   async create(@Body() payload: AttributeCategoryCreateInput) {
     return ok(await this.categoryService.create(payload));

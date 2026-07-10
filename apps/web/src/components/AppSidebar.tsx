@@ -1,4 +1,4 @@
-import { BriefcaseIcon, ReadCvLogoIcon, TagIcon, UserFocusIcon, UsersIcon } from "@phosphor-icons/react";
+import { BriefcaseIcon, ReadCvLogoIcon, TagIcon, UserFocusIcon, UserListIcon, UsersIcon } from "@phosphor-icons/react";
 import { NavLink } from "react-router-dom";
 
 export const AppSidebar = () => {
@@ -13,6 +13,10 @@ export const AppSidebar = () => {
       <div>
         <ul className="menu w-full">
           <li>
+            <NavLink to="/profile" className={({ isActive }) => (isActive ? "menu-active" : "")}>
+              <UserListIcon className="icon" />
+              Profile
+            </NavLink>
             <NavLink to="/users" className={({ isActive }) => (isActive ? "menu-active" : "")}>
               <UsersIcon className="icon" />
               Users

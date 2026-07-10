@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { PositionService } from './position.service';
 import { PositionCreatePayload } from '@rh/shared';
+import { ok } from '@/models/api';
 
 @Controller('positions')
 export class PositionController {
@@ -20,8 +21,8 @@ export class PositionController {
   }
 
   @Get()
-  findAll() {
-    return this.positionService.findAll();
+  async findAll() {
+    return ok(await this.positionService.findAll());
   }
 
   @Get(':id')
