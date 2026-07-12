@@ -10,6 +10,7 @@ import { AttributeModule } from './attribute/attribute.module';
 import { AttributeChoiceModule } from './attribute-choice/attribute-choice.module';
 import { PositionModule } from './position/position.module';
 import { CategoryModule } from './category/category.module';
+import { ProfileAttributeModule } from './profile-attribute/profile-attribute.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CategoryModule } from './category/category.module';
     AttributeChoiceModule,
     PositionModule,
     CategoryModule,
+    ProfileAttributeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

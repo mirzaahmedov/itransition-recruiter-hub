@@ -2,9 +2,6 @@
 @import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));
-@plugin "daisyui" {
-  themes: corporate, business;
-}
 
 @theme {
   --color-base-divider: color-mix(in oklab, var(--color-base-content) 10%, transparent);
@@ -266,6 +263,6 @@ body,
     font-family: var(--font-mono);
   }
   html {
-    @apply font-sans font-mono;
+    @apply font-sans;
   }
 }

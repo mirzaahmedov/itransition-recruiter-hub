@@ -17,7 +17,11 @@ export class UserService {
         userId,
       },
       include: {
-        attrs: true,
+        attrs: {
+          include: {
+            attribute: true,
+          },
+        },
       },
     });
     return profile;

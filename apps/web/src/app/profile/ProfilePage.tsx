@@ -1,36 +1,33 @@
-import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
+import { useCategories } from "@/app/categories/useCategories";
+import { AttributePicker } from "@/components/AttributePicker/AttributePickerV2";
+import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import type { AttributeWithChoices } from "../attributes/api";
-import { createProfileAttributeValue, fetchProfile } from "./api";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@phosphor-icons/react";
-import { AttributeEditor } from "@/components/AttributeEditor";
-import { AttributeType } from "@rh/database/enums";
 import type { Attribute, AttributeValue } from "@rh/database/browser";
+import { AttributeType } from "@rh/database/enums";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createProfileAttribute, fetchProfile } from "./api";
 
 const ProfilePage = () => {
   const user = useAuthStore((store) => store.user);
-
-  const [value, setValue] = useState<unknown>();
-  const [attrData, setAttrData] = useState<AttributeWithChoices>();
 
   const { data: profileData } = useQuery({
     queryKey: ["user/profile", user?.id],
     queryFn: fetchProfile,
   });
 
+  const categories = useCategories();
+
   const createProfileAttributeMutation = useMutation({
-    mutationFn: createProfileAttributeValue,
+    mutationFn: createProfileAttribute,
   });
 
   const handleSelectAttribute = (attr: Attribute) => {
-    setValue(getDynamicDefaultValue(attr.type));
-    setAttrData(attr);
+    createProfileAttributeMutation
+      .mutateAsync({
+        attrId: attr.id,
+      })
+      .then(console.log);
   };
 
   return (
@@ -39,43 +36,21 @@ const ProfilePage = () => {
         <FieldLabel>Attribute</FieldLabel>
         <AttributePicker onSelect={handleSelectAttribute} />
       </Field>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (profileData?.data) {
-            createProfileAttributeMutation.mutate({
-              attributeId: attrData.id,
-              profileId: profileData.data.id,
-              ...getDynamicValueObject(value, attrData.type),
-            });
-          }
-        }}
-      >
-        {attrData ? (
-          <div className="flex items-end gap-5">
-            <Field>
-              <FieldLabel>Name</FieldLabel>
-              <Input readOnly value={attrData.name} />
-            </Field>
-            <Field>
-              <FieldLabel>Type</FieldLabel>
-              <Input readOnly value={attrData.type} />
-            </Field>
-            <Field>
-              <FieldLabel>Type</FieldLabel>
-              <AttributeEditor value={value} onValueChange={setValue} type={attrData.type} />
-            </Field>
-            <Button>
-              <PlusIcon />
-              Add
-            </Button>
-          </div>
-        ) : null}
-      </Form>
 
-      {profileData?.data?.attrs?.map((attr) => (
-        <div key={attr.id}>{attr.id}</div>
-      ))}
+      <Accordion className="w-full" multiple>
+        {categories.map((category) => (
+          <AccordionItem key={category.id} value="item-1">
+            <AccordionTrigger>{category.name}</AccordionTrigger>
+            <AccordionPanel>
+              {profileData?.data?.attrs
+                .filter((attr) => attr.attribute.categoryId === category.id)
+                .map((attr) => (
+                  <li>{attr.attribute.name}</li>
+                ))}
+            </AccordionPanel>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 };

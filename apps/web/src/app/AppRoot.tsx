@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "./api";
+import { Spinner } from "@/components/ui/spinner";
 
 const AppRoot = () => {
   const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
@@ -39,7 +40,7 @@ const AppRoot = () => {
     <Outlet />
   ) : (
     <div className="h-full grid place-content-center">
-      <div className="loading loading-xl loading-spinner"></div>
+      <Spinner size={40} />
     </div>
   );
 };

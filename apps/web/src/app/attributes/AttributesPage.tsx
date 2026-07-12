@@ -1,27 +1,32 @@
-import { AttributeCategoryList } from "@/components/AttributeCategory/AttributeCategoryList";
 import { GenericTable } from "@/components/GenericTable/GenericTable";
 import { rowDataWithFallback } from "@/lib/table/utils";
-import type { AttributeGetPayload } from "@/types/prisma/models";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { createAttribute, fetchAttributes } from "./api";
 
 import type { AttributeCreatePayload } from "@rh/shared";
 import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
 import { useDialogState } from "@/hooks/use-dialog-state";
+import type { AttributeGetPayload } from "@rh/database/models";
+import { Spinner } from "@/components/ui/spinner";
 
 const columns: ColumnDef<
   AttributeGetPayload<{
     include: {
       choices: true;
+      category: true;
     };
   }>
 >[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    id: "category",
+    header: "Category",
+    cell: ({ row }) => row.original.category.name,
   },
   {
     accessorKey: "type",
@@ -41,15 +46,12 @@ const columns: ColumnDef<
 ];
 
 export const AttributesPage = () => {
-  const [categoryId, setCategoryId] = useState("");
-
   const createDialog = useDialogState();
   const queryClient = useQueryClient();
 
-  const { data: attributes } = useQuery({
+  const { data: attributes, isLoading } = useQuery({
     queryKey: ["attributes"],
-    queryFn: () => fetchAttributes(categoryId!),
-    enabled: !!categoryId,
+    queryFn: () => fetchAttributes(),
   });
 
   const createAttributeMutation = useMutation({
@@ -70,7 +72,7 @@ export const AttributesPage = () => {
   };
 
   const handleSubmit = (payload: AttributeCreatePayload) => {
-    const { name, type, choices } = payload;
+    const { name, type, choices, categoryId } = payload;
 
     createAttributeMutation.mutate(
       {
@@ -94,21 +96,16 @@ export const AttributesPage = () => {
 
   return (
     <div className="h-full flex">
-      <AttributeCategoryList categoryId={categoryId} onCategoryChange={setCategoryId} />
       <div className="flex-1 flex flex-col">
         <div className="p-2 flex items-center justify-end border-b">
-          {categoryId && (
-            <AttibuteCreateDialog
-              open={createDialog.open}
-              onOpenChange={createDialog.setOpen}
-              onSubmit={handleSubmit}
-              isSubmitting={createAttributeMutation.isPending}
-            />
-          )}
+          <AttibuteCreateDialog
+            open={createDialog.open}
+            onOpenChange={createDialog.setOpen}
+            onSubmit={handleSubmit}
+            isSubmitting={createAttributeMutation.isPending}
+          />
         </div>
-        <div className="flex-1">
-          <GenericTable instance={table} />
-        </div>
+        <div className="flex-1">{isLoading ? <Spinner /> : <GenericTable instance={table} />}</div>
       </div>
     </div>
   );

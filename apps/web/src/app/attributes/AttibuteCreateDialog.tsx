@@ -10,8 +10,9 @@ import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/c
 import { AttributeCreateSchema, type AttributeCreatePayload } from "@rh/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useEffect, type FC } from "react";
+import { useEffect, useMemo, type FC } from "react";
 import { AttributeType } from "@rh/database/enums";
+import { useCategories } from "../categories/useCategories";
 
 export const AttibuteCreateDialog: FC<{
   open: boolean;
@@ -19,6 +20,8 @@ export const AttibuteCreateDialog: FC<{
   onSubmit: (values: AttributeCreatePayload) => void;
   isSubmitting: boolean;
 }> = ({ open, onOpenChange, onSubmit, isSubmitting = false }) => {
+  const categories = useCategories();
+
   const form = useForm({
     resolver: zodResolver(AttributeCreateSchema),
     defaultValues: {
@@ -44,6 +47,13 @@ export const AttibuteCreateDialog: FC<{
     }
   }, [open]);
 
+  const categoryOptions = useMemo(() => {
+    return categories.map((c) => ({
+      label: c.name,
+      value: c.id,
+    }));
+  }, [categories]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger render={<Button />}>
@@ -55,6 +65,29 @@ export const AttibuteCreateDialog: FC<{
         </DialogHeader>
         <Form className="contents" onSubmit={handleSubmit}>
           <DialogPanel className="grid gap-4">
+            <Field>
+              <FieldLabel>Name</FieldLabel>
+              <Controller
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <Select inputRef={field.ref} value={field.value} onValueChange={field.onChange} disabled={field.disabled} items={categoryOptions}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectPopup>
+                      {categoryOptions.map(({ value, label }) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </Select>
+                )}
+              />
+              <FieldError />
+            </Field>
+
             <Field>
               <FieldLabel>Name</FieldLabel>
               <Input type="text" {...form.register("name")} />

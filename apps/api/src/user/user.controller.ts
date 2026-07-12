@@ -21,7 +21,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   async getUserProfile(@AuthUser() user: User) {
     const profile = await this.userService.findUserProfile(user.id);
-    ok(profile);
+    return ok(profile);
   }
 
   @Patch('bulk-change-roles')

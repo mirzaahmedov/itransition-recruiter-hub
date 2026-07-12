@@ -31,6 +31,22 @@ export class AttributeService {
       },
       include: {
         choices: true,
+        category: true,
+      },
+    });
+  }
+
+  async search(search: string) {
+    return await this.prisma.category.findMany({
+      include: {
+        attrs: {
+          where: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
       },
     });
   }
