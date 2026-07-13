@@ -16,7 +16,7 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import { ArrowDownIcon, ArrowUpIcon } from "@phosphor-icons/react";
+import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from "@phosphor-icons/react";
 import { CornerDownLeftIcon } from "lucide-react";
 import { useEffect, useRef, useState, type FC } from "react";
 import { Fragment } from "react/jsx-runtime";
@@ -64,11 +64,7 @@ export const AttributePicker: FC<{
   return (
     <CommandDialog onOpenChange={setOpen} open={open}>
       <CommandDialogTrigger render={<Button variant="outline" />}>
-        Open Command Palette
-        <KbdGroup>
-          <Kbd>⌘</Kbd>
-          <Kbd>J</Kbd>
-        </KbdGroup>
+        <PlusIcon /> Add attribute
       </CommandDialogTrigger>
       <CommandDialogPopup>
         <Command items={groupedItems} value={inputValue} onValueChange={setInputValue}>

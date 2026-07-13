@@ -7,9 +7,18 @@ import type { Attribute, AttributeValue } from "@rh/database/browser";
 import { AttributeType } from "@rh/database/enums";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createProfileAttribute, fetchProfile } from "./api";
+import { AttributeEditor } from "@/components/AttributeEditor";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 const ProfilePage = () => {
   const user = useAuthStore((store) => store.user);
+
+  const form = useForm({
+    defaultValues: {
+      attrs: {} as Record<string, any>,
+    },
+  });
 
   const { data: profileData } = useQuery({
     queryKey: ["user/profile", user?.id],
@@ -30,22 +39,48 @@ const ProfilePage = () => {
       .then(console.log);
   };
 
-  return (
-    <div>
-      <Field>
-        <FieldLabel>Attribute</FieldLabel>
-        <AttributePicker onSelect={handleSelectAttribute} />
-      </Field>
+  useEffect(() => {
+    if (profileData?.data?.attrs) {
+      form.reset({
+        attrs: profileData.data.attrs.reduce((result, item) => {
+          console.log({ item });
+          result[item.id] = readDynamicValue(item.attribute.type, item) ?? getDynamicDefaultValue(item.attribute.type);
+          return result;
+        }, {}),
+      });
+    } else {
+      form.reset({
+        attrs: {},
+      });
+    }
+  }, [profileData]);
 
-      <Accordion className="w-full" multiple>
+  console.log({ values: form.watch("attrs") });
+
+  return (
+    <div className="h-full overflow-y-auto overflow-x-hidden p-5">
+      <AttributePicker onSelect={handleSelectAttribute} />
+
+      <Accordion multiple>
         {categories.map((category) => (
-          <AccordionItem key={category.id} value="item-1">
+          <AccordionItem key={category.id} value={category.id}>
             <AccordionTrigger>{category.name}</AccordionTrigger>
             <AccordionPanel>
               {profileData?.data?.attrs
                 .filter((attr) => attr.attribute.categoryId === category.id)
-                .map((attr) => (
-                  <li>{attr.attribute.name}</li>
+                .map((item) => (
+                  <li key={item.id}>
+                    <div className="p-5 grid grid-cols-2">
+                      <span>{item.attribute.name}</span>
+                      <div>
+                        <Controller
+                          control={form.control}
+                          name={`attrs.${item.id}`}
+                          render={({ field }) => <AttributeEditor type={item.attribute.type} value={field.value} onValueChange={field.onChange} />}
+                        />
+                      </div>
+                    </div>
+                  </li>
                 ))}
             </AccordionPanel>
           </AccordionItem>
@@ -69,6 +104,23 @@ function getDynamicDefaultValue(type: AttributeType) {
       return [null, null];
     default:
       return "";
+  }
+}
+
+function readDynamicValue(type: AttributeType, record: AttributeValue): any {
+  switch (type) {
+    case AttributeType.NUMERIC:
+      return record.numberValue;
+    case AttributeType.BOOLEAN:
+      return record.booleanValue;
+    case AttributeType.CHOICE:
+      return record.choiceId;
+    case AttributeType.DATE:
+      return record.dateValue;
+    case AttributeType.DATEPERIOD:
+      return [record.startDateValue, record.endDateValue];
+    default:
+      return record.textValue;
   }
 }
 
