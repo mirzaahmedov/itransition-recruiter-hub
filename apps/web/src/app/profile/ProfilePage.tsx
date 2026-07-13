@@ -1,18 +1,21 @@
 import { useCategories } from "@/app/categories/useCategories";
+import { AttributeEditor } from "@/components/AttributeEditor";
 import { AttributePicker } from "@/components/AttributePicker/AttributePickerV2";
 import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
-import { Field, FieldLabel } from "@/components/ui/field";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { Attribute, AttributeValue } from "@rh/database/browser";
-import { AttributeType } from "@rh/database/enums";
+import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createProfileAttribute, fetchProfile } from "./api";
-import { AttributeEditor } from "@/components/AttributeEditor";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { createProfileAttribute, fetchProfile, updateProfileAttribute } from "./api";
+import type { ProfileAttributeUpdatePayload } from "@rh/shared";
+import type { AttributeValueGetPayload } from "@rh/database/models";
 
 const ProfilePage = () => {
   const user = useAuthStore((store) => store.user);
+
+  const timers = useRef<Record<string, number>>({});
 
   const form = useForm({
     defaultValues: {
@@ -29,6 +32,10 @@ const ProfilePage = () => {
 
   const createProfileAttributeMutation = useMutation({
     mutationFn: createProfileAttribute,
+  });
+
+  const updateProfileAttributeMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: ProfileAttributeUpdatePayload }) => updateProfileAttribute(id, payload),
   });
 
   const handleSelectAttribute = (attr: Attribute) => {
@@ -57,6 +64,28 @@ const ProfilePage = () => {
 
   console.log({ values: form.watch("attrs") });
 
+  const handleChangeField = (
+    attr: AttributeValueGetPayload<{
+      include: {
+        attribute: true;
+      };
+    }>,
+    value: any,
+  ) => {
+    if (timers.current[attr.id]) {
+      clearTimeout(timers.current[attr.id]);
+    }
+
+    const timeoutId = setTimeout(() => {
+      updateProfileAttributeMutation.mutate({
+        id: attr.id,
+        payload: getDynamicValueObject(value, attr.attribute.type) as any,
+      });
+    }, 1000);
+
+    timers.current[attr.id] = timeoutId;
+  };
+
   return (
     <div className="h-full overflow-y-auto overflow-x-hidden p-5">
       <AttributePicker onSelect={handleSelectAttribute} />
@@ -76,7 +105,16 @@ const ProfilePage = () => {
                         <Controller
                           control={form.control}
                           name={`attrs.${item.id}`}
-                          render={({ field }) => <AttributeEditor type={item.attribute.type} value={field.value} onValueChange={field.onChange} />}
+                          render={({ field }) => (
+                            <AttributeEditor
+                              type={item.attribute.type}
+                              value={field.value}
+                              onValueChange={(value) => {
+                                handleChangeField(item, value);
+                                field.onChange(value);
+                              }}
+                            />
+                          )}
                         />
                       </div>
                     </div>
@@ -89,56 +127,5 @@ const ProfilePage = () => {
     </div>
   );
 };
-
-function getDynamicDefaultValue(type: AttributeType) {
-  switch (type) {
-    case AttributeType.NUMERIC:
-      return 0;
-    case AttributeType.BOOLEAN:
-      return false;
-    case AttributeType.CHOICE:
-      return null;
-    case AttributeType.DATE:
-      return null;
-    case AttributeType.DATEPERIOD:
-      return [null, null];
-    default:
-      return "";
-  }
-}
-
-function readDynamicValue(type: AttributeType, record: AttributeValue): any {
-  switch (type) {
-    case AttributeType.NUMERIC:
-      return record.numberValue;
-    case AttributeType.BOOLEAN:
-      return record.booleanValue;
-    case AttributeType.CHOICE:
-      return record.choiceId;
-    case AttributeType.DATE:
-      return record.dateValue;
-    case AttributeType.DATEPERIOD:
-      return [record.startDateValue, record.endDateValue];
-    default:
-      return record.textValue;
-  }
-}
-
-function getDynamicValueObject(value: any, type: AttributeType): Partial<AttributeValue> {
-  switch (type) {
-    case AttributeType.NUMERIC:
-      return { numberValue: value };
-    case AttributeType.BOOLEAN:
-      return { booleanValue: value };
-    case AttributeType.CHOICE:
-      return { choiceId: value };
-    case AttributeType.DATE:
-      return { dateValue: value };
-    case AttributeType.DATEPERIOD:
-      return { startDateValue: value[0], endDateValue: value[1] };
-    default:
-      return { textValue: String(value) };
-  }
-}
 
 export default ProfilePage;

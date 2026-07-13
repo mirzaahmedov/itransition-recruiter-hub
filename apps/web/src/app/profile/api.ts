@@ -1,7 +1,7 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { UserProfileGetPayload } from "@rh/database/models";
-import type { ProfileAttributeCreatePayload } from "@rh/shared";
+import type { ProfileAttributeCreatePayload, ProfileAttributeUpdatePayload } from "@rh/shared";
 
 export type UserProfileWithAttributes = UserProfileGetPayload<{
   include: {
@@ -20,5 +20,10 @@ export async function fetchProfile() {
 
 export async function createProfileAttribute(payload: ProfileAttributeCreatePayload) {
   const res = await privateApi.post("/profile-attributes", payload);
+  return res.data;
+}
+
+export async function updateProfileAttribute(id: string, payload: ProfileAttributeUpdatePayload) {
+  const res = await privateApi.patch(`/profile-attributes/${id}`, payload);
   return res.data;
 }
