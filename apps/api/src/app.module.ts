@@ -7,10 +7,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AttributeModule } from './attribute/attribute.module';
-import { AttributeChoiceModule } from './attribute-choice/attribute-choice.module';
 import { PositionModule } from './position/position.module';
 import { CategoryModule } from './category/category.module';
 import { ProfileAttributeModule } from './profile-attribute/profile-attribute.module';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { APP_PIPE } from '@nestjs/core';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -28,12 +30,18 @@ import { ProfileAttributeModule } from './profile-attribute/profile-attribute.mo
     AuthModule,
     UserModule,
     AttributeModule,
-    AttributeChoiceModule,
     PositionModule,
     CategoryModule,
     ProfileAttributeModule,
+    StorageModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
+    },
+  ],
 })
 export class AppModule {}

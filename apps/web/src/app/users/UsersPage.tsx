@@ -4,10 +4,14 @@ import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstac
 import { UserRole, type User } from "@rh/database/browser";
 import { useState } from "react";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
-import { FloatingPopover } from "@/components/FloatingPopover";
 import { countSelectRows, rowSelectionToArray } from "@/lib/table/utils";
 import toast from "react-hot-toast";
 import { GenericTable } from "@/components/GenericTable/GenericTable";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverPopup, PopoverTrigger } from "@/components/ui/popover";
+import { fallbackName } from "@/utils/fallbackName";
 
 const UsersPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -37,23 +41,21 @@ const UsersPage = () => {
       {
         id: "id",
         header: ({ table }) => (
-          <input
-            type="checkbox"
+          <Checkbox
             name="selectAll"
             id="selectAll"
             className="checkbox"
             checked={table.getIsAllRowsSelected()}
-            onChange={(e) => table.toggleAllRowsSelected(e.target.checked)}
+            onCheckedChange={(checked) => table.toggleAllRowsSelected(checked)}
           />
         ),
         cell: ({ row }) => (
-          <input
-            type="checkbox"
+          <Checkbox
             name="selectAll"
             id="selectAll"
             className="checkbox"
             checked={row.getIsSelected()}
-            onChange={(e) => row.toggleSelected(e.target.checked)}
+            onCheckedChange={(checked) => row.toggleSelected(checked)}
           />
         ),
       },
@@ -62,11 +64,10 @@ const UsersPage = () => {
         header: "Name",
         cell: ({ row }) => (
           <div className="flex items-center gap-5">
-            <div className="avatar">
-              <div className="mask mask-squircle h-12 w-12">
-                <img src={row.original.avatar ?? ""} alt={row.original.name ?? "Profile picture"} />
-              </div>
-            </div>
+            <Avatar>
+              <AvatarImage alt={row.original.name ?? "User avatar"} src={row.original.avatar ?? undefined} />
+              <AvatarFallback>{fallbackName(row.original.name ?? "")}</AvatarFallback>
+            </Avatar>
             <b>{row.original.name}</b>
           </div>
         ),
@@ -91,9 +92,16 @@ const UsersPage = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="p-5 border-b border-base-content/10 flex items-center gap-5">
-        <FloatingPopover
-          placement="bottom-start"
-          render={() => (
+        <Popover>
+          <PopoverTrigger
+            render={
+              <Button disabled={!selectedCount}>
+                <ShieldCheckIcon className="size-5" />
+                Assign new role
+              </Button>
+            }
+          ></PopoverTrigger>
+          <PopoverPopup>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -149,17 +157,13 @@ const UsersPage = () => {
                 </div>
               </fieldset>
 
-              <button type="submit" className="btn btn-primary self-end">
+              <Button type="submit" className="self-end">
                 Change role
-              </button>
+              </Button>
             </form>
-          )}
-        >
-          <button disabled={!selectedCount} className="btn btn-primary">
-            <ShieldCheckIcon className="size-5" />
-            Assign new role
-          </button>
-        </FloatingPopover>
+          </PopoverPopup>
+        </Popover>
+
         <p>
           <b>{selectedCount}</b> user selected
         </p>

@@ -1,15 +1,31 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import type { Request, Response } from 'express';
 import { IGoogleUser } from './strategies/google.strategy';
 import { AuthUser } from './decorators/auth-user.decorator';
-import type { User } from '@rh/database/client';
-import { ok } from '@/models/api';
+import { UserRole, type User } from '@rh/database/client';
+import { makeResponse } from '@/models/api';
+import { UserLoginDto, UserRegisterDto } from './auth.dto';
+import { UserService } from '@/user/user.service';
+import bcrypt from 'bcryptjs';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -26,9 +42,46 @@ export class AuthController {
     );
   }
 
+  @Post('register')
+  async register(@Body() data: UserRegisterDto) {
+    const ecryptedPassword = bcrypt.hashSync(data.password, 10);
+
+    const user = await this.userService.create({
+      name: data.name,
+      email: data.email,
+      password: ecryptedPassword,
+      role: UserRole.CANDIDATE,
+    });
+
+    user.password = null;
+
+    return makeResponse(user);
+  }
+
+  @Post('login')
+  async login(@Body() data: UserLoginDto) {
+    const user = await this.userService.findByEmail(data.email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.password) {
+      throw new UnauthorizedException();
+    }
+
+    if (!bcrypt.compareSync(data.password, user.password)) {
+      throw new UnauthorizedException();
+    }
+
+    user.password = null;
+
+    return makeResponse(user);
+  }
+
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   getProfile(@AuthUser() user: User) {
-    return ok(user);
+    return makeResponse(user);
   }
 }

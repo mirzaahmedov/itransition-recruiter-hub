@@ -65,10 +65,10 @@ export type Attribute = Prisma.AttributeModel
  */
 export type AttributeChoice = Prisma.AttributeChoiceModel
 /**
- * Model AttributeValue
+ * Model ProfileAttribute
  * 
  */
-export type AttributeValue = Prisma.AttributeValueModel
+export type ProfileAttribute = Prisma.ProfileAttributeModel
 /**
  * Model AccessRule
  * 

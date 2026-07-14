@@ -33,7 +33,7 @@ model UserProfile {
   id        String @id @default(cuid())
   userId    String @unique
   user      User @relation(fields: [userId], references: [id])
-  attrs     AttributeValue[]
+  attrs     ProfileAttribute[]
 
   @@map("user_profiles")
 }
@@ -46,6 +46,7 @@ model User {
   googleId  String?  @unique
   role      UserRole
   profile   UserProfile?
+  password  String?
 
   createdAt DateTime @default(now())
 
@@ -71,7 +72,7 @@ model Attribute {
   category              Category @relation(fields: [categoryId], references: [id])
   createdAt             DateTime @default(now())
   choices               AttributeChoice[]
-  values                AttributeValue[]
+  values                ProfileAttribute[]
   positionAttributes    PositionAttribute[]
 
   @@map("attributes")
@@ -84,13 +85,13 @@ model AttributeChoice {
   attributeId     String
   createdAt       DateTime @default(now())
   
-  values          AttributeValue[]
+  values          ProfileAttribute[]
 
   @@unique([attributeId, value])
   @@map("attribute_choices")
 }
 
-model AttributeValue {
+model ProfileAttribute {
   id              String @id @default(cuid())
   
   attributeId     String
@@ -102,13 +103,15 @@ model AttributeValue {
   dateValue       DateTime?
   startDateValue  DateTime?
   endDateValue    DateTime?
-  createdAt       DateTime @default(now())
 
-  choiceId            String?
+  choiceId        String?
   choice          AttributeChoice? @relation(fields: [choiceId], references: [id])
 
   profileId       String
-  profile         UserProfile @relation(fields: [profileId], references: [id])
+  profile         UserProfile      @relation(fields: [profileId], references: [id])
+
+  createdAt       DateTime         @default(now())
+  version         Int              @default(1)
 
   @@unique([attributeId, profileId])
   @@map("attribute_values")

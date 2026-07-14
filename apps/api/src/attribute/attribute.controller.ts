@@ -1,17 +1,17 @@
-import { ok } from '@/models/api';
+import { makeResponse } from '@/models/api';
 import {
   Body,
   Controller,
   Delete,
   Get,
-  HttpStatus,
+  InternalServerErrorException,
   Param,
+  Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
-import { AttributeCreateSchema } from '@rh/shared';
-import { Response } from 'express';
+import { AttributeRenamePayload } from '@rh/shared';
+import { AttributeCreateDto } from './attribute.dto';
 import { AttributeService } from './attribute.service';
 
 @Controller('attributes')
@@ -19,26 +19,33 @@ export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
   @Post()
-  async create(@Res() res: Response, @Body() payload: unknown) {
+  async create(@Body() data: AttributeCreateDto) {
     try {
-      const result = AttributeCreateSchema.safeParse(payload);
-      if (!result.success) {
-        res.status(HttpStatus.BAD_REQUEST).send(result.error);
-        return;
-      }
-      const { name, type, categoryId, choices = [] } = result.data;
+      const { name, type, categoryId, choices = [] } = data;
+
       const attr = await this.attributeService.create({
         name,
         type,
         categoryId,
         choices,
       });
-      res.status(HttpStatus.CREATED).send(ok(attr));
+
+      return makeResponse(attr);
     } catch (err) {
-      console.log({ err });
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send('Internal server error');
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Patch(':id/rename')
+  async rename(@Body() data: AttributeRenamePayload, @Param() id: string) {
+    try {
+      const { name } = data;
+
+      const attr = await this.attributeService.rename(id, name);
+
+      return makeResponse(attr);
+    } catch (err) {
+      throw new InternalServerErrorException();
     }
   }
 
@@ -50,29 +57,16 @@ export class AttributeController {
   @Get()
   async findAll(@Query('categoryId') categoryId: string) {
     const attrs = await this.attributeService.findAll(categoryId);
-    return ok(attrs);
+    return makeResponse(attrs);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.attributeService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Res() res: Response,
-  //   @Param('id') id: string,
-  //   @Body() payload: AttributeCreatePayload,
-  // ) {
-  //   try {
-  //     return this.attributeService.update(id, payload);
-  //   } catch (error) {
-  //     res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Something went wrong');
-  //   }
-  // }
-
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.attributeService.remove(id);
   }
 }

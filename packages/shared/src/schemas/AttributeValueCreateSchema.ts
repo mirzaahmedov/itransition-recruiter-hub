@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const AttributeValueCreateSchema = z.object({
+export const ProfileAttributeCreateSchema = z.object({
   attributeId: z.string(),
 
   textValue: z.string().optional(),
@@ -13,4 +13,4 @@ export const AttributeValueCreateSchema = z.object({
   choiceId: z.string().optional(),
   profileId: z.string(),
 });
-export type AttributeValueCreatePayload = z.infer<typeof AttributeValueCreateSchema>;
+export type ProfileAttributeCreatePayload = z.infer<typeof ProfileAttributeCreateSchema>;

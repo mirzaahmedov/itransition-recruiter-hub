@@ -175,7 +175,7 @@ export type AttributeChoiceWhereInput = {
   attributeId?: Prisma.StringFilter<"AttributeChoice"> | string
   createdAt?: Prisma.DateTimeFilter<"AttributeChoice"> | Date | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
-  values?: Prisma.AttributeValueListRelationFilter
+  values?: Prisma.ProfileAttributeListRelationFilter
 }
 
 export type AttributeChoiceOrderByWithRelationInput = {
@@ -184,7 +184,7 @@ export type AttributeChoiceOrderByWithRelationInput = {
   attributeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   attribute?: Prisma.AttributeOrderByWithRelationInput
-  values?: Prisma.AttributeValueOrderByRelationAggregateInput
+  values?: Prisma.ProfileAttributeOrderByRelationAggregateInput
 }
 
 export type AttributeChoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -197,7 +197,7 @@ export type AttributeChoiceWhereUniqueInput = Prisma.AtLeast<{
   attributeId?: Prisma.StringFilter<"AttributeChoice"> | string
   createdAt?: Prisma.DateTimeFilter<"AttributeChoice"> | Date | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
-  values?: Prisma.AttributeValueListRelationFilter
+  values?: Prisma.ProfileAttributeListRelationFilter
 }, "id" | "attributeId_value">
 
 export type AttributeChoiceOrderByWithAggregationInput = {
@@ -225,7 +225,7 @@ export type AttributeChoiceCreateInput = {
   value: string
   createdAt?: Date | string
   attribute: Prisma.AttributeCreateNestedOneWithoutChoicesInput
-  values?: Prisma.AttributeValueCreateNestedManyWithoutChoiceInput
+  values?: Prisma.ProfileAttributeCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceUncheckedCreateInput = {
@@ -233,7 +233,7 @@ export type AttributeChoiceUncheckedCreateInput = {
   value: string
   attributeId: string
   createdAt?: Date | string
-  values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutChoiceInput
+  values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceUpdateInput = {
@@ -241,7 +241,7 @@ export type AttributeChoiceUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attribute?: Prisma.AttributeUpdateOneRequiredWithoutChoicesNestedInput
-  values?: Prisma.AttributeValueUpdateManyWithoutChoiceNestedInput
+  values?: Prisma.ProfileAttributeUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceUncheckedUpdateInput = {
@@ -249,7 +249,7 @@ export type AttributeChoiceUncheckedUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  values?: Prisma.AttributeValueUncheckedUpdateManyWithoutChoiceNestedInput
+  values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceCreateManyInput = {
@@ -375,14 +375,14 @@ export type AttributeChoiceCreateWithoutAttributeInput = {
   id?: string
   value: string
   createdAt?: Date | string
-  values?: Prisma.AttributeValueCreateNestedManyWithoutChoiceInput
+  values?: Prisma.ProfileAttributeCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceUncheckedCreateWithoutAttributeInput = {
   id?: string
   value: string
   createdAt?: Date | string
-  values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutChoiceInput
+  values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutChoiceInput
 }
 
 export type AttributeChoiceCreateOrConnectWithoutAttributeInput = {
@@ -475,14 +475,14 @@ export type AttributeChoiceUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  values?: Prisma.AttributeValueUpdateManyWithoutChoiceNestedInput
+  values?: Prisma.ProfileAttributeUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceUncheckedUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  values?: Prisma.AttributeValueUncheckedUpdateManyWithoutChoiceNestedInput
+  values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutChoiceNestedInput
 }
 
 export type AttributeChoiceUncheckedUpdateManyWithoutAttributeInput = {
@@ -518,7 +518,7 @@ export type AttributeChoiceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Ty
  * AttributeChoiceCountOutputType without action
  */
 export type AttributeChoiceCountOutputTypeCountValuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AttributeValueWhereInput
+  where?: Prisma.ProfileAttributeWhereInput
 }
 
 
@@ -572,7 +572,7 @@ export type $AttributeChoicePayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "AttributeChoice"
   objects: {
     attribute: Prisma.$AttributePayload<ExtArgs>
-    values: Prisma.$AttributeValuePayload<ExtArgs>[]
+    values: Prisma.$ProfileAttributePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -974,7 +974,7 @@ readonly fields: AttributeChoiceFieldRefs;
 export interface Prisma__AttributeChoiceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   attribute<T extends Prisma.AttributeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeDefaultArgs<ExtArgs>>): Prisma.Prisma__AttributeClient<runtime.Types.Result.GetResult<Prisma.$AttributePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  values<T extends Prisma.AttributeChoice$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeChoice$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  values<T extends Prisma.AttributeChoice$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeChoice$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1413,23 +1413,23 @@ export type AttributeChoiceDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
  */
 export type AttributeChoice$valuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AttributeValue
+   * Select specific fields to fetch from the ProfileAttribute
    */
-  select?: Prisma.AttributeValueSelect<ExtArgs> | null
+  select?: Prisma.ProfileAttributeSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AttributeValue
+   * Omit specific fields from the ProfileAttribute
    */
-  omit?: Prisma.AttributeValueOmit<ExtArgs> | null
+  omit?: Prisma.ProfileAttributeOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AttributeValueInclude<ExtArgs> | null
-  where?: Prisma.AttributeValueWhereInput
-  orderBy?: Prisma.AttributeValueOrderByWithRelationInput | Prisma.AttributeValueOrderByWithRelationInput[]
-  cursor?: Prisma.AttributeValueWhereUniqueInput
+  include?: Prisma.ProfileAttributeInclude<ExtArgs> | null
+  where?: Prisma.ProfileAttributeWhereInput
+  orderBy?: Prisma.ProfileAttributeOrderByWithRelationInput | Prisma.ProfileAttributeOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileAttributeWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AttributeValueScalarFieldEnum | Prisma.AttributeValueScalarFieldEnum[]
+  distinct?: Prisma.ProfileAttributeScalarFieldEnum | Prisma.ProfileAttributeScalarFieldEnum[]
 }
 
 /**

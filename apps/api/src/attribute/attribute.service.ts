@@ -24,6 +24,17 @@ export class AttributeService {
     });
   }
 
+  async rename(id: string, name: string) {
+    return await this.prisma.attribute.update({
+      data: {
+        name,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
   async findAll(categoryId: string) {
     return await this.prisma.attribute.findMany({
       where: {

@@ -1,4 +1,4 @@
-import type { User } from "@/types/prisma/browser";
+import type { User } from "@rh/database/browser";
 import { create } from "zustand";
 
 export const useAuthStore = create<{

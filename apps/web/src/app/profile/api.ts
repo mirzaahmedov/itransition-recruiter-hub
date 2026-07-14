@@ -23,7 +23,11 @@ export async function createProfileAttribute(payload: ProfileAttributeCreatePayl
   return res.data;
 }
 
-export async function updateProfileAttribute(id: string, payload: ProfileAttributeUpdatePayload) {
-  const res = await privateApi.patch(`/profile-attributes/${id}`, payload);
+export async function updateProfileAttribute(id: string, version: number, payload: ProfileAttributeUpdatePayload) {
+  const res = await privateApi.patch(`/profile-attributes/${id}`, payload, {
+    params: {
+      version,
+    },
+  });
   return res.data;
 }

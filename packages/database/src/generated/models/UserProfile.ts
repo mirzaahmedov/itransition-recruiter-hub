@@ -159,14 +159,14 @@ export type UserProfileWhereInput = {
   id?: Prisma.StringFilter<"UserProfile"> | string
   userId?: Prisma.StringFilter<"UserProfile"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  attrs?: Prisma.AttributeValueListRelationFilter
+  attrs?: Prisma.ProfileAttributeListRelationFilter
 }
 
 export type UserProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  attrs?: Prisma.AttributeValueOrderByRelationAggregateInput
+  attrs?: Prisma.ProfileAttributeOrderByRelationAggregateInput
 }
 
 export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -176,7 +176,7 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserProfileWhereInput[]
   NOT?: Prisma.UserProfileWhereInput | Prisma.UserProfileWhereInput[]
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  attrs?: Prisma.AttributeValueListRelationFilter
+  attrs?: Prisma.ProfileAttributeListRelationFilter
 }, "id" | "userId">
 
 export type UserProfileOrderByWithAggregationInput = {
@@ -198,25 +198,25 @@ export type UserProfileScalarWhereWithAggregatesInput = {
 export type UserProfileCreateInput = {
   id?: string
   user: Prisma.UserCreateNestedOneWithoutProfileInput
-  attrs?: Prisma.AttributeValueCreateNestedManyWithoutProfileInput
+  attrs?: Prisma.ProfileAttributeCreateNestedManyWithoutProfileInput
 }
 
 export type UserProfileUncheckedCreateInput = {
   id?: string
   userId: string
-  attrs?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutProfileInput
+  attrs?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutProfileInput
 }
 
 export type UserProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
-  attrs?: Prisma.AttributeValueUpdateManyWithoutProfileNestedInput
+  attrs?: Prisma.ProfileAttributeUpdateManyWithoutProfileNestedInput
 }
 
 export type UserProfileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  attrs?: Prisma.AttributeValueUncheckedUpdateManyWithoutProfileNestedInput
+  attrs?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutProfileNestedInput
 }
 
 export type UserProfileCreateManyInput = {
@@ -306,12 +306,12 @@ export type UserProfileUpdateOneRequiredWithoutAttrsNestedInput = {
 
 export type UserProfileCreateWithoutUserInput = {
   id?: string
-  attrs?: Prisma.AttributeValueCreateNestedManyWithoutProfileInput
+  attrs?: Prisma.ProfileAttributeCreateNestedManyWithoutProfileInput
 }
 
 export type UserProfileUncheckedCreateWithoutUserInput = {
   id?: string
-  attrs?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutProfileInput
+  attrs?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutProfileInput
 }
 
 export type UserProfileCreateOrConnectWithoutUserInput = {
@@ -332,12 +332,12 @@ export type UserProfileUpdateToOneWithWhereWithoutUserInput = {
 
 export type UserProfileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  attrs?: Prisma.AttributeValueUpdateManyWithoutProfileNestedInput
+  attrs?: Prisma.ProfileAttributeUpdateManyWithoutProfileNestedInput
 }
 
 export type UserProfileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  attrs?: Prisma.AttributeValueUncheckedUpdateManyWithoutProfileNestedInput
+  attrs?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutProfileNestedInput
 }
 
 export type UserProfileCreateWithoutAttrsInput = {
@@ -403,7 +403,7 @@ export type UserProfileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
  * UserProfileCountOutputType without action
  */
 export type UserProfileCountOutputTypeCountAttrsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AttributeValueWhereInput
+  where?: Prisma.ProfileAttributeWhereInput
 }
 
 
@@ -449,7 +449,7 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "UserProfile"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    attrs: Prisma.$AttributeValuePayload<ExtArgs>[]
+    attrs: Prisma.$ProfileAttributePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -849,7 +849,7 @@ readonly fields: UserProfileFieldRefs;
 export interface Prisma__UserProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  attrs<T extends Prisma.UserProfile$attrsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserProfile$attrsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeValuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attrs<T extends Prisma.UserProfile$attrsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserProfile$attrsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1286,23 +1286,23 @@ export type UserProfileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
  */
 export type UserProfile$attrsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AttributeValue
+   * Select specific fields to fetch from the ProfileAttribute
    */
-  select?: Prisma.AttributeValueSelect<ExtArgs> | null
+  select?: Prisma.ProfileAttributeSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AttributeValue
+   * Omit specific fields from the ProfileAttribute
    */
-  omit?: Prisma.AttributeValueOmit<ExtArgs> | null
+  omit?: Prisma.ProfileAttributeOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AttributeValueInclude<ExtArgs> | null
-  where?: Prisma.AttributeValueWhereInput
-  orderBy?: Prisma.AttributeValueOrderByWithRelationInput | Prisma.AttributeValueOrderByWithRelationInput[]
-  cursor?: Prisma.AttributeValueWhereUniqueInput
+  include?: Prisma.ProfileAttributeInclude<ExtArgs> | null
+  where?: Prisma.ProfileAttributeWhereInput
+  orderBy?: Prisma.ProfileAttributeOrderByWithRelationInput | Prisma.ProfileAttributeOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileAttributeWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AttributeValueScalarFieldEnum | Prisma.AttributeValueScalarFieldEnum[]
+  distinct?: Prisma.ProfileAttributeScalarFieldEnum | Prisma.ProfileAttributeScalarFieldEnum[]
 }
 
 /**

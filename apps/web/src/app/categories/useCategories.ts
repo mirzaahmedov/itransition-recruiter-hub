@@ -8,5 +8,5 @@ export function useCategories() {
     queryFn: fetchCategories,
   });
 
-  return rowDataWithFallback(categoriesData);
+  return rowDataWithFallback(categoriesData?.data);
 }

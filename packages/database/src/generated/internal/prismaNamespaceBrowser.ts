@@ -56,7 +56,7 @@ export const ModelName = {
   User: 'User',
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
-  AttributeValue: 'AttributeValue',
+  ProfileAttribute: 'ProfileAttribute',
   AccessRule: 'AccessRule',
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
@@ -103,6 +103,7 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   googleId: 'googleId',
   role: 'role',
+  password: 'password',
   createdAt: 'createdAt'
 } as const
 
@@ -130,7 +131,7 @@ export const AttributeChoiceScalarFieldEnum = {
 export type AttributeChoiceScalarFieldEnum = (typeof AttributeChoiceScalarFieldEnum)[keyof typeof AttributeChoiceScalarFieldEnum]
 
 
-export const AttributeValueScalarFieldEnum = {
+export const ProfileAttributeScalarFieldEnum = {
   id: 'id',
   attributeId: 'attributeId',
   textValue: 'textValue',
@@ -139,12 +140,13 @@ export const AttributeValueScalarFieldEnum = {
   dateValue: 'dateValue',
   startDateValue: 'startDateValue',
   endDateValue: 'endDateValue',
-  createdAt: 'createdAt',
   choiceId: 'choiceId',
-  profileId: 'profileId'
+  profileId: 'profileId',
+  createdAt: 'createdAt',
+  version: 'version'
 } as const
 
-export type AttributeValueScalarFieldEnum = (typeof AttributeValueScalarFieldEnum)[keyof typeof AttributeValueScalarFieldEnum]
+export type ProfileAttributeScalarFieldEnum = (typeof ProfileAttributeScalarFieldEnum)[keyof typeof ProfileAttributeScalarFieldEnum]
 
 
 export const AccessRuleScalarFieldEnum = {

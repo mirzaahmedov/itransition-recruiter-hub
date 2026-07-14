@@ -1,28 +1,38 @@
+import { makeResponse } from '@/models/api';
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  InternalServerErrorException,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { PositionService } from './position.service';
 import { PositionCreatePayload } from '@rh/shared';
-import { ok } from '@/models/api';
+import { PositionCreateDto } from './position.dto';
+import { PositionService } from './position.service';
 
 @Controller('positions')
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 
   @Post()
-  create(@Body() payload: PositionCreatePayload) {
-    return this.positionService.create(payload);
+  create(@Body() data: PositionCreateDto) {
+    try {
+      return this.positionService.create(data);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
   @Get()
   async findAll() {
-    return ok(await this.positionService.findAll());
+    try {
+      return makeResponse(await this.positionService.findAll());
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
   @Get(':id')

@@ -11,7 +11,7 @@ export interface ErrorResponse<T, D = undefined> {
 
 export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse<T>;
 
-export function ok<T, M>(data: T, meta?: M): SuccessResponse<T, M> {
+export function makeResponse<T, M>(data: T, meta?: M): SuccessResponse<T, M> {
   return {
     success: true,
     data,

@@ -1,3 +1,4 @@
+import { makeResponse } from '@/models/api';
 import { Controller, Get } from '@nestjs/common';
 import { CategoryService } from './category.service';
 
@@ -6,7 +7,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  async findAll() {
+    return makeResponse(await this.categoryService.findAll());
   }
 }
