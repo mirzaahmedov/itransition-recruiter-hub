@@ -5,6 +5,7 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
   Patch,
   Put,
   Req,
@@ -20,15 +21,17 @@ import { UserBulkUpdateRolesDto } from './user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { nanoid } from 'nanoid';
 
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import type { Express, Request } from 'express';
 import { extname } from 'path';
 import { StorageService } from '@/storage/storage.service';
+import { UserProfileService } from '@/profile/profile.service';
 
 @Controller('users')
 export class UserController {
   constructor(
     private userService: UserService,
+    private userProfileService: UserProfileService,
     private s3Service: StorageService,
   ) {}
 
@@ -42,12 +45,25 @@ export class UserController {
     }
   }
 
-  @Get('profile')
+  @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  async getUserProfile(@AuthUser() user: User) {
+  async getById(@Param('id') id: string) {
     try {
-      const profile = await this.userService.findByUserId(user.id);
-      console.log({ profile });
+      const user = await this.userService.findById(id);
+      if (!user) {
+        throw new NotFoundException();
+      }
+      return makeResponse(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Get(':id/profile')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserProfile(@Param('id') userId: string) {
+    try {
+      const profile = await this.userProfileService.findByUserId(userId, true);
       if (!profile) {
         throw new NotFoundException();
       }

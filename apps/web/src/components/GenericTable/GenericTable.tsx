@@ -1,10 +1,11 @@
-import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
+import { flexRender, type Row, type Table as TanstackTable } from "@tanstack/react-table";
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 
 type GenericTableProps<T> = {
   instance: TanstackTable<T>;
+  onRowClick?: (row: Row<T>) => void;
 };
-export const GenericTable = <T,>({ instance }: GenericTableProps<T>) => {
+export const GenericTable = <T,>({ instance, onRowClick }: GenericTableProps<T>) => {
   return (
     <Table>
       <TableHeader>
@@ -18,7 +19,7 @@ export const GenericTable = <T,>({ instance }: GenericTableProps<T>) => {
       </TableHeader>
       <TableBody>
         {instance.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
+          <TableRow key={row.id} onClick={() => onRowClick?.(row)} className={typeof onRowClick === "function" ? "cursor-pointer" : ""}>
             {row.getVisibleCells().map((column) => (
               <TableCell key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</TableCell>
             ))}

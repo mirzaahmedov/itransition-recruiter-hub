@@ -51,22 +51,6 @@ export class UserService {
     return users;
   }
 
-  async findByUserId(userId: string) {
-    const profile = await this.prisma.userProfile.findUnique({
-      where: {
-        userId,
-      },
-      include: {
-        attrs: {
-          include: {
-            attribute: true,
-          },
-        },
-      },
-    });
-    return profile;
-  }
-
   async bulkUpdateRoles(userIds: string[], role: UserRole): Promise<void> {
     await this.prisma.user.updateMany({
       where: {

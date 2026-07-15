@@ -9,7 +9,7 @@ import { UserModule } from './user/user.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { PositionModule } from './position/position.module';
 import { CategoryModule } from './category/category.module';
-import { ProfileAttributeModule } from './profile-attribute/profile-attribute.module';
+import { ProfileAttributeModule } from './profile/attribute/profile-attribute.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
 import { StorageModule } from './storage/storage.module';
@@ -29,10 +29,10 @@ import { StorageModule } from './storage/storage.module';
     }),
     AuthModule,
     UserModule,
-    AttributeModule,
-    PositionModule,
     CategoryModule,
+    AttributeModule,
     ProfileAttributeModule,
+    PositionModule,
     StorageModule,
   ],
   controllers: [AppController],

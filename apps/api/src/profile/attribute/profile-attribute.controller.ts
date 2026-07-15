@@ -1,5 +1,5 @@
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { ProfileService } from '@/profile/profile.service';
+import { UserProfileService } from '@/profile/profile.service';
 import {
   Body,
   Controller,
@@ -20,13 +20,12 @@ import {
   ProfileAttributeUpdateDto,
 } from './profile-attribute.dto';
 import { ProfileAttributeService } from './profile-attribute.service';
-import { PrismaService } from '@/prisma/prisma.service';
 
-@Controller('profile-attributes')
+@Controller('profile/:profileId/attributes')
 export class ProfileAttributeController {
   constructor(
     private readonly profileAttributeService: ProfileAttributeService,
-    private readonly profileService: ProfileService,
+    private readonly userProfileService: UserProfileService,
   ) {}
 
   @Post()
@@ -36,7 +35,7 @@ export class ProfileAttributeController {
     @Body() data: ProfileAttributeCreateDto,
   ) {
     try {
-      const profile = await this.profileService.findByUserId(user.id);
+      const profile = await this.userProfileService.findByUserId(user.id);
       if (!profile) {
         throw new NotFoundException('Profile not found');
       }
@@ -59,7 +58,7 @@ export class ProfileAttributeController {
     @Body() payload: ProfileAttributeUpdateDto,
   ) {
     try {
-      const profile = await this.profileService.findByUserId(user.id);
+      const profile = await this.userProfileService.findByUserId(user.id);
       if (!profile) {
         throw new NotFoundException('Profile not found');
       }

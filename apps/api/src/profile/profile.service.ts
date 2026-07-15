@@ -2,14 +2,23 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ProfileService {
+export class UserProfileService {
   constructor(private prisma: PrismaService) {}
 
-  async findByUserId(userId: string) {
-    const profile = await this.prisma.userProfile.findFirst({
+  async findByUserId(userId: string, includeAttributes = false) {
+    const profile = await this.prisma.userProfile.findUnique({
       where: {
         userId,
       },
+      include: includeAttributes
+        ? {
+            attrs: {
+              include: {
+                attribute: true,
+              },
+            },
+          }
+        : undefined,
     });
     return profile;
   }

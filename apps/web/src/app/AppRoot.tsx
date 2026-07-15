@@ -2,7 +2,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { fetchUserProfile } from "./api";
+import { fetchMe } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 
 const AppRoot = () => {
@@ -12,9 +12,9 @@ const AppRoot = () => {
 
   const navigate = useNavigate();
 
-  const fetchUserProfileMutation = useMutation({
+  const fetchMeMutation = useMutation({
     mutationKey: ["users/me"],
-    mutationFn: fetchUserProfile,
+    mutationFn: fetchMe,
   });
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const AppRoot = () => {
       logout();
       navigate("/sign-in");
     };
-    fetchUserProfileMutation.mutate(undefined, {
+    fetchMeMutation.mutate(undefined, {
       onSuccess(res) {
         if (res.success) {
           setUserProfile(res.data);

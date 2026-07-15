@@ -161,6 +161,11 @@ export type EnumAttributeTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumAttributeTypeFilter<$PrismaModel> | $Enums.AttributeType
 }
 
+export type BoolFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
+}
+
 export type EnumAttributeTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.AttributeType | Prisma.EnumAttributeTypeFieldRefInput<$PrismaModel>
   in?: $Enums.AttributeType[] | Prisma.ListEnumAttributeTypeFieldRefInput<$PrismaModel>
@@ -169,6 +174,14 @@ export type EnumAttributeTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAttributeTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAttributeTypeFilter<$PrismaModel>
+}
+
+export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBoolFilter<$PrismaModel>
+  _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
 export type FloatNullableFilter<$PrismaModel = never> = {
@@ -396,6 +409,11 @@ export type NestedEnumAttributeTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumAttributeTypeFilter<$PrismaModel> | $Enums.AttributeType
 }
 
+export type NestedBoolFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
+}
+
 export type NestedEnumAttributeTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.AttributeType | Prisma.EnumAttributeTypeFieldRefInput<$PrismaModel>
   in?: $Enums.AttributeType[] | Prisma.ListEnumAttributeTypeFieldRefInput<$PrismaModel>
@@ -404,6 +422,14 @@ export type NestedEnumAttributeTypeWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAttributeTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAttributeTypeFilter<$PrismaModel>
+}
+
+export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBoolFilter<$PrismaModel>
+  _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
 export type NestedFloatNullableFilter<$PrismaModel = never> = {

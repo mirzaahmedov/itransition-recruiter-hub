@@ -44,6 +44,16 @@ export const AppSidebar = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   render={
+                    <NavLink to="/users">
+                      <UserIcon size={18} />
+                      Users
+                    </NavLink>
+                  }
+                ></SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={
                     <NavLink to="/profile">
                       <UserIcon size={18} />
                       Profile

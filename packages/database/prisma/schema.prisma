@@ -68,6 +68,7 @@ model Attribute {
   id                    String   @id @default(cuid())
   name                  String
   type                  AttributeType
+  system                Boolean  @default(false)
   categoryId            String
   category              Category @relation(fields: [categoryId], references: [id])
   createdAt             DateTime @default(now())

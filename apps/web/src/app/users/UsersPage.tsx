@@ -4,7 +4,7 @@ import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstac
 import { UserRole, type User } from "@rh/database/browser";
 import { useState } from "react";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
-import { countSelectRows, rowSelectionToArray } from "@/lib/table/utils";
+import { countSelectRows, rowDataWithFallback, rowSelectionToArray } from "@/lib/table/utils";
 import toast from "react-hot-toast";
 import { GenericTable } from "@/components/GenericTable/GenericTable";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,12 +12,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverPopup, PopoverTrigger } from "@/components/ui/popover";
 import { fallbackName } from "@/utils/fallbackName";
+import { useNavigate } from "react-router-dom";
+import { userColumns } from "./columns";
 
 const UsersPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [newRole, setNewRole] = useState<UserRole>(UserRole.ADMINISTRATOR);
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const selectedCount = countSelectRows(rowSelection);
 
   const { data: users } = useQuery({
@@ -25,69 +28,22 @@ const UsersPage = () => {
     queryFn: fetchUsers,
   });
 
+  const rowData = rowDataWithFallback(users?.data);
+
   const updateUserRolesMutation = useMutation({
     mutationFn: (role: UserRole) => bulkUpdateRoles(rowSelectionToArray(rowSelection), role),
   });
 
   const table = useReactTable<User>({
     getCoreRowModel: getCoreRowModel(),
-    data: users?.data ?? [],
+    data: rowData,
     state: {
       rowSelection,
     },
     getRowId: (row) => row.id,
     onRowSelectionChange: setRowSelection,
-    columns: [
-      {
-        id: "id",
-        header: ({ table }) => (
-          <Checkbox
-            name="selectAll"
-            id="selectAll"
-            className="checkbox"
-            checked={table.getIsAllRowsSelected()}
-            onCheckedChange={(checked) => table.toggleAllRowsSelected(checked)}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            name="selectAll"
-            id="selectAll"
-            className="checkbox"
-            checked={row.getIsSelected()}
-            onCheckedChange={(checked) => row.toggleSelected(checked)}
-          />
-        ),
-      },
-      {
-        id: "name",
-        header: "Name",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-5">
-            <Avatar>
-              <AvatarImage alt={row.original.name ?? "User avatar"} src={row.original.avatar ?? undefined} />
-              <AvatarFallback>{fallbackName(row.original.name ?? "")}</AvatarFallback>
-            </Avatar>
-            <b>{row.original.name}</b>
-          </div>
-        ),
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "role",
-        header: "Role",
-      },
-      {
-        accessorKey: "createdAt",
-        header: "Created At",
-      },
-    ],
+    columns: userColumns,
   });
-
-  console.log({ rowSelection, ids: rowSelectionToArray(rowSelection) });
 
   return (
     <div className="h-full flex flex-col">
@@ -169,7 +125,7 @@ const UsersPage = () => {
         </p>
       </div>
       <div className="flex-1">
-        <GenericTable instance={table} />
+        <GenericTable instance={table} onRowClick={(row) => navigate(`${row.original.id}/profile`)} />
       </div>
     </div>
   );

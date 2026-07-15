@@ -114,6 +114,7 @@ export const AttributeScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
+  system: 'system',
   categoryId: 'categoryId',
   createdAt: 'createdAt'
 } as const

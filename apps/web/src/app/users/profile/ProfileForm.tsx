@@ -8,13 +8,15 @@ import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { createProfileAttribute, fetchProfile, updateProfileAttribute } from "./api";
+import { createProfileAttribute, fetchUserProfile, updateProfileAttribute, uploadProfilePicture } from "./api";
 import type { ProfileAttributeUpdatePayload } from "@rh/shared";
 import type { ProfileAttributeGetPayload } from "@rh/database/models";
+import FileUploadAvatar from "@/components/FileUploadAvatar";
+import type { FileWithPreview } from "@/hooks/use-file-upload";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { fallbackName } from "@/utils/fallbackName";
 
-const ProfilePage = () => {
+const ProfileForm = () => {
   const user = useAuthStore((store) => store.user);
 
   const timers = useRef<Record<string, number>>({});
@@ -27,13 +29,17 @@ const ProfilePage = () => {
 
   const { data: profileData } = useQuery({
     queryKey: ["user/profile", user?.id],
-    queryFn: fetchProfile,
+    queryFn: fetchUserProfile,
   });
 
   const categories = useCategories();
 
   const createProfileAttributeMutation = useMutation({
     mutationFn: createProfileAttribute,
+  });
+
+  const uploadProfilePictureMutation = useMutation({
+    mutationFn: uploadProfilePicture,
   });
 
   const updateProfileAttributeMutation = useMutation({
@@ -90,13 +96,23 @@ const ProfilePage = () => {
     timers.current[attr.id] = timeoutId;
   };
 
+  const handleUploadImage = (data: FileWithPreview) => {
+    if (data.file instanceof File) {
+      uploadProfilePictureMutation.mutate(data.file);
+    }
+  };
+
   return (
     <div className="h-full overflow-y-auto overflow-x-hidden flex flex-wrap divide-x">
       <div className="w-60 flex flex-col items-center p-5">
-        <Avatar className="size-40 rounded-md">
-          <AvatarImage src={user?.avatar ?? undefined} alt={user?.name ?? "Avatar name"} />
-          <AvatarFallback>{fallbackName(user?.name ?? "")}</AvatarFallback>
-        </Avatar>
+        {user?.avatar ? (
+          <Avatar>
+            <AvatarImage src={user.avatar} alt={user.name ?? "Avatar"} />
+            <AvatarFallback>{fallbackName(user.name ?? "User")}</AvatarFallback>
+          </Avatar>
+        ) : (
+          <FileUploadAvatar onSelect={handleUploadImage} isPending={uploadProfilePictureMutation.isPending} />
+        )}
       </div>
       <div className="flex-1 p-5">
         <AttributePicker onSelect={handleSelectAttribute} />
@@ -140,4 +156,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default ProfileForm;

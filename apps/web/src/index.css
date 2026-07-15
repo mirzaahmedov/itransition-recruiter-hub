@@ -32,6 +32,7 @@ body,
   --font-heading: "Inter", sans-serif;
   --font-mono: "Geist Mono", monospace;
   --font-sans: "Inter", sans-serif;
+  --color-brand: var(--brand);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -161,6 +162,8 @@ body,
 }
 
 :root {
+  --brand: var(--color-blue-400);
+
   --destructive-foreground: var(--color-red-700);
   --info: var(--color-blue-500);
   --info-foreground: var(--color-blue-700);
@@ -206,6 +209,7 @@ body,
 }
 
 .dark {
+  --brand: var(--color-blue-400);
   --destructive-foreground: var(--color-red-400);
   --info: var(--color-blue-500);
   --info-foreground: var(--color-blue-400);

@@ -28,6 +28,7 @@ export type AttributeMinAggregateOutputType = {
   id: string | null
   name: string | null
   type: $Enums.AttributeType | null
+  system: boolean | null
   categoryId: string | null
   createdAt: Date | null
 }
@@ -36,6 +37,7 @@ export type AttributeMaxAggregateOutputType = {
   id: string | null
   name: string | null
   type: $Enums.AttributeType | null
+  system: boolean | null
   categoryId: string | null
   createdAt: Date | null
 }
@@ -44,6 +46,7 @@ export type AttributeCountAggregateOutputType = {
   id: number
   name: number
   type: number
+  system: number
   categoryId: number
   createdAt: number
   _all: number
@@ -54,6 +57,7 @@ export type AttributeMinAggregateInputType = {
   id?: true
   name?: true
   type?: true
+  system?: true
   categoryId?: true
   createdAt?: true
 }
@@ -62,6 +66,7 @@ export type AttributeMaxAggregateInputType = {
   id?: true
   name?: true
   type?: true
+  system?: true
   categoryId?: true
   createdAt?: true
 }
@@ -70,6 +75,7 @@ export type AttributeCountAggregateInputType = {
   id?: true
   name?: true
   type?: true
+  system?: true
   categoryId?: true
   createdAt?: true
   _all?: true
@@ -151,6 +157,7 @@ export type AttributeGroupByOutputType = {
   id: string
   name: string
   type: $Enums.AttributeType
+  system: boolean
   categoryId: string
   createdAt: Date
   _count: AttributeCountAggregateOutputType | null
@@ -180,6 +187,7 @@ export type AttributeWhereInput = {
   id?: Prisma.StringFilter<"Attribute"> | string
   name?: Prisma.StringFilter<"Attribute"> | string
   type?: Prisma.EnumAttributeTypeFilter<"Attribute"> | $Enums.AttributeType
+  system?: Prisma.BoolFilter<"Attribute"> | boolean
   categoryId?: Prisma.StringFilter<"Attribute"> | string
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
@@ -192,6 +200,7 @@ export type AttributeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  system?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
@@ -207,6 +216,7 @@ export type AttributeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AttributeWhereInput | Prisma.AttributeWhereInput[]
   name?: Prisma.StringFilter<"Attribute"> | string
   type?: Prisma.EnumAttributeTypeFilter<"Attribute"> | $Enums.AttributeType
+  system?: Prisma.BoolFilter<"Attribute"> | boolean
   categoryId?: Prisma.StringFilter<"Attribute"> | string
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
@@ -219,6 +229,7 @@ export type AttributeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  system?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AttributeCountOrderByAggregateInput
@@ -233,6 +244,7 @@ export type AttributeScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Attribute"> | string
   name?: Prisma.StringWithAggregatesFilter<"Attribute"> | string
   type?: Prisma.EnumAttributeTypeWithAggregatesFilter<"Attribute"> | $Enums.AttributeType
+  system?: Prisma.BoolWithAggregatesFilter<"Attribute"> | boolean
   categoryId?: Prisma.StringWithAggregatesFilter<"Attribute"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Attribute"> | Date | string
 }
@@ -241,6 +253,7 @@ export type AttributeCreateInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
@@ -252,6 +265,7 @@ export type AttributeUncheckedCreateInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   categoryId: string
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
@@ -263,6 +277,7 @@ export type AttributeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
@@ -274,6 +289,7 @@ export type AttributeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
@@ -285,6 +301,7 @@ export type AttributeCreateManyInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   categoryId: string
   createdAt?: Date | string
 }
@@ -293,6 +310,7 @@ export type AttributeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -300,6 +318,7 @@ export type AttributeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -318,6 +337,7 @@ export type AttributeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  system?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -326,6 +346,7 @@ export type AttributeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  system?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -334,6 +355,7 @@ export type AttributeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  system?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -389,6 +411,10 @@ export type EnumAttributeTypeFieldUpdateOperationsInput = {
   set?: $Enums.AttributeType
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type AttributeCreateNestedOneWithoutChoicesInput = {
   create?: Prisma.XOR<Prisma.AttributeCreateWithoutChoicesInput, Prisma.AttributeUncheckedCreateWithoutChoicesInput>
   connectOrCreate?: Prisma.AttributeCreateOrConnectWithoutChoicesInput
@@ -435,6 +461,7 @@ export type AttributeCreateWithoutCategoryInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
   values?: Prisma.ProfileAttributeCreateNestedManyWithoutAttributeInput
@@ -445,6 +472,7 @@ export type AttributeUncheckedCreateWithoutCategoryInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
   values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutAttributeInput
@@ -484,6 +512,7 @@ export type AttributeScalarWhereInput = {
   id?: Prisma.StringFilter<"Attribute"> | string
   name?: Prisma.StringFilter<"Attribute"> | string
   type?: Prisma.EnumAttributeTypeFilter<"Attribute"> | $Enums.AttributeType
+  system?: Prisma.BoolFilter<"Attribute"> | boolean
   categoryId?: Prisma.StringFilter<"Attribute"> | string
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
 }
@@ -492,6 +521,7 @@ export type AttributeCreateWithoutChoicesInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   values?: Prisma.ProfileAttributeCreateNestedManyWithoutAttributeInput
@@ -502,6 +532,7 @@ export type AttributeUncheckedCreateWithoutChoicesInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   categoryId: string
   createdAt?: Date | string
   values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutAttributeInput
@@ -528,6 +559,7 @@ export type AttributeUpdateWithoutChoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   values?: Prisma.ProfileAttributeUpdateManyWithoutAttributeNestedInput
@@ -538,6 +570,7 @@ export type AttributeUncheckedUpdateWithoutChoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutAttributeNestedInput
@@ -548,6 +581,7 @@ export type AttributeCreateWithoutValuesInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
@@ -558,6 +592,7 @@ export type AttributeUncheckedCreateWithoutValuesInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   categoryId: string
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
@@ -584,6 +619,7 @@ export type AttributeUpdateWithoutValuesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
@@ -594,6 +630,7 @@ export type AttributeUncheckedUpdateWithoutValuesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
@@ -604,6 +641,7 @@ export type AttributeCreateWithoutPositionAttributesInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
@@ -614,6 +652,7 @@ export type AttributeUncheckedCreateWithoutPositionAttributesInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   categoryId: string
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
@@ -640,6 +679,7 @@ export type AttributeUpdateWithoutPositionAttributesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
@@ -650,6 +690,7 @@ export type AttributeUncheckedUpdateWithoutPositionAttributesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
@@ -660,6 +701,7 @@ export type AttributeCreateManyCategoryInput = {
   id?: string
   name: string
   type: $Enums.AttributeType
+  system?: boolean
   createdAt?: Date | string
 }
 
@@ -667,6 +709,7 @@ export type AttributeUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
   values?: Prisma.ProfileAttributeUpdateManyWithoutAttributeNestedInput
@@ -677,6 +720,7 @@ export type AttributeUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
   values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutAttributeNestedInput
@@ -687,6 +731,7 @@ export type AttributeUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAttributeTypeFieldUpdateOperationsInput | $Enums.AttributeType
+  system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -743,6 +788,7 @@ export type AttributeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   name?: boolean
   type?: boolean
+  system?: boolean
   categoryId?: boolean
   createdAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -756,6 +802,7 @@ export type AttributeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   name?: boolean
   type?: boolean
+  system?: boolean
   categoryId?: boolean
   createdAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -765,6 +812,7 @@ export type AttributeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   name?: boolean
   type?: boolean
+  system?: boolean
   categoryId?: boolean
   createdAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -774,11 +822,12 @@ export type AttributeSelectScalar = {
   id?: boolean
   name?: boolean
   type?: boolean
+  system?: boolean
   categoryId?: boolean
   createdAt?: boolean
 }
 
-export type AttributeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "categoryId" | "createdAt", ExtArgs["result"]["attribute"]>
+export type AttributeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "system" | "categoryId" | "createdAt", ExtArgs["result"]["attribute"]>
 export type AttributeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.Attribute$choicesArgs<ExtArgs>
@@ -805,6 +854,7 @@ export type $AttributePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     name: string
     type: $Enums.AttributeType
+    system: boolean
     categoryId: string
     createdAt: Date
   }, ExtArgs["result"]["attribute"]>
@@ -1237,6 +1287,7 @@ export interface AttributeFieldRefs {
   readonly id: Prisma.FieldRef<"Attribute", 'String'>
   readonly name: Prisma.FieldRef<"Attribute", 'String'>
   readonly type: Prisma.FieldRef<"Attribute", 'AttributeType'>
+  readonly system: Prisma.FieldRef<"Attribute", 'Boolean'>
   readonly categoryId: Prisma.FieldRef<"Attribute", 'String'>
   readonly createdAt: Prisma.FieldRef<"Attribute", 'DateTime'>
 }
