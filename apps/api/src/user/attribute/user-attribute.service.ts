@@ -5,6 +5,9 @@ import {
   ProfileAttributeUpdatePayload,
 } from '@rh/shared';
 import { ProfileAttributeCreateBulkDto } from './user-attribute.dto';
+import { BulkUpdateUserAttributesPayload } from '@rh/shared/schemas';
+import { makeResponse } from '@/models/api';
+import { UserAttribute } from '@rh/database/client';
 
 interface IdParams {
   userId: string;
@@ -41,7 +44,7 @@ export class UserAttributeService {
     data: ProfileAttributeUpdatePayload,
   ) {
     return await this.prisma.$transaction(async (tx) => {
-      const result = await tx.userAttribute.updateMany({
+      const results = await tx.userAttribute.updateManyAndReturn({
         data: {
           ...data,
           version: {
@@ -55,10 +58,66 @@ export class UserAttributeService {
         },
       });
 
-      if (result.count === 0) {
+      if (results.length === 0) {
         throw new ConflictException('Concurrent modification detected.');
       }
+
+      return results[0];
     });
+  }
+
+  async bulkUpdate(
+    { userId }: Pick<IdParams, 'userId'>,
+    data: BulkUpdateUserAttributesPayload,
+  ) {
+    const results = await Promise.allSettled(
+      data.map((item) =>
+        this.prisma.$transaction(async (tx) => {
+          const results = await tx.userAttribute.updateManyAndReturn({
+            data: {
+              ...item.data,
+              version: {
+                increment: 1,
+              },
+            },
+            where: {
+              id: item.id,
+              version: item.version,
+              userId,
+            },
+          });
+
+          if (results.length === 0) {
+            throw new ConflictException('Concurrent modification detected.');
+          }
+
+          return results[0];
+        }),
+      ),
+    );
+
+    const concurrent_modification: BulkUpdateUserAttributesPayload = [];
+    const failed_unknown: BulkUpdateUserAttributesPayload = [];
+    const modified: UserAttribute[] = [];
+
+    results.forEach((result, index) => {
+      if (
+        result.status === 'rejected' &&
+        result.reason instanceof ConflictException
+      ) {
+        concurrent_modification.push(data[index]);
+      } else if (result.status === 'rejected') {
+        failed_unknown.push(data[index]);
+      } else {
+        modified.push(result.value);
+      }
+    });
+
+    return {
+      concurrent_modification,
+      failed_unknown,
+      modified,
+    };
   }
 
   async findUserAttributes(userId: string) {

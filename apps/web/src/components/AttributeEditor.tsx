@@ -1,9 +1,9 @@
 import { AttributeType } from "@rh/database/enums";
-import { NumberFormatBase } from "react-number-format";
 import type { FC } from "react";
 import { Input } from "./ui/input";
 import { Switch } from "./ui/switch";
 import { Textarea } from "./ui/textarea";
+import { NumberField, NumberFieldDecrement, NumberFieldGroup, NumberFieldIncrement, NumberFieldInput } from "./ui/number-field";
 
 export const AttributeEditor: FC<{
   type: AttributeType;
@@ -12,16 +12,24 @@ export const AttributeEditor: FC<{
 }> = ({ type, value, onValueChange }) => {
   switch (type) {
     case AttributeType.NUMERIC:
-      return <NumberFormatBase customInput={Input} value={value} onValueChange={(values) => onValueChange(values.floatValue ?? 0)} />;
+      return (
+        <NumberField value={value} onValueChange={onValueChange} className="w-full max-w-full">
+          <NumberFieldGroup>
+            <NumberFieldDecrement />
+            <NumberFieldInput />
+            <NumberFieldIncrement />
+          </NumberFieldGroup>
+        </NumberField>
+      );
     case AttributeType.BOOLEAN:
-      return <Switch checked={value} onCheckedChange={onValueChange} />;
+      return <Switch checked={value} onCheckedChange={onValueChange} className="w-full max-w-full" />;
     case AttributeType.DATE:
-      return <Input type="date" value={value} onChange={(e) => onValueChange(e.target.value)} />;
+      return <Input type="date" value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" />;
     case AttributeType.MARKDOWN:
-      return <Textarea value={value} onChange={(e) => onValueChange(e.target.value)} />;
+      return <Textarea value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" />;
     case AttributeType.TEXT:
-      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} />;
+      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" />;
     default:
-      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} />;
+      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" />;
   }
 };

@@ -6,4 +6,5 @@ export * from "./UserAttributeUpdateSchema.js";
 export * from "./UserRegisterSchema.js";
 export * from "./UserLoginSchema.js";
 export * from "./UserBulkUpdateRolesSchema.js";
+export * from "./BulkUpdateUserAttributeSchema.js";
 export * from "./BulkIdsSchema.js";

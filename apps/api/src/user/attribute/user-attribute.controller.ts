@@ -16,10 +16,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@rh/database/client';
 import {
+  BulkUpdateUserAttributesDto,
   ProfileAttributeCreateBulkDto,
   ProfileAttributeUpdateDto,
 } from './user-attribute.dto';
 import { UserAttributeService } from './user-attribute.service';
+import { BulkUpdateUserAttributesPayload } from '@rh/shared/schemas';
 
 @Controller('users/:userId/attributes')
 export class UserAttributeController {
@@ -66,6 +68,32 @@ export class UserAttributeController {
     }
   }
 
+  @Patch('bulk')
+  @UseGuards(AuthGuard('jwt'))
+  async bulkUpdate(
+    @AuthUser() user: User,
+    @Param('userId') userId: string,
+    @Body() data: BulkUpdateUserAttributesDto,
+  ) {
+    try {
+      if (userId !== user.id) {
+        throw new ForbiddenException();
+      }
+
+      return makeResponse(
+        await this.userAttributeService.bulkUpdate(
+          {
+            userId,
+          },
+          data,
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
   async update(
@@ -80,13 +108,15 @@ export class UserAttributeController {
         throw new ForbiddenException();
       }
 
-      return await this.userAttributeService.update(
-        {
-          id,
-          version,
-          userId,
-        },
-        payload,
+      return makeResponse(
+        await this.userAttributeService.update(
+          {
+            id,
+            version,
+            userId,
+          },
+          payload,
+        ),
       );
     } catch (error) {
       console.log(error);

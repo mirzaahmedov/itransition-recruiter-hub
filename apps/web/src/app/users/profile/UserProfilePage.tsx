@@ -16,7 +16,11 @@ const UserProfilePage = () => {
     queryFn: () => fetchUser(userId!),
     enabled: !!userId,
   });
-  const { data: userAttributes, isFetching: isFetchingUserAttributes } = useQuery({
+  const {
+    data: userAttributes,
+    isFetching: isFetchingUserAttributes,
+    refetch: refetchAttributes,
+  } = useQuery({
     queryKey: ["users", userId, "attributes"],
     queryFn: () => fetchUserAttributes(userId!),
     enabled: !!userId,
@@ -26,14 +30,23 @@ const UserProfilePage = () => {
   const userAttributesData = userAttributes?.data;
 
   return (
-    <div className="h-full px-5">
+    <div className="relative h-full px-5">
       {isFetchingUser || isFetchingUserAttributes ? (
-        <div className="h-full grid place-items-center">
+        <div className="fixed inset-0 bg-black/60 h-full grid place-items-center">
           <Spinner />
         </div>
-      ) : userData && userAttributesData ? (
+      ) : null}
+
+      {userData && userAttributesData ? (
         editing ? (
-          <ProfileForm user={userData} userAttributes={userAttributesData} onStop={() => setEditing(false)} />
+          <ProfileForm
+            user={userData}
+            userAttributes={userAttributesData}
+            onStopEditing={() => {
+              setEditing(false);
+              refetchAttributes();
+            }}
+          />
         ) : (
           <ProfileView user={userData} userAttributes={userAttributesData} onEdit={() => setEditing(true)} />
         )

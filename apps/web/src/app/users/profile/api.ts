@@ -1,8 +1,8 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
-import type { User } from "@rh/database/browser";
+import type { User, UserAttribute } from "@rh/database/browser";
 import type { UserAttributeGetPayload } from "@rh/database/models";
-import type { ProfileAttributeUpdatePayload, ProfileAttributeCreateBulkPayload } from "@rh/shared/schemas";
+import type { ProfileAttributeUpdatePayload, ProfileAttributeCreateBulkPayload, BulkUpdateUserAttributesPayload } from "@rh/shared/schemas";
 
 export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
   include: {
@@ -44,6 +44,21 @@ export async function updateProfileAttribute({ id, userId, version, data }: User
       version,
     },
   });
+  return res.data;
+}
+
+export interface BulkUpdateUserAttributeArgs {
+  userId: string;
+  data: BulkUpdateUserAttributesPayload;
+}
+export async function bulkUpdateProfileAttributes({ userId, data }: BulkUpdateUserAttributeArgs) {
+  const res = await privateApi.patch<
+    ApiResponse<{
+      concurrent_modification: BulkUpdateUserAttributesPayload;
+      failed_unknown: BulkUpdateUserAttributesPayload;
+      modified: UserAttribute[];
+    }>
+  >(`/users/${userId}/attributes/bulk`, data);
   return res.data;
 }
 

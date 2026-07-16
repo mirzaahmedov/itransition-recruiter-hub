@@ -45,13 +45,13 @@ export const ProfileView: FC<{
               <div className="flex items-center justify-between gap-5">
                 <h3 className="uppercase text-xs font-semibold">{category.name}</h3>
               </div>
-              <ul className="mt-5">
+              <ul className="mt-5 space-y-4">
                 {attrs.length > 0 ? (
                   attrs.map((attr) => (
                     <li key={attr.id} className="flex justify-between">
-                      <span>{attr.attribute.name}</span>
+                      <span className="text-sm">{attr.attribute.name}</span>
                       <span className="flex-1 border-b border-border border-dotted"></span>
-                      <b>{renderDynamicValue(attr.attribute.type, attr)}</b>
+                      <span>{renderDynamicValue(attr.attribute.type, attr)}</span>
                     </li>
                   ))
                 ) : (

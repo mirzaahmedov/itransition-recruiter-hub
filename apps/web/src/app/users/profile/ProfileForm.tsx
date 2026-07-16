@@ -5,28 +5,51 @@ import { useDialogState } from "@/hooks/use-dialog-state";
 import type { FileWithPreview } from "@/hooks/use-file-upload";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { fallbackName } from "@/utils/fallbackName";
-import { PlusIcon, XIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PlusIcon, WarningCircleIcon, XIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import type { ProfileAttributeUpdatePayload } from "@rh/shared";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, type FC } from "react";
+import { useCallback, useEffect, useState, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { createBulkUserAttributes, updateProfileAttribute, uploadProfilePicture, type UserAttributeWithJoins } from "./api";
+import {
+  bulkUpdateProfileAttributes,
+  createBulkUserAttributes,
+  uploadProfilePicture,
+  type BulkUpdateUserAttributeArgs,
+  type UserAttributeWithJoins,
+} from "./api";
 import { AttributePicker } from "./AttributePicker";
+import { useAutoSave } from "./useAutoSave";
+import { Badge } from "@/components/ui/badge";
+
+interface UserAttributeUpdateArgs {
+  id: string;
+  version: number;
+  payload: ProfileAttributeUpdatePayload;
+}
+interface ProfileFormData {
+  attrs: Record<
+    string,
+    {
+      attr: UserAttributeWithJoins;
+      value: any;
+    }
+  >;
+}
 
 const ProfileForm: FC<{
   user: User;
   userAttributes: UserAttributeWithJoins[];
-  onStop: VoidFunction;
-}> = ({ user, userAttributes, onStop }) => {
-  const timers = useRef<Record<string, number>>({});
-
+  onStopEditing: VoidFunction;
+}> = ({ user, userAttributes, onStopEditing }) => {
   const queryClient = useQueryClient();
 
-  const form = useForm({
+  const [conflicts, setConflicts] = useState<Record<string, boolean>>({});
+
+  const form = useForm<ProfileFormData>({
     defaultValues: {
-      attrs: {} as Record<string, any>,
+      attrs: {},
     },
   });
 
@@ -42,24 +65,53 @@ const ProfileForm: FC<{
   });
 
   const updateProfileAttributeMutation = useMutation({
-    mutationFn: ({ id, version, payload }: { id: string; version: number; payload: ProfileAttributeUpdatePayload }) =>
-      updateProfileAttribute({
-        id,
+    mutationFn: ({ data }: Omit<BulkUpdateUserAttributeArgs, "userId">) =>
+      bulkUpdateProfileAttributes({
         userId: user.id,
-        version,
-        data: payload,
+        data,
       }),
   });
+
+  const handleSave = useCallback(async (values: UserAttributeUpdateArgs[]) => {
+    updateProfileAttributeMutation
+      .mutateAsync({
+        data: values.map((value) => ({
+          data: value.payload,
+          version: 100, // value.version,
+          id: value.id,
+        })),
+      })
+      .then((res) => {
+        const { concurrent_modification = [], failed_unknown = [], modified = [] } = res?.data ?? {};
+
+        if (concurrent_modification.length) {
+          setConflicts(
+            concurrent_modification.reduce(
+              (result, item) => {
+                result[item.id] = true;
+                return result;
+              },
+              {} as typeof conflicts,
+            ),
+          );
+        }
+      });
+  }, []);
+  const { queueUpdate, flush, isSaving } = useAutoSave<UserAttributeUpdateArgs>(handleSave);
 
   useEffect(() => {
     if (Array.isArray(userAttributes)) {
       form.reset({
         attrs: userAttributes.reduce(
           (result, item) => {
-            result[item.id] = readDynamicValue(item.attribute.type, item) ?? getDynamicDefaultValue(item.attribute.type);
+            const value = readDynamicValue(item.attribute.type, item) ?? getDynamicDefaultValue(item.attribute.type);
+            result[item.id] = {
+              value,
+              attr: item,
+            };
             return result;
           },
-          {} as Record<string, any>,
+          {} as ProfileFormData["attrs"],
         ),
       });
     } else {
@@ -69,21 +121,11 @@ const ProfileForm: FC<{
     }
   }, [userAttributes]);
 
-  const handleChangeField = (attr: UserAttributeWithJoins, value: any) => {
-    if (timers.current[attr.id]) {
-      clearTimeout(timers.current[attr.id]);
-    }
-
-    const timeoutId = setTimeout(() => {
-      updateProfileAttributeMutation.mutate({
-        id: attr.id,
-        version: attr.version,
-        payload: getDynamicValueObject(value, attr.attribute.type) as any,
-      });
-    }, 1000);
-
-    timers.current[attr.id] = timeoutId;
-  };
+  //   updateProfileAttributeMutation.mutateAsync({
+  //   id: attr.id,
+  //   version: attr.version,
+  //   payload: getDynamicValueObject(value, attr.attribute.type) as any,
+  // });
 
   const handleUploadImage = (data: FileWithPreview) => {
     if (data.file instanceof File) {
@@ -92,7 +134,8 @@ const ProfileForm: FC<{
   };
 
   const readCategoryAttributes = (categoryId: string) => {
-    return userAttributes.filter((attr) => attr.attribute.categoryId === categoryId);
+    const attrs = form.watch("attrs");
+    return Object.entries(attrs).filter(([, item]) => item.attr.attribute.categoryId === categoryId);
   };
 
   const handleCreateAttributes = async (attrIds: string[]) => {
@@ -103,8 +146,9 @@ const ProfileForm: FC<{
       })
       .then(() => {
         queryClient.invalidateQueries({
-          queryKey: ["users", user.id, "profile"],
+          queryKey: ["users", user.id, "attributes"],
         });
+        createDialog.closeDialog();
       });
   };
 
@@ -118,8 +162,12 @@ const ProfileForm: FC<{
         <div className="flex-1">
           <h1 className="text-4xl font-bold">{user.name}</h1>
           <p>{user.email}</p>
-          <div className="mt-10 flex justify-end">
-            <Button variant="destructive" onClick={onStop}>
+          <div className="mt-10 flex justify-end gap-5">
+            <Button loading={isSaving} onClick={flush}>
+              <FloppyDiskIcon />
+              Save
+            </Button>
+            <Button variant="destructive" onClick={onStopEditing}>
               <XIcon />
               Stop editing
             </Button>
@@ -133,31 +181,42 @@ const ProfileForm: FC<{
             <div key={category.id} className="p-5 bg-black/20 rounded-xl">
               <div className="flex items-center justify-between gap-5">
                 <h3 className="uppercase text-xs font-semibold">{category.name}</h3>
-                <Button variant="outline" onClick={createDialog.openDialog}>
+                <Button variant="secondary" onClick={createDialog.openDialog}>
                   <PlusIcon />
                   Add attribute
                 </Button>
               </div>
-              <ul className="mt-5">
+              <ul className="mt-5 space-y-4">
                 {attrs.length > 0 ? (
-                  attrs.map((attr) => (
-                    <li key={attr.id} className="flex justify-between items-center">
-                      <span>{attr.attribute.name}</span>
-                      <span>
+                  attrs.map(([attrId, attr]) => (
+                    <li key={attrId} className="flex items-center gap-5">
+                      <span className="text-sm">{attr.attr.attribute.name}</span>
+                      <span className="ml-auto w-full max-w-80">
                         <Controller
                           control={form.control}
-                          name={`attrs.${attr.id}`}
+                          name={`attrs.${attrId}.value`}
                           render={({ field }) => (
                             <AttributeEditor
-                              type={attr.attribute.type}
+                              type={attr.attr.attribute.type}
                               value={field.value}
                               onValueChange={(value) => {
-                                handleChangeField(attr, value);
+                                queueUpdate({
+                                  id: attr.attr.id,
+                                  version: attr.attr.version,
+                                  payload: getDynamicValueObject(value, attr.attr.attribute.type),
+                                });
                                 field.onChange(value);
                               }}
                             />
                           )}
                         />
+                      </span>
+                      <span className="w-20">
+                        {conflicts[attr.attr.id] ? (
+                          <Badge variant="destructive">
+                            <WarningCircleIcon weight="bold" /> Conflict
+                          </Badge>
+                        ) : null}
                       </span>
                     </li>
                   ))

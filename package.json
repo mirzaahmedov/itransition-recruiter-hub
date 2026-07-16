@@ -30,6 +30,7 @@
     "db:reset": "npm run db:reset -w @rh/database"
   },
   "devDependencies": {
+    "@types/node": "^26.1.1",
     "concurrently": "^10.0.3",
     "dotenv": "^17.4.2",
     "eslint": "^10.6.0",

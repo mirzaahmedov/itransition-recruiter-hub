@@ -1,6 +1,10 @@
 import { UserAttribute } from "@rh/database/browser";
 import { AttributeType } from "@rh/database/enums";
 
+type RemoveNull<T> = {
+  [K in keyof T]: Exclude<T[K], null>;
+};
+
 export function getDynamicDefaultValue(type: AttributeType) {
   switch (type) {
     case AttributeType.NUMERIC:
@@ -35,7 +39,7 @@ export function readDynamicValue(type: AttributeType, record: UserAttribute): an
   }
 }
 
-export function getDynamicValueObject(value: any, type: AttributeType): Partial<UserAttribute> {
+export function getDynamicValueObject(value: any, type: AttributeType): Partial<RemoveNull<UserAttribute>> {
   switch (type) {
     case AttributeType.NUMERIC:
       return { numberValue: value };

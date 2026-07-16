@@ -66,7 +66,7 @@ export const AttibuteCreateDialog: FC<{
         <Form className="contents" onSubmit={handleSubmit}>
           <DialogPanel className="grid gap-4">
             <Field>
-              <FieldLabel>Name</FieldLabel>
+              <FieldLabel>Category</FieldLabel>
               <Controller
                 control={form.control}
                 name="categoryId"
