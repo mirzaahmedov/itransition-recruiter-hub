@@ -3,9 +3,13 @@ import { useParams } from "react-router-dom";
 import { fetchUser, fetchUserProfile } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { ProfileView } from "./ProfileView";
+import { useState } from "react";
+import ProfileForm from "./ProfileForm";
 
 const UserProfilePage = () => {
   const userId = useParams().id;
+
+  const [editing, setEditing] = useState(false);
 
   const { data: user, isFetching: isFetchingUser } = useQuery({
     queryKey: ["users", userId],
@@ -28,7 +32,11 @@ const UserProfilePage = () => {
           <Spinner />
         </div>
       ) : userData && userProfileData ? (
-        <ProfileView user={userData} userProfile={userProfileData} />
+        editing ? (
+          <ProfileForm user={userData} userProfile={userProfileData} onStop={() => setEditing(false)} />
+        ) : (
+          <ProfileView user={userData} userProfile={userProfileData} onEdit={() => setEditing(true)} />
+        )
       ) : (
         <div>Nothing to show</div>
       )}

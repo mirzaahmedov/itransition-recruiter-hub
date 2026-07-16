@@ -270,3 +270,7 @@ body,
     @apply font-sans;
   }
 }
+
+html {
+  font-size: 16px;
+}
