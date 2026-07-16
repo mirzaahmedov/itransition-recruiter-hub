@@ -1,16 +1,16 @@
 import { privateApi } from "@/lib/api/client";
-import type { CategoryGetPayload } from "@rh/database/models";
+import type { ApiResponse } from "@/models/api";
+import type { Attribute } from "@rh/database/browser";
 
-export async function fetchSearchAttributes(search: string) {
-  const res = await privateApi.get<
-    CategoryGetPayload<{
-      include: {
-        attrs: true;
-      };
-    }>[]
-  >("/attributes/search", {
+interface SearchAttributeArgs {
+  q: string;
+  categoryId?: string;
+}
+export async function fetchSearchAttributes({ q, categoryId }: SearchAttributeArgs) {
+  const res = await privateApi.get<ApiResponse<Attribute[]>>("/attributes/search", {
     params: {
-      search,
+      q,
+      categoryId,
     },
   });
   return res.data;

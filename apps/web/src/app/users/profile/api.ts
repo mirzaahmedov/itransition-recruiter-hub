@@ -1,36 +1,45 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { User } from "@rh/database/browser";
-import type { UserProfileGetPayload } from "@rh/database/models";
-import type { ProfileAttributeCreatePayload, ProfileAttributeUpdatePayload } from "@rh/shared";
+import type { UserAttributeGetPayload } from "@rh/database/models";
+import type { ProfileAttributeUpdatePayload, ProfileAttributeCreateBulkPayload } from "@rh/shared/schemas";
 
-export type UserProfileWithAttributes = UserProfileGetPayload<{
+export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
   include: {
-    attrs: {
-      include: {
-        attribute: true;
-      };
-    };
+    attribute: true;
+    choice: true;
   };
-}>;
+}> {}
+
+interface IdParams {
+  userId: string;
+}
 
 export async function fetchUser(userId: string) {
   const res = await privateApi.get<ApiResponse<User>>(`/users/${userId}`);
   return res.data;
 }
 
-export async function fetchUserProfile(userId: string) {
-  const res = await privateApi.get<ApiResponse<UserProfileWithAttributes>>(`/users/${userId}/profile`);
+export async function fetchUserAttributes(userId: string) {
+  const res = await privateApi.get<ApiResponse<UserAttributeWithJoins[]>>(`/users/${userId}/attributes`);
   return res.data;
 }
 
-export async function createProfileAttribute(payload: ProfileAttributeCreatePayload) {
-  const res = await privateApi.post("/profile-attributes", payload);
+export async function createBulkUserAttributes({ ids, userId }: ProfileAttributeCreateBulkPayload & Pick<IdParams, "userId">) {
+  const res = await privateApi.post(`/users/${userId}/attributes`, {
+    ids,
+  });
   return res.data;
 }
 
-export async function updateProfileAttribute(id: string, version: number, payload: ProfileAttributeUpdatePayload) {
-  const res = await privateApi.patch(`/profile-attributes/${id}`, payload, {
+interface UserAttributeUpdateArgs {
+  id: string;
+  userId: string;
+  version: number;
+  data: ProfileAttributeUpdatePayload;
+}
+export async function updateProfileAttribute({ id, userId, version, data }: UserAttributeUpdateArgs) {
+  const res = await privateApi.patch(`/users/${userId}/attributes/${id}`, data, {
     params: {
       version,
     },
@@ -38,11 +47,11 @@ export async function updateProfileAttribute(id: string, version: number, payloa
   return res.data;
 }
 
-export async function uploadProfilePicture(file: File) {
+export async function uploadProfilePicture(id: string, file: File) {
   const formData = new FormData();
 
   formData.set("image", file);
 
-  const res = await privateApi.put("/users/profile-picture", formData);
+  const res = await privateApi.put(`/users/${id}/profile-picture`, formData);
   return res.data;
 }

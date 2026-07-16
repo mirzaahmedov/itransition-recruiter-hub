@@ -9,11 +9,10 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Category.js'
-export type * from './models/UserProfile.js'
 export type * from './models/User.js'
 export type * from './models/Attribute.js'
 export type * from './models/AttributeChoice.js'
-export type * from './models/ProfileAttribute.js'
+export type * from './models/UserAttribute.js'
 export type * from './models/AccessRule.js'
 export type * from './models/PositionAttribute.js'
 export type * from './models/Position.js'

@@ -1,4 +1,4 @@
-import { ProfileAttribute } from "@rh/database/browser";
+import { UserAttribute } from "@rh/database/browser";
 import { AttributeType } from "@rh/database/enums";
 
 export function getDynamicDefaultValue(type: AttributeType) {
@@ -18,7 +18,7 @@ export function getDynamicDefaultValue(type: AttributeType) {
   }
 }
 
-export function readDynamicValue(type: AttributeType, record: ProfileAttribute): any {
+export function readDynamicValue(type: AttributeType, record: UserAttribute): any {
   switch (type) {
     case AttributeType.NUMERIC:
       return record.numberValue;
@@ -35,7 +35,7 @@ export function readDynamicValue(type: AttributeType, record: ProfileAttribute):
   }
 }
 
-export function getDynamicValueObject(value: any, type: AttributeType): Partial<ProfileAttribute> {
+export function getDynamicValueObject(value: any, type: AttributeType): Partial<UserAttribute> {
   switch (type) {
     case AttributeType.NUMERIC:
       return { numberValue: value };

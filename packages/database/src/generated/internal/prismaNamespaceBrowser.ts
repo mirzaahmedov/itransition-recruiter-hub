@@ -52,11 +52,10 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Category: 'Category',
-  UserProfile: 'UserProfile',
   User: 'User',
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
-  ProfileAttribute: 'ProfileAttribute',
+  UserAttribute: 'UserAttribute',
   AccessRule: 'AccessRule',
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
@@ -86,14 +85,6 @@ export const CategoryScalarFieldEnum = {
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
-
-
-export const UserProfileScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId'
-} as const
-
-export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -132,7 +123,7 @@ export const AttributeChoiceScalarFieldEnum = {
 export type AttributeChoiceScalarFieldEnum = (typeof AttributeChoiceScalarFieldEnum)[keyof typeof AttributeChoiceScalarFieldEnum]
 
 
-export const ProfileAttributeScalarFieldEnum = {
+export const UserAttributeScalarFieldEnum = {
   id: 'id',
   attributeId: 'attributeId',
   textValue: 'textValue',
@@ -142,12 +133,12 @@ export const ProfileAttributeScalarFieldEnum = {
   startDateValue: 'startDateValue',
   endDateValue: 'endDateValue',
   choiceId: 'choiceId',
-  profileId: 'profileId',
+  userId: 'userId',
   createdAt: 'createdAt',
   version: 'version'
 } as const
 
-export type ProfileAttributeScalarFieldEnum = (typeof ProfileAttributeScalarFieldEnum)[keyof typeof ProfileAttributeScalarFieldEnum]
+export type UserAttributeScalarFieldEnum = (typeof UserAttributeScalarFieldEnum)[keyof typeof UserAttributeScalarFieldEnum]
 
 
 export const AccessRuleScalarFieldEnum = {

@@ -1,26 +1,80 @@
 import { fetchSearchAttributes } from "@/components/AttributePicker/api";
+import { GenericTable } from "@/components/GenericTable/GenericTable";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusIcon } from "@phosphor-icons/react";
-import type { CategoryGetPayload } from "@rh/database/models";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Spinner } from "@/components/ui/spinner";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useCategoryStore } from "@/store/useCategoryStore";
+import { MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
+import type { Attribute } from "@rh/database/browser";
 import { useMutation } from "@tanstack/react-query";
+import { getCoreRowModel, getGroupedRowModel, useReactTable, type ColumnDef, type RowSelectionState } from "@tanstack/react-table";
 import { useEffect, useRef, useState, type FC } from "react";
 
-type GroupedAttribute = CategoryGetPayload<{
-  include: {
-    attrs: true;
-  };
-}>;
+const attrColumns: ColumnDef<Attribute>[] = [
+  {
+    id: "id",
+    header: ({ table }) => (
+      <Checkbox
+        name="selectAll"
+        id="selectAll"
+        className="checkbox"
+        indeterminate={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
+        checked={table.getIsAllRowsSelected()}
+        onCheckedChange={(checked) => table.toggleAllRowsSelected(checked)}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        name="selectAll"
+        id="selectAll"
+        className="checkbox"
+        checked={row.getIsSelected()}
+        onCheckedChange={(checked) => row.toggleSelected(checked)}
+      />
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ getValue }) => <Badge variant="info">{getValue<string>()}</Badge>,
+  },
+];
 
-const AttributePicker: FC<{
+const valueOrAll = (value: string) => (value !== "all" ? value : undefined);
+
+export const AttributePicker: FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}> = ({ open, onOpenChange }) => {
+  onSelect: (values: string[]) => Promise<void>;
+}> = ({ open, onOpenChange, onSelect }) => {
   const timerRef = useRef<number>(null);
 
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [inputValue, setInputValue] = useState("");
+  const [rowData, setRowData] = useState<Attribute[]>([]);
+  const [categoryId, setCategoryId] = useState(["all"]);
 
-  const [groupedItems, setGroupedItems] = useState<GroupedAttribute[]>();
+  const categories = useCategoryStore((store) => store.categories);
+
+  const table = useReactTable({
+    columns: attrColumns,
+    data: rowData,
+    state: {
+      rowSelection,
+    },
+    getRowId: (row) => row.id,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
+  });
 
   const searchAttributeMutation = useMutation({
     mutationFn: fetchSearchAttributes,
@@ -32,7 +86,12 @@ const AttributePicker: FC<{
     }
 
     const timeoutId = setTimeout(() => {
-      searchAttributeMutation.mutateAsync(inputValue).then((data) => setGroupedItems(data.filter((item) => item.attrs.length > 0)));
+      searchAttributeMutation
+        .mutateAsync({
+          q: inputValue,
+          categoryId: valueOrAll(categoryId[0]),
+        })
+        .then((res) => setRowData(res.data ?? []));
     }, 500);
     timerRef.current = timeoutId;
 
@@ -41,23 +100,64 @@ const AttributePicker: FC<{
     };
   }, [inputValue]);
 
+  const handleSelected = () => {
+    onSelect(Object.keys(rowSelection)).then(() => {
+      setCategoryId(["all"]);
+      setRowSelection({});
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger render={<Button />}>
         <PlusIcon /> Create
       </DialogTrigger>
-      <DialogPopup>
+      <DialogPopup className="w-full max-w-6xl min-h-150">
         <DialogHeader>
           <DialogTitle>Create new attribute</DialogTitle>
         </DialogHeader>
-        <DialogPanel className="grid gap-4">Contents</DialogPanel>
+        <DialogPanel className="flex flex-col gap-5">
+          <InputGroup className="max-w-xs">
+            <InputGroupAddon>
+              <MagnifyingGlassIcon />
+            </InputGroupAddon>
+            <InputGroupInput value={inputValue} onValueChange={setInputValue} />
+          </InputGroup>
+          <ToggleGroup
+            value={categoryId}
+            onValueChange={(values) => {
+              searchAttributeMutation
+                .mutateAsync({
+                  q: inputValue,
+                  categoryId: valueOrAll(values[0]),
+                })
+                .then((res) => setRowData(res.data ?? []));
+              setCategoryId(values);
+            }}
+            className="flex flex-wrap"
+          >
+            <ToggleGroupItem value="all">All</ToggleGroupItem>
+            {categories.map((category) => (
+              <ToggleGroupItem key={category.id} size="sm" value={category.id}>
+                <span className="text-xs">{category.name}</span>
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+          <div className="flex-1">
+            {searchAttributeMutation.isPending ? (
+              <div className="h-full grid place-items-center">
+                <Spinner />
+              </div>
+            ) : (
+              <GenericTable instance={table} />
+            )}
+          </div>
+        </DialogPanel>
         <DialogFooter>
           <DialogClose render={<Button variant="ghost" />}>Close</DialogClose>
-          <Button type="submit">Save</Button>
+          <Button onClick={handleSelected}>Select</Button>
         </DialogFooter>
       </DialogPopup>
     </Dialog>
   );
 };
-
-export default AttributePicker;

@@ -47,17 +47,14 @@ export class AttributeService {
     });
   }
 
-  async search(search: string) {
-    return await this.prisma.category.findMany({
-      include: {
-        attrs: {
-          where: {
-            name: {
-              contains: search,
-              mode: 'insensitive',
-            },
-          },
+  async search(query: string, categoryId?: string) {
+    return this.prisma.attribute.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: 'insensitive',
         },
+        categoryId: categoryId || undefined,
       },
     });
   }

@@ -1,27 +1,21 @@
 import { UserRole } from '@rh/database/enums';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import {
-  UserCreateWithoutProfileInput,
-  UserUpdateWithoutProfileInput,
-} from '@rh/database/models';
+import { UserCreateInput, UserUpdateInput } from '@rh/database/models';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: UserCreateWithoutProfileInput) {
+  async create(data: UserCreateInput) {
     return this.prisma.user.create({
       data: {
         ...data,
-        profile: {
-          create: {},
-        },
       },
     });
   }
 
-  async update(id: string, data: UserUpdateWithoutProfileInput) {
+  async update(id: string, data: UserUpdateInput) {
     return this.prisma.user.update({
       data,
       where: {

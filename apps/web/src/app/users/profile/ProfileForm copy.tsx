@@ -8,7 +8,7 @@ import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { createProfileAttribute, fetchUserProfile, updateProfileAttribute, uploadProfilePicture } from "./api";
+import { createProfileAttribute, fetchUserAttributes, updateProfileAttribute, uploadProfilePicture } from "./api";
 import type { ProfileAttributeUpdatePayload } from "@rh/shared";
 import type { ProfileAttributeGetPayload } from "@rh/database/models";
 import FileUploadAvatar from "@/components/FileUploadAvatar";
@@ -29,7 +29,7 @@ const ProfileForm = () => {
 
   const { data: profileData } = useQuery({
     queryKey: ["user/profile", user?.id],
-    queryFn: fetchUserProfile,
+    queryFn: fetchUserAttributes,
   });
 
   const categories = useCategories();

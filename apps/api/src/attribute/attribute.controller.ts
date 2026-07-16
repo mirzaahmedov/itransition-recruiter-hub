@@ -50,8 +50,11 @@ export class AttributeController {
   }
 
   @Get('search')
-  async search(@Query('search') search: string) {
-    return await this.attributeService.search(search);
+  async search(
+    @Query('q') q: string,
+    @Query('categoryId') categoryId?: string,
+  ) {
+    return makeResponse(await this.attributeService.search(q, categoryId));
   }
 
   @Get()

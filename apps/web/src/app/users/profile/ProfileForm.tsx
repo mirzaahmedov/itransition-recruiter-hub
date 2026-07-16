@@ -1,29 +1,28 @@
-import { useCategories } from "@/app/categories/useCategories";
 import { AttributeEditor } from "@/components/AttributeEditor";
-import { AttributePicker } from "@/components/AttributePicker/AttributePickerV2";
-import { Accordion, AccordionItem, AccordionPanel, AccordionTrigger } from "@/components/ui/accordion";
-import { useAuthStore } from "@/store/useAuthStore";
-import type { Attribute, User } from "@rh/database/browser";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useDialogState } from "@/hooks/use-dialog-state";
+import type { FileWithPreview } from "@/hooks/use-file-upload";
+import { useCategoryStore } from "@/store/useCategoryStore";
+import { fallbackName } from "@/utils/fallbackName";
+import { PlusIcon, XIcon } from "@phosphor-icons/react";
+import type { User } from "@rh/database/browser";
+import type { ProfileAttributeUpdatePayload } from "@rh/shared";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { createProfileAttribute, fetchUserProfile, updateProfileAttribute, uploadProfilePicture, type UserProfileWithAttributes } from "./api";
-import type { ProfileAttributeUpdatePayload } from "@rh/shared";
-import type { ProfileAttributeGetPayload } from "@rh/database/models";
-import FileUploadAvatar from "@/components/FileUploadAvatar";
-import type { FileWithPreview } from "@/hooks/use-file-upload";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { fallbackName } from "@/utils/fallbackName";
-import { Button } from "@/components/ui/button";
-import { PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
+import { createBulkUserAttributes, updateProfileAttribute, uploadProfilePicture, type UserAttributeWithJoins } from "./api";
+import { AttributePicker } from "./AttributePicker";
 
 const ProfileForm: FC<{
   user: User;
-  userProfile: UserProfileWithAttributes;
+  userAttributes: UserAttributeWithJoins[];
   onStop: VoidFunction;
-}> = ({ user, userProfile, onStop }) => {
+}> = ({ user, userAttributes, onStop }) => {
   const timers = useRef<Record<string, number>>({});
+
+  const queryClient = useQueryClient();
 
   const form = useForm({
     defaultValues: {
@@ -31,55 +30,46 @@ const ProfileForm: FC<{
     },
   });
 
-  const categories = useCategories();
+  const categories = useCategoryStore((store) => store.categories);
+  const createDialog = useDialogState();
 
-  const createProfileAttributeMutation = useMutation({
-    mutationFn: createProfileAttribute,
+  const createUserAttributeMutation = useMutation({
+    mutationFn: createBulkUserAttributes,
   });
 
   const uploadProfilePictureMutation = useMutation({
-    mutationFn: uploadProfilePicture,
+    mutationFn: (file: File) => uploadProfilePicture(user.id, file),
   });
 
   const updateProfileAttributeMutation = useMutation({
     mutationFn: ({ id, version, payload }: { id: string; version: number; payload: ProfileAttributeUpdatePayload }) =>
-      updateProfileAttribute(id, version, payload),
+      updateProfileAttribute({
+        id,
+        userId: user.id,
+        version,
+        data: payload,
+      }),
   });
 
-  const handleSelectAttribute = (attr: Attribute) => {
-    createProfileAttributeMutation
-      .mutateAsync({
-        attrId: attr.id,
-      })
-      .then(console.log);
-  };
-
   useEffect(() => {
-    if (userProfile.attrs) {
+    if (Array.isArray(userAttributes)) {
       form.reset({
-        attrs: userProfile.attrs.reduce((result, item) => {
-          console.log({ item });
-          result[item.id] = readDynamicValue(item.attribute.type, item) ?? getDynamicDefaultValue(item.attribute.type);
-          return result;
-        }, {}),
+        attrs: userAttributes.reduce(
+          (result, item) => {
+            result[item.id] = readDynamicValue(item.attribute.type, item) ?? getDynamicDefaultValue(item.attribute.type);
+            return result;
+          },
+          {} as Record<string, any>,
+        ),
       });
     } else {
       form.reset({
         attrs: {},
       });
     }
-  }, [userProfile]);
+  }, [userAttributes]);
 
-  console.log({ values: form.watch("attrs") });
-
-  const handleChangeField = (
-    attr: ProfileAttributeGetPayload<{
-      include: {
-        attribute: true;
-      };
-    }>,
-    value: any,
-  ) => {
+  const handleChangeField = (attr: UserAttributeWithJoins, value: any) => {
     if (timers.current[attr.id]) {
       clearTimeout(timers.current[attr.id]);
     }
@@ -102,7 +92,20 @@ const ProfileForm: FC<{
   };
 
   const readCategoryAttributes = (categoryId: string) => {
-    return userProfile.attrs.filter((attr) => attr.attribute.categoryId === categoryId);
+    return userAttributes.filter((attr) => attr.attribute.categoryId === categoryId);
+  };
+
+  const handleCreateAttributes = async (attrIds: string[]) => {
+    createUserAttributeMutation
+      .mutateAsync({
+        ids: attrIds,
+        userId: user.id,
+      })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["users", user.id, "profile"],
+        });
+      });
   };
 
   return (
@@ -128,7 +131,13 @@ const ProfileForm: FC<{
           const attrs = readCategoryAttributes(category.id);
           return (
             <div key={category.id} className="p-5 bg-black/20 rounded-xl">
-              <h3 className="uppercase text-xs font-semibold text-brand">{category.name}</h3>
+              <div className="flex items-center justify-between gap-5">
+                <h3 className="uppercase text-xs font-semibold">{category.name}</h3>
+                <Button variant="outline" onClick={createDialog.openDialog}>
+                  <PlusIcon />
+                  Add attribute
+                </Button>
+              </div>
               <ul className="mt-5">
                 {attrs.length > 0 ? (
                   attrs.map((attr) => (
@@ -160,6 +169,8 @@ const ProfileForm: FC<{
           );
         })}
       </div>
+
+      <AttributePicker open={createDialog.open} onOpenChange={createDialog.setOpen} onSelect={handleCreateAttributes} />
     </div>
   );
 };

@@ -385,11 +385,10 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Category: 'Category',
-  UserProfile: 'UserProfile',
   User: 'User',
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
-  ProfileAttribute: 'ProfileAttribute',
+  UserAttribute: 'UserAttribute',
   AccessRule: 'AccessRule',
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
@@ -409,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "userProfile" | "user" | "attribute" | "attributeChoice" | "profileAttribute" | "accessRule" | "positionAttribute" | "position" | "cV"
+    modelProps: "category" | "user" | "attribute" | "attributeChoice" | "userAttribute" | "accessRule" | "positionAttribute" | "position" | "cV"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -484,80 +483,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
-        }
-      }
-    }
-    UserProfile: {
-      payload: Prisma.$UserProfilePayload<ExtArgs>
-      fields: Prisma.UserProfileFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.UserProfileFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.UserProfileFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
-        }
-        findFirst: {
-          args: Prisma.UserProfileFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.UserProfileFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
-        }
-        findMany: {
-          args: Prisma.UserProfileFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>[]
-        }
-        create: {
-          args: Prisma.UserProfileCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
-        }
-        createMany: {
-          args: Prisma.UserProfileCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.UserProfileCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>[]
-        }
-        delete: {
-          args: Prisma.UserProfileDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
-        }
-        update: {
-          args: Prisma.UserProfileUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
-        }
-        deleteMany: {
-          args: Prisma.UserProfileDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.UserProfileUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.UserProfileUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>[]
-        }
-        upsert: {
-          args: Prisma.UserProfileUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
-        }
-        aggregate: {
-          args: Prisma.UserProfileAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateUserProfile>
-        }
-        groupBy: {
-          args: Prisma.UserProfileGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserProfileGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.UserProfileCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserProfileCountAggregateOutputType> | number
         }
       }
     }
@@ -783,77 +708,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    ProfileAttribute: {
-      payload: Prisma.$ProfileAttributePayload<ExtArgs>
-      fields: Prisma.ProfileAttributeFieldRefs
+    UserAttribute: {
+      payload: Prisma.$UserAttributePayload<ExtArgs>
+      fields: Prisma.UserAttributeFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.ProfileAttributeFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload> | null
+          args: Prisma.UserAttributeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.ProfileAttributeFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>
+          args: Prisma.UserAttributeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>
         }
         findFirst: {
-          args: Prisma.ProfileAttributeFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload> | null
+          args: Prisma.UserAttributeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.ProfileAttributeFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>
+          args: Prisma.UserAttributeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>
         }
         findMany: {
-          args: Prisma.ProfileAttributeFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>[]
+          args: Prisma.UserAttributeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>[]
         }
         create: {
-          args: Prisma.ProfileAttributeCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>
+          args: Prisma.UserAttributeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>
         }
         createMany: {
-          args: Prisma.ProfileAttributeCreateManyArgs<ExtArgs>
+          args: Prisma.UserAttributeCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.ProfileAttributeCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>[]
+          args: Prisma.UserAttributeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>[]
         }
         delete: {
-          args: Prisma.ProfileAttributeDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>
+          args: Prisma.UserAttributeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>
         }
         update: {
-          args: Prisma.ProfileAttributeUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>
+          args: Prisma.UserAttributeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>
         }
         deleteMany: {
-          args: Prisma.ProfileAttributeDeleteManyArgs<ExtArgs>
+          args: Prisma.UserAttributeDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.ProfileAttributeUpdateManyArgs<ExtArgs>
+          args: Prisma.UserAttributeUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.ProfileAttributeUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>[]
+          args: Prisma.UserAttributeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>[]
         }
         upsert: {
-          args: Prisma.ProfileAttributeUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProfileAttributePayload>
+          args: Prisma.UserAttributeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAttributePayload>
         }
         aggregate: {
-          args: Prisma.ProfileAttributeAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateProfileAttribute>
+          args: Prisma.UserAttributeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserAttribute>
         }
         groupBy: {
-          args: Prisma.ProfileAttributeGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProfileAttributeGroupByOutputType>[]
+          args: Prisma.UserAttributeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserAttributeGroupByOutputType>[]
         }
         count: {
-          args: Prisma.ProfileAttributeCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProfileAttributeCountAggregateOutputType> | number
+          args: Prisma.UserAttributeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserAttributeCountAggregateOutputType> | number
         }
       }
     }
@@ -1201,14 +1126,6 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
-export const UserProfileScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId'
-} as const
-
-export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
-
-
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -1245,7 +1162,7 @@ export const AttributeChoiceScalarFieldEnum = {
 export type AttributeChoiceScalarFieldEnum = (typeof AttributeChoiceScalarFieldEnum)[keyof typeof AttributeChoiceScalarFieldEnum]
 
 
-export const ProfileAttributeScalarFieldEnum = {
+export const UserAttributeScalarFieldEnum = {
   id: 'id',
   attributeId: 'attributeId',
   textValue: 'textValue',
@@ -1255,12 +1172,12 @@ export const ProfileAttributeScalarFieldEnum = {
   startDateValue: 'startDateValue',
   endDateValue: 'endDateValue',
   choiceId: 'choiceId',
-  profileId: 'profileId',
+  userId: 'userId',
   createdAt: 'createdAt',
   version: 'version'
 } as const
 
-export type ProfileAttributeScalarFieldEnum = (typeof ProfileAttributeScalarFieldEnum)[keyof typeof ProfileAttributeScalarFieldEnum]
+export type UserAttributeScalarFieldEnum = (typeof UserAttributeScalarFieldEnum)[keyof typeof UserAttributeScalarFieldEnum]
 
 
 export const AccessRuleScalarFieldEnum = {
@@ -1529,11 +1446,10 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   category?: Prisma.CategoryOmit
-  userProfile?: Prisma.UserProfileOmit
   user?: Prisma.UserOmit
   attribute?: Prisma.AttributeOmit
   attributeChoice?: Prisma.AttributeChoiceOmit
-  profileAttribute?: Prisma.ProfileAttributeOmit
+  userAttribute?: Prisma.UserAttributeOmit
   accessRule?: Prisma.AccessRuleOmit
   positionAttribute?: Prisma.PositionAttributeOmit
   position?: Prisma.PositionOmit

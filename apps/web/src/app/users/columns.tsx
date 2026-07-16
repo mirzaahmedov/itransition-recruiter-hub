@@ -12,6 +12,7 @@ export const userColumns: ColumnDef<User>[] = [
         name="selectAll"
         id="selectAll"
         className="checkbox"
+        indeterminate={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
         checked={table.getIsAllRowsSelected()}
         onCheckedChange={(checked) => table.toggleAllRowsSelected(checked)}
       />

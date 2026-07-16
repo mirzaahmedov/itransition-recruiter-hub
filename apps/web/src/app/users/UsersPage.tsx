@@ -1,18 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { bulkUpdateRoles, fetchUsers } from "./api";
-import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
-import { UserRole, type User } from "@rh/database/browser";
-import { useState } from "react";
-import { ShieldCheckIcon } from "@phosphor-icons/react";
-import { countSelectRows, rowDataWithFallback, rowSelectionToArray } from "@/lib/table/utils";
-import toast from "react-hot-toast";
 import { GenericTable } from "@/components/GenericTable/GenericTable";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverPopup, PopoverTrigger } from "@/components/ui/popover";
-import { fallbackName } from "@/utils/fallbackName";
+import { countSelectRows, rowDataWithFallback, rowSelectionToArray } from "@/lib/table/utils";
+import { ShieldCheckIcon } from "@phosphor-icons/react";
+import { UserRole, type User } from "@rh/database/browser";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { bulkUpdateRoles, fetchUsers } from "./api";
 import { userColumns } from "./columns";
 
 const UsersPage = () => {

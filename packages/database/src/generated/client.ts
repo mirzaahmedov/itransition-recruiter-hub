@@ -45,11 +45,6 @@ export { Prisma }
  */
 export type Category = Prisma.CategoryModel
 /**
- * Model UserProfile
- * 
- */
-export type UserProfile = Prisma.UserProfileModel
-/**
  * Model User
  * 
  */
@@ -65,10 +60,10 @@ export type Attribute = Prisma.AttributeModel
  */
 export type AttributeChoice = Prisma.AttributeChoiceModel
 /**
- * Model ProfileAttribute
+ * Model UserAttribute
  * 
  */
-export type ProfileAttribute = Prisma.ProfileAttributeModel
+export type UserAttribute = Prisma.UserAttributeModel
 /**
  * Model AccessRule
  * 

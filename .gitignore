@@ -3,7 +3,7 @@ node_modules
 .env
 .turbo
 .vscode
-packages/core/src/generated
+packages/database/src/generated
 
 # compiled output
 /dist

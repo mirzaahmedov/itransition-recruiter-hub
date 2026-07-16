@@ -192,7 +192,7 @@ export type AttributeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   choices?: Prisma.AttributeChoiceListRelationFilter
-  values?: Prisma.ProfileAttributeListRelationFilter
+  values?: Prisma.UserAttributeListRelationFilter
   positionAttributes?: Prisma.PositionAttributeListRelationFilter
 }
 
@@ -205,7 +205,7 @@ export type AttributeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
   choices?: Prisma.AttributeChoiceOrderByRelationAggregateInput
-  values?: Prisma.ProfileAttributeOrderByRelationAggregateInput
+  values?: Prisma.UserAttributeOrderByRelationAggregateInput
   positionAttributes?: Prisma.PositionAttributeOrderByRelationAggregateInput
 }
 
@@ -221,7 +221,7 @@ export type AttributeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Attribute"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   choices?: Prisma.AttributeChoiceListRelationFilter
-  values?: Prisma.ProfileAttributeListRelationFilter
+  values?: Prisma.UserAttributeListRelationFilter
   positionAttributes?: Prisma.PositionAttributeListRelationFilter
 }, "id">
 
@@ -257,7 +257,7 @@ export type AttributeCreateInput = {
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
-  values?: Prisma.ProfileAttributeCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
@@ -269,7 +269,7 @@ export type AttributeUncheckedCreateInput = {
   categoryId: string
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
-  values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
@@ -281,7 +281,7 @@ export type AttributeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
-  values?: Prisma.ProfileAttributeUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
@@ -293,7 +293,7 @@ export type AttributeUncheckedUpdateInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
-  values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUncheckedUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
@@ -464,7 +464,7 @@ export type AttributeCreateWithoutCategoryInput = {
   system?: boolean
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
-  values?: Prisma.ProfileAttributeCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
@@ -475,7 +475,7 @@ export type AttributeUncheckedCreateWithoutCategoryInput = {
   system?: boolean
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
-  values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
@@ -524,7 +524,7 @@ export type AttributeCreateWithoutChoicesInput = {
   system?: boolean
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
-  values?: Prisma.ProfileAttributeCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeCreateNestedManyWithoutAttributeInput
 }
 
@@ -535,7 +535,7 @@ export type AttributeUncheckedCreateWithoutChoicesInput = {
   system?: boolean
   categoryId: string
   createdAt?: Date | string
-  values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutAttributeInput
   positionAttributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
@@ -562,7 +562,7 @@ export type AttributeUpdateWithoutChoicesInput = {
   system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
-  values?: Prisma.ProfileAttributeUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
@@ -573,7 +573,7 @@ export type AttributeUncheckedUpdateWithoutChoicesInput = {
   system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUncheckedUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
@@ -645,7 +645,7 @@ export type AttributeCreateWithoutPositionAttributesInput = {
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutAttrsInput
   choices?: Prisma.AttributeChoiceCreateNestedManyWithoutAttributeInput
-  values?: Prisma.ProfileAttributeCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeUncheckedCreateWithoutPositionAttributesInput = {
@@ -656,7 +656,7 @@ export type AttributeUncheckedCreateWithoutPositionAttributesInput = {
   categoryId: string
   createdAt?: Date | string
   choices?: Prisma.AttributeChoiceUncheckedCreateNestedManyWithoutAttributeInput
-  values?: Prisma.ProfileAttributeUncheckedCreateNestedManyWithoutAttributeInput
+  values?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutAttributeInput
 }
 
 export type AttributeCreateOrConnectWithoutPositionAttributesInput = {
@@ -683,7 +683,7 @@ export type AttributeUpdateWithoutPositionAttributesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutAttrsNestedInput
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
-  values?: Prisma.ProfileAttributeUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeUncheckedUpdateWithoutPositionAttributesInput = {
@@ -694,7 +694,7 @@ export type AttributeUncheckedUpdateWithoutPositionAttributesInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
-  values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
 export type AttributeCreateManyCategoryInput = {
@@ -712,7 +712,7 @@ export type AttributeUpdateWithoutCategoryInput = {
   system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUpdateManyWithoutAttributeNestedInput
-  values?: Prisma.ProfileAttributeUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUpdateManyWithoutAttributeNestedInput
 }
 
@@ -723,7 +723,7 @@ export type AttributeUncheckedUpdateWithoutCategoryInput = {
   system?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   choices?: Prisma.AttributeChoiceUncheckedUpdateManyWithoutAttributeNestedInput
-  values?: Prisma.ProfileAttributeUncheckedUpdateManyWithoutAttributeNestedInput
+  values?: Prisma.UserAttributeUncheckedUpdateManyWithoutAttributeNestedInput
   positionAttributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutAttributeNestedInput
 }
 
@@ -773,7 +773,7 @@ export type AttributeCountOutputTypeCountChoicesArgs<ExtArgs extends runtime.Typ
  * AttributeCountOutputType without action
  */
 export type AttributeCountOutputTypeCountValuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProfileAttributeWhereInput
+  where?: Prisma.UserAttributeWhereInput
 }
 
 /**
@@ -847,7 +847,7 @@ export type $AttributePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     category: Prisma.$CategoryPayload<ExtArgs>
     choices: Prisma.$AttributeChoicePayload<ExtArgs>[]
-    values: Prisma.$ProfileAttributePayload<ExtArgs>[]
+    values: Prisma.$UserAttributePayload<ExtArgs>[]
     positionAttributes: Prisma.$PositionAttributePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1253,7 +1253,7 @@ export interface Prisma__AttributeClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   choices<T extends Prisma.Attribute$choicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$choicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttributeChoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  values<T extends Prisma.Attribute$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  values<T extends Prisma.Attribute$valuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$valuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   positionAttributes<T extends Prisma.Attribute$positionAttributesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attribute$positionAttributesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1719,23 +1719,23 @@ export type Attribute$choicesArgs<ExtArgs extends runtime.Types.Extensions.Inter
  */
 export type Attribute$valuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ProfileAttribute
+   * Select specific fields to fetch from the UserAttribute
    */
-  select?: Prisma.ProfileAttributeSelect<ExtArgs> | null
+  select?: Prisma.UserAttributeSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ProfileAttribute
+   * Omit specific fields from the UserAttribute
    */
-  omit?: Prisma.ProfileAttributeOmit<ExtArgs> | null
+  omit?: Prisma.UserAttributeOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProfileAttributeInclude<ExtArgs> | null
-  where?: Prisma.ProfileAttributeWhereInput
-  orderBy?: Prisma.ProfileAttributeOrderByWithRelationInput | Prisma.ProfileAttributeOrderByWithRelationInput[]
-  cursor?: Prisma.ProfileAttributeWhereUniqueInput
+  include?: Prisma.UserAttributeInclude<ExtArgs> | null
+  where?: Prisma.UserAttributeWhereInput
+  orderBy?: Prisma.UserAttributeOrderByWithRelationInput | Prisma.UserAttributeOrderByWithRelationInput[]
+  cursor?: Prisma.UserAttributeWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ProfileAttributeScalarFieldEnum | Prisma.ProfileAttributeScalarFieldEnum[]
+  distinct?: Prisma.UserAttributeScalarFieldEnum | Prisma.UserAttributeScalarFieldEnum[]
 }
 
 /**

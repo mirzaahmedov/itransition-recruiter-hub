@@ -1,26 +1,22 @@
-import { useCategories } from "@/app/categories/useCategories";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { fallbackName } from "@/utils/fallbackName";
-import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
+import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
-import { readDynamicValue } from "@rh/shared/utils";
 import type { FC } from "react";
-import type { UserProfileWithAttributes } from "./api";
-import AttributePicker from "./AttributePicker";
-import { useDialogState } from "@/hooks/use-dialog-state";
+import type { UserAttributeWithJoins } from "./api";
+import { useCategoryStore } from "@/store/useCategoryStore";
+import { renderDynamicValue } from "@/utils/renderDynamicValue";
 
 export const ProfileView: FC<{
   user: User;
-  userProfile: UserProfileWithAttributes;
+  userAttributes: UserAttributeWithJoins[];
   onEdit: VoidFunction;
-}> = ({ user, userProfile, onEdit }) => {
-  const categories = useCategories();
-
-  const createDialog = useDialogState();
+}> = ({ user, userAttributes, onEdit }) => {
+  const categories = useCategoryStore((store) => store.categories);
 
   const readCategoryAttributes = (categoryId: string) => {
-    return userProfile.attrs.filter((attr) => attr.attribute.categoryId === categoryId);
+    return userAttributes.filter((attr) => attr.attribute.categoryId === categoryId);
   };
 
   return (
@@ -48,10 +44,6 @@ export const ProfileView: FC<{
             <div key={category.id} className="p-5 bg-black/20 rounded-xl">
               <div className="flex items-center justify-between gap-5">
                 <h3 className="uppercase text-xs font-semibold">{category.name}</h3>
-                <Button variant="outline" onClick={createDialog.openDialog}>
-                  <PlusIcon />
-                  Add attribute
-                </Button>
               </div>
               <ul className="mt-5">
                 {attrs.length > 0 ? (
@@ -59,7 +51,7 @@ export const ProfileView: FC<{
                     <li key={attr.id} className="flex justify-between">
                       <span>{attr.attribute.name}</span>
                       <span className="flex-1 border-b border-border border-dotted"></span>
-                      <b>{readDynamicValue(attr.attribute.type, attr)}</b>
+                      <b>{renderDynamicValue(attr.attribute.type, attr)}</b>
                     </li>
                   ))
                 ) : (
@@ -70,8 +62,6 @@ export const ProfileView: FC<{
           );
         })}
       </div>
-
-      <AttributePicker open={createDialog.open} onOpenChange={createDialog.setOpen} />
     </div>
   );
 };

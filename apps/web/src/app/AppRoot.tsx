@@ -4,10 +4,13 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { fetchMe } from "./api";
 import { Spinner } from "@/components/ui/spinner";
+import { fetchCategories } from "./categories/api";
+import { useCategoryStore } from "@/store/useCategoryStore";
 
 const AppRoot = () => {
   const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
   const setUserProfile = useAuthStore((store) => store.setUserProfile);
+  const setCategories = useCategoryStore((store) => store.setCategories);
   const logout = useAuthStore((store) => store.logOut);
 
   const navigate = useNavigate();
@@ -15,6 +18,11 @@ const AppRoot = () => {
   const fetchMeMutation = useMutation({
     mutationKey: ["users/me"],
     mutationFn: fetchMe,
+  });
+
+  const fetchCategoryMutation = useMutation({
+    mutationKey: ["categories"],
+    mutationFn: fetchCategories,
   });
 
   useEffect(() => {
@@ -35,6 +43,12 @@ const AppRoot = () => {
       },
     });
   }, [setUserProfile]);
+
+  useEffect(() => {
+    fetchCategoryMutation.mutateAsync().then((res) => {
+      setCategories(res.data ?? []);
+    });
+  }, []);
 
   return isAuthenticated ? (
     <Outlet />
