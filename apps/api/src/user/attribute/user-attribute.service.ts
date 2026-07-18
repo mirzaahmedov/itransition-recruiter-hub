@@ -3,7 +3,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import {
   CreateUserProfileAttributePayload,
   UpdateUserProfileAttributePayload,
-} from '@rh/shared';
+} from '@rh/shared/schemas';
 import { BulkCreateUserProfileAttributeDto } from './user-attribute.dto';
 import { BulkUpdateUserProfileAttributePayload } from '@rh/shared/schemas';
 import { makeResponse } from '@/models/api';

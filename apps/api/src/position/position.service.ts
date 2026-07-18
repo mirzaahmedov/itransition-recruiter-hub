@@ -1,6 +1,18 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { CreatePositionPayload, UpdatePositionPayload } from '@rh/shared';
+
+const positionInclude = {
+  attributes: {
+    include: {
+      attribute: true,
+    },
+  },
+} as const;
 
 @Injectable()
 export class PositionService {
@@ -17,21 +29,20 @@ export class PositionService {
           })),
         },
       },
+      include: positionInclude,
     });
   }
 
   async findAll() {
     return await this.prisma.position.findMany({
-      include: {
-        attributes: true,
-      },
+      include: positionInclude,
     });
   }
 
   async findOne(id: string) {
     const position = await this.prisma.position.findUnique({
       where: { id },
-      include: { attributes: true },
+      include: positionInclude,
     });
 
     if (!position) {
@@ -60,8 +71,58 @@ export class PositionService {
           },
         }),
       },
-      include: { attributes: true },
+      include: positionInclude,
     });
+  }
+
+  async addAttribute(positionId: string, attributeId: string) {
+    await this.findOne(positionId);
+
+    const existing = await this.prisma.positionAttribute.findFirst({
+      where: {
+        positionId,
+        attributeId,
+      },
+    });
+
+    if (existing) {
+      throw new ConflictException(
+        'Attribute is already assigned to this position',
+      );
+    }
+
+    await this.prisma.positionAttribute.create({
+      data: {
+        positionId,
+        attributeId,
+      },
+    });
+
+    return this.findOne(positionId);
+  }
+
+  async removeAttribute(positionId: string, attributeId: string) {
+    await this.findOne(positionId);
+
+    const positionAttribute =
+      await this.prisma.positionAttribute.findFirst({
+        where: {
+          positionId,
+          attributeId,
+        },
+      });
+
+    if (!positionAttribute) {
+      throw new NotFoundException(
+        `Attribute #${attributeId} not found on position #${positionId}`,
+      );
+    }
+
+    await this.prisma.positionAttribute.delete({
+      where: { id: positionAttribute.id },
+    });
+
+    return this.findOne(positionId);
   }
 
   async delete(id: string) {
