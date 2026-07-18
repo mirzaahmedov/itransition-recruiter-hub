@@ -1,12 +1,11 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { ConflictException, Injectable } from '@nestjs/common';
+import { BulkCreateUserProfileAttributeDto } from './user-attribute.dto';
 import {
+  BulkUpdateUserProfileAttributePayload,
   CreateUserProfileAttributePayload,
   UpdateUserProfileAttributePayload,
-} from '@rh/shared';
-import { BulkCreateUserProfileAttributeDto } from './user-attribute.dto';
-import { BulkUpdateUserProfileAttributePayload } from '@rh/shared/schemas';
-import { makeResponse } from '@/models/api';
+} from '@rh/shared/schemas';
 import { UserAttribute } from '@rh/database/client';
 
 interface IdParams {
@@ -24,7 +23,7 @@ export class UserAttributeService {
   ) {
     return await this.prisma.userAttribute.create({
       data: {
-        attributeId: data.attrId,
+        attributeId: data.attributeId,
         userId: data.userId,
       },
     });

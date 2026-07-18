@@ -10,3 +10,5 @@ export * from "./bulk-update-user-roles.schema.js";
 export * from "./bulk-update-user-profile-attribute.schema.js";
 export * from "./bulk-ids.schema.js";
 export * from "./update-user-profile.schema.js";
+export * from "./create-user-profile-attribute.schema.js";
+export * from "./update-user-profile-attribute.schema.js";
