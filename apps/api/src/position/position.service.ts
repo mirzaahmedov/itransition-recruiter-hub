@@ -1,13 +1,13 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
-import { PositionCreatePayload } from '@rh/shared';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreatePositionPayload, UpdatePositionPayload } from '@rh/shared';
 
 @Injectable()
 export class PositionService {
   constructor(readonly prisma: PrismaService) {}
 
-  async create(payload: PositionCreatePayload) {
-    const position = this.prisma.position.create({
+  async create(payload: CreatePositionPayload) {
+    return await this.prisma.position.create({
       data: {
         title: payload.title,
         description: payload.description,
@@ -18,7 +18,6 @@ export class PositionService {
         },
       },
     });
-    return position;
   }
 
   async findAll() {
@@ -29,16 +28,47 @@ export class PositionService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} position`;
+  async findOne(id: string) {
+    const position = await this.prisma.position.findUnique({
+      where: { id },
+      include: { attributes: true },
+    });
+
+    if (!position) {
+      throw new NotFoundException(`Position #${id} not found`);
+    }
+
+    return position;
   }
 
-  update(id: number, payload: unknown) {
-    console.log({ payload });
-    return `This action updates a #${id} position`;
+  async update(id: string, payload: UpdatePositionPayload) {
+    await this.findOne(id);
+
+    return await this.prisma.position.update({
+      where: { id },
+      data: {
+        ...(payload.title !== undefined && { title: payload.title }),
+        ...(payload.description !== undefined && {
+          description: payload.description,
+        }),
+        ...(payload.attributes !== undefined && {
+          attributes: {
+            deleteMany: {},
+            create: payload.attributes.map((attr) => ({
+              attributeId: attr.id,
+            })),
+          },
+        }),
+      },
+      include: { attributes: true },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} position`;
+  async delete(id: string) {
+    await this.findOne(id);
+
+    return await this.prisma.position.delete({
+      where: { id },
+    });
   }
 }

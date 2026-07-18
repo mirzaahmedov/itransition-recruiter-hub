@@ -1,21 +1,20 @@
-import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
 import {
   BulkIdsSchema,
-  BulkUpdateUserAttributesSchema,
-  ProfileAttributeCreateSchema,
-  ProfileAttributeUpdateSchema,
+  BulkUpdateUserProfileAttributeSchema,
+  CreateUserProfileAttributeSchema,
+  UpdateUserProfileAttributeSchema,
 } from '@rh/shared/schemas';
 
-export class ProfileAttributeCreateDto extends createZodDto(
-  ProfileAttributeCreateSchema,
+export class CreateUserProfileAttributeDto extends createZodDto(
+  CreateUserProfileAttributeSchema,
 ) {}
-export class ProfileAttributeUpdateDto extends createZodDto(
-  ProfileAttributeUpdateSchema,
+export class UpdateUserProfileAttributeDto extends createZodDto(
+  UpdateUserProfileAttributeSchema,
 ) {}
-export class ProfileAttributeCreateBulkDto extends createZodDto(
+export class BulkCreateUserProfileAttributeDto extends createZodDto(
   BulkIdsSchema,
 ) {}
-export class BulkUpdateUserAttributesDto extends createZodDto(
-  BulkUpdateUserAttributesSchema,
+export class BulkUpdateUserProfileAttributeDto extends createZodDto(
+  BulkUpdateUserProfileAttributeSchema,
 ) {}

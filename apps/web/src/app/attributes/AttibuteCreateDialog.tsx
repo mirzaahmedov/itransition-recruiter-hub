@@ -1,35 +1,36 @@
-import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle } from "@/components/ui/dialog";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { PlusIcon, XIcon } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { AttributeTypeSelectItems } from "./data";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AttributeCreateSchema, type AttributeCreatePayload } from "@rh/shared";
+import { CreateAttributeSchema, type CreateAttributePayload } from "@rh/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useEffect, useMemo, type FC } from "react";
+import { useEffect, useMemo, type FC, type ReactNode } from "react";
 import { AttributeType } from "@rh/database/enums";
 import { useCategories } from "../categories/useCategories";
 
 export const AttibuteCreateDialog: FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: AttributeCreatePayload) => void;
+  onSubmit: (values: CreateAttributePayload) => void;
   isSubmitting: boolean;
-}> = ({ open, onOpenChange, onSubmit, isSubmitting = false }) => {
+  trigger?: ReactNode;
+}> = ({ open, onOpenChange, onSubmit, isSubmitting = false, trigger }) => {
   const categories = useCategories();
 
   const form = useForm({
-    resolver: zodResolver(AttributeCreateSchema),
+    resolver: zodResolver(CreateAttributeSchema),
     defaultValues: {
       name: "",
       type: "TEXT",
       categoryId: "",
       choices: [],
-    } as AttributeCreatePayload,
+    } as CreateAttributePayload,
   });
 
   const choicesArray = useFieldArray({
@@ -56,9 +57,7 @@ export const AttibuteCreateDialog: FC<{
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger render={<Button />}>
-        <PlusIcon /> Create
-      </DialogTrigger>
+      {trigger}
       <DialogPopup>
         <DialogHeader>
           <DialogTitle>Create new attribute</DialogTitle>

@@ -9,7 +9,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { createProfileAttribute, fetchUserAttributes, updateProfileAttribute, uploadProfilePicture } from "./api";
-import type { ProfileAttributeUpdatePayload } from "@rh/shared";
+import type { UpdateUserProfileAttributePayload } from "@rh/shared";
 import type { ProfileAttributeGetPayload } from "@rh/database/models";
 import FileUploadAvatar from "@/components/FileUploadAvatar";
 import type { FileWithPreview } from "@/hooks/use-file-upload";
@@ -43,7 +43,7 @@ const ProfileForm = () => {
   });
 
   const updateProfileAttributeMutation = useMutation({
-    mutationFn: ({ id, version, payload }: { id: string; version: number; payload: ProfileAttributeUpdatePayload }) =>
+    mutationFn: ({ id, version, payload }: { id: string; version: number; payload: UpdateUserProfileAttributePayload }) =>
       updateProfileAttribute(id, version, payload),
   });
 

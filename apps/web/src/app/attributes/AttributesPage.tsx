@@ -5,11 +5,13 @@ import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-
 import toast from "react-hot-toast";
 import { createAttribute, fetchAttributes } from "./api";
 
-import type { AttributeCreatePayload } from "@rh/shared";
+import type { CreateAttributePayload } from "@rh/shared";
 import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import type { AttributeGetPayload } from "@rh/database/models";
 import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "@phosphor-icons/react";
 
 const columns: ColumnDef<
   AttributeGetPayload<{
@@ -71,7 +73,7 @@ export const AttributesPage = () => {
     });
   };
 
-  const handleSubmit = (payload: AttributeCreatePayload) => {
+  const handleSubmit = (payload: CreateAttributePayload) => {
     const { name, type, choices, categoryId } = payload;
 
     createAttributeMutation.mutate(
@@ -95,17 +97,34 @@ export const AttributesPage = () => {
   };
 
   return (
-    <div className="h-full flex">
-      <div className="flex-1 flex flex-col">
-        <div className="p-2 flex items-center justify-end border-b">
-          <AttibuteCreateDialog
-            open={createDialog.open}
-            onOpenChange={createDialog.setOpen}
-            onSubmit={handleSubmit}
-            isSubmitting={createAttributeMutation.isPending}
-          />
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold">Attributes</h1>
+          <p className="text-sm text-muted-foreground mt-1">Manage attribute definitions</p>
         </div>
-        <div className="flex-1">{isLoading ? <Spinner /> : <GenericTable instance={table} />}</div>
+        <AttibuteCreateDialog
+          open={createDialog.open}
+          onOpenChange={createDialog.setOpen}
+          onSubmit={handleSubmit}
+          isSubmitting={createAttributeMutation.isPending}
+          trigger={
+            <Button>
+              <PlusIcon />
+              New Attribute
+            </Button>
+          }
+        />
+      </div>
+
+      <div className="rounded-2xl border bg-card overflow-hidden">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Spinner />
+          </div>
+        ) : (
+          <GenericTable instance={table} />
+        )}
       </div>
     </div>
   );

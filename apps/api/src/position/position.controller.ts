@@ -9,8 +9,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { PositionCreatePayload } from '@rh/shared';
-import { PositionCreateDto } from './position.dto';
+import { CreatePositionDto, UpdatePositionDto } from './position.dto';
 import { PositionService } from './position.service';
 
 @Controller('positions')
@@ -18,9 +17,9 @@ export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 
   @Post()
-  create(@Body() data: PositionCreateDto) {
+  async create(@Body() data: CreatePositionDto) {
     try {
-      return this.positionService.create(data);
+      return makeResponse(await this.positionService.create(data));
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -36,17 +35,29 @@ export class PositionController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.positionService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return makeResponse(await this.positionService.findOne(id));
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() payload: PositionCreatePayload) {
-    return this.positionService.update(+id, payload);
+  async update(@Param('id') id: string, @Body() payload: UpdatePositionDto) {
+    try {
+      return makeResponse(await this.positionService.update(id, payload));
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.positionService.remove(+id);
+  async delete(@Param('id') id: string) {
+    try {
+      return makeResponse(await this.positionService.delete(id));
+    } catch (error) {
+      throw error;
+    }
   }
 }

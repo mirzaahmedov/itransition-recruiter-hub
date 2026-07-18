@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PositionCreateSchema = z.object({
+export const CreatePositionSchema = z.object({
   title: z.string().nonempty(),
   description: z.string().nonempty(),
 
@@ -10,4 +10,4 @@ export const PositionCreateSchema = z.object({
     }),
   ),
 });
-export type PositionCreatePayload = z.infer<typeof PositionCreateSchema>;
+export type CreatePositionPayload = z.infer<typeof CreatePositionSchema>;

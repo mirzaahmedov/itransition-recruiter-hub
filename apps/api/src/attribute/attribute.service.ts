@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AttributeUpdateInput } from '@rh/database/models';
-import { AttributeCreatePayload } from '@rh/shared';
+import { CreateAttributePayload } from '@rh/shared';
 
 @Injectable()
 export class AttributeService {
   constructor(private prisma: PrismaService) {}
 
-  async create(payload: AttributeCreatePayload) {
+  async create(payload: CreateAttributePayload) {
     return await this.prisma.attribute.create({
       data: {
         name: payload.name,
@@ -24,7 +23,7 @@ export class AttributeService {
     });
   }
 
-  async rename(id: string, name: string) {
+  async update(id: string, name: string) {
     return await this.prisma.attribute.update({
       data: {
         name,
@@ -67,14 +66,7 @@ export class AttributeService {
     });
   }
 
-  async update(id: string, payload: AttributeUpdateInput) {
-    return await this.prisma.attribute.update({
-      where: { id },
-      data: payload,
-    });
-  }
-
-  async remove(id: string) {
+  async delete(id: string) {
     return await this.prisma.attribute.delete({
       where: { id },
     });

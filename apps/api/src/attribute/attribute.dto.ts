@@ -1,5 +1,5 @@
-import { AttributeCreateSchema, AttributeRenameSchema } from '@rh/shared';
 import { createZodDto } from 'nestjs-zod';
+import { CreateAttributeSchema, UpdateAttributeSchema } from '@rh/shared';
 
-export class AttributeCreateDto extends createZodDto(AttributeCreateSchema) {}
-export class AttributeUpdateDto extends createZodDto(AttributeRenameSchema) {}
+export class CreateAttributeDto extends createZodDto(CreateAttributeSchema) {}
+export class UpdateAttributeDto extends createZodDto(UpdateAttributeSchema) {}

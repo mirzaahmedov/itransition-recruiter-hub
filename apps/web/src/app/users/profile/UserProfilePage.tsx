@@ -29,15 +29,15 @@ const UserProfilePage = () => {
   const userData = user?.data;
   const userAttributesData = userAttributes?.data;
 
+  const isLoading = isFetchingUser || isFetchingUserAttributes;
+
   return (
-    <div className="relative h-full px-5">
-      {isFetchingUser || isFetchingUserAttributes ? (
-        <div className="fixed inset-0 bg-black/60 h-full grid place-items-center">
+    <div className="relative min-h-full">
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
           <Spinner />
         </div>
-      ) : null}
-
-      {userData && userAttributesData ? (
+      ) : userData && userAttributesData ? (
         editing ? (
           <ProfileForm
             user={userData}
@@ -51,7 +51,7 @@ const UserProfilePage = () => {
           <ProfileView user={userData} userAttributes={userAttributesData} onEdit={() => setEditing(true)} />
         )
       ) : (
-        <div>Nothing to show</div>
+        <div className="text-center py-20 text-muted-foreground">Nothing to show</div>
       )}
     </div>
   );

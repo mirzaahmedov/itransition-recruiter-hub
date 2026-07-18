@@ -2,7 +2,7 @@ import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { Attribute } from "@/types/prisma/browser";
 import type { AttributeGetPayload } from "@/types/prisma/models";
-import type { AttributeCreatePayload } from "@rh/shared";
+import type { CreateAttributePayload } from "@rh/shared";
 
 export type AttributeWithChoices = AttributeGetPayload<{
   include: {
@@ -18,7 +18,7 @@ export async function fetchAttributes(categoryId?: string) {
   });
   return res.data;
 }
-export async function createAttribute(payload: AttributeCreatePayload) {
+export async function createAttribute(payload: CreateAttributePayload) {
   const res = await privateApi.post<ApiResponse<Attribute>>("/attributes", payload);
   return res.data;
 }

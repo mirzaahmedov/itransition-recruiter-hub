@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import AppRoot from "./app/AppRoot";
 import { AttributesPage } from "./app/attributes/AttributesPage";
@@ -10,6 +10,7 @@ import SignInPage from "./app/sign-in/SignInPage";
 import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
 import PositionsPage from "./app/positions/PositionsPage";
+import PositionPage from "./app/positions/PositionPage";
 import UserProfilePage from "./app/users/profile/UserProfilePage";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           {
+            path: "/",
+            element: <Navigate to="/positions" replace />,
+          },
+          {
             path: "/users",
             element: <UsersPage />,
           },
@@ -40,6 +45,10 @@ const router = createBrowserRouter([
           {
             path: "/positions",
             element: <PositionsPage />,
+          },
+          {
+            path: "/positions/:id",
+            element: <PositionPage />,
           },
           {
             path: "/attributes",

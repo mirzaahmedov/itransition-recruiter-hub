@@ -16,12 +16,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@rh/database/client';
 import {
-  BulkUpdateUserAttributesDto,
-  ProfileAttributeCreateBulkDto,
-  ProfileAttributeUpdateDto,
+  BulkUpdateUserProfileAttributeDto,
+  BulkCreateUserProfileAttributeDto,
+  UpdateUserProfileAttributeDto,
 } from './user-attribute.dto';
 import { UserAttributeService } from './user-attribute.service';
-import { BulkUpdateUserAttributesPayload } from '@rh/shared/schemas';
+import { BulkUpdateUserProfileAttributePayload } from '@rh/shared/schemas';
 
 @Controller('users/:userId/attributes')
 export class UserAttributeController {
@@ -29,17 +29,17 @@ export class UserAttributeController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async createBulk(
+  async bulkCreate(
     @AuthUser() user: User,
     @Param('userId') userId: string,
-    @Body() data: ProfileAttributeCreateBulkDto,
+    @Body() data: BulkCreateUserProfileAttributeDto,
   ) {
     try {
       if (userId !== user.id) {
         throw new ForbiddenException();
       }
 
-      return this.userAttributeService.createBulk({
+      return this.userAttributeService.bulkCreate({
         ids: data.ids,
         userId: user.id,
       });
@@ -50,17 +50,10 @@ export class UserAttributeController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async getProfileAttributes(
-    @AuthUser() user: User,
-    @Param('userId') userId: string,
-  ) {
+  async findAll(@AuthUser() user: User, @Param('userId') userId: string) {
     try {
-      if (userId !== user.id) {
-        throw new ForbiddenException();
-      }
-
       return makeResponse(
-        await this.userAttributeService.findUserAttributes(user.id),
+        await this.userAttributeService.findByUserId(user.id),
       );
     } catch (error) {
       console.log('error', error);
@@ -73,7 +66,7 @@ export class UserAttributeController {
   async bulkUpdate(
     @AuthUser() user: User,
     @Param('userId') userId: string,
-    @Body() data: BulkUpdateUserAttributesDto,
+    @Body() data: BulkUpdateUserProfileAttributeDto,
   ) {
     try {
       if (userId !== user.id) {
@@ -101,7 +94,7 @@ export class UserAttributeController {
     @Param('userId') userId: string,
     @Param('id') id: string,
     @Query('version', ParseIntPipe) version: number,
-    @Body() payload: ProfileAttributeUpdateDto,
+    @Body() payload: UpdateUserProfileAttributeDto,
   ) {
     try {
       if (userId !== user.id) {

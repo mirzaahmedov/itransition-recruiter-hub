@@ -2,7 +2,7 @@ import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { User, UserAttribute } from "@rh/database/browser";
 import type { UserAttributeGetPayload } from "@rh/database/models";
-import type { ProfileAttributeUpdatePayload, ProfileAttributeCreateBulkPayload, BulkUpdateUserAttributesPayload } from "@rh/shared/schemas";
+import type { UpdateUserProfileAttributePayload, BulkCreateUserProfileAttributePayload, BulkUpdateUserProfileAttributePayload, UpdateUserProfilePayload } from "@rh/shared/schemas";
 
 export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
   include: {
@@ -25,7 +25,7 @@ export async function fetchUserAttributes(userId: string) {
   return res.data;
 }
 
-export async function createBulkUserAttributes({ ids, userId }: ProfileAttributeCreateBulkPayload & Pick<IdParams, "userId">) {
+export async function createBulkUserAttributes({ ids, userId }: BulkCreateUserProfileAttributePayload & Pick<IdParams, "userId">) {
   const res = await privateApi.post(`/users/${userId}/attributes`, {
     ids,
   });
@@ -36,7 +36,7 @@ interface UserAttributeUpdateArgs {
   id: string;
   userId: string;
   version: number;
-  data: ProfileAttributeUpdatePayload;
+  data: UpdateUserProfileAttributePayload;
 }
 export async function updateProfileAttribute({ id, userId, version, data }: UserAttributeUpdateArgs) {
   const res = await privateApi.patch(`/users/${userId}/attributes/${id}`, data, {
@@ -49,13 +49,13 @@ export async function updateProfileAttribute({ id, userId, version, data }: User
 
 export interface BulkUpdateUserAttributeArgs {
   userId: string;
-  data: BulkUpdateUserAttributesPayload;
+  data: BulkUpdateUserProfileAttributePayload;
 }
 export async function bulkUpdateProfileAttributes({ userId, data }: BulkUpdateUserAttributeArgs) {
   const res = await privateApi.patch<
     ApiResponse<{
-      concurrent_modification: BulkUpdateUserAttributesPayload;
-      failed_unknown: BulkUpdateUserAttributesPayload;
+      concurrent_modification: BulkUpdateUserProfileAttributePayload;
+      failed_unknown: BulkUpdateUserProfileAttributePayload;
       modified: UserAttribute[];
     }>
   >(`/users/${userId}/attributes/bulk`, data);
@@ -68,5 +68,10 @@ export async function uploadProfilePicture(id: string, file: File) {
   formData.set("image", file);
 
   const res = await privateApi.put(`/users/${id}/profile-picture`, formData);
+  return res.data;
+}
+
+export async function updateUserProfile(id: string, data: UpdateUserProfilePayload) {
+  const res = await privateApi.patch<ApiResponse<User>>(`/users/${id}`, data);
   return res.data;
 }

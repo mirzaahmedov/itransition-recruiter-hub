@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
-import { PositionCreateSchema } from '@rh/shared';
+import { CreatePositionSchema, UpdatePositionSchema } from '@rh/shared';
 
-export class PositionCreateDto extends createZodDto(PositionCreateSchema) {}
+export class CreatePositionDto extends createZodDto(CreatePositionSchema) {}
+export class UpdatePositionDto extends createZodDto(UpdatePositionSchema) {}

@@ -16,7 +16,7 @@ import { IGoogleUser } from './strategies/google.strategy';
 import { AuthUser } from './decorators/auth-user.decorator';
 import { UserRole, type User } from '@rh/database/client';
 import { makeResponse } from '@/models/api';
-import { UserLoginDto, UserRegisterDto } from './auth.dto';
+import { LoginUserDto, RegisterUserDto } from './auth.dto';
 import { UserService } from '@/user/user.service';
 import bcrypt from 'bcryptjs';
 
@@ -43,7 +43,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() data: UserRegisterDto) {
+  async register(@Body() data: RegisterUserDto) {
     const ecryptedPassword = bcrypt.hashSync(data.password, 10);
 
     const user = await this.userService.create({
@@ -59,7 +59,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() data: UserLoginDto) {
+  async login(@Body() data: LoginUserDto) {
     const user = await this.userService.findByEmail(data.email);
 
     if (!user) {

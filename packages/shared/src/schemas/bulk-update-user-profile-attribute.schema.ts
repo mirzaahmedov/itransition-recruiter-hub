@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const BulkUpdateUserAttributesSchema = z.array(
+export const BulkUpdateUserProfileAttributeSchema = z.array(
   z.object({
     id: z.string(),
     version: z.number(),
@@ -16,4 +16,4 @@ export const BulkUpdateUserAttributesSchema = z.array(
   }),
 );
 
-export type BulkUpdateUserAttributesPayload = z.infer<typeof BulkUpdateUserAttributesSchema>;
+export type BulkUpdateUserProfileAttributePayload = z.infer<typeof BulkUpdateUserProfileAttributeSchema>;

@@ -18,7 +18,7 @@ import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import { User } from '@rh/database/client';
-import { UserBulkUpdateRolesDto } from './user.dto';
+import { BulkUpdateUserRolesDto, UpdateUserProfileDto } from './user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { nanoid } from 'nanoid';
 
@@ -35,7 +35,7 @@ export class UserController {
   ) {}
 
   @Get()
-  async getUsers() {
+  async findAll() {
     try {
       const users = await this.userService.findMany();
       return makeResponse(users);
@@ -46,7 +46,7 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  async getById(@Param('id') id: string) {
+  async findById(@Param('id') id: string) {
     try {
       const user = await this.userService.findById(id);
       if (!user) {
@@ -95,8 +95,26 @@ export class UserController {
     }
   }
 
+  @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async update(
+    @AuthUser() user: User,
+    @Param('id') id: string,
+    @Body() data: UpdateUserProfileDto,
+  ) {
+    try {
+      if (user.id !== id) {
+        throw new ForbiddenException();
+      }
+      const updated = await this.userService.update(id, data);
+      return makeResponse(updated);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Patch('bulk-change-roles')
-  async updateBulkUserRoles(@Body() data: UserBulkUpdateRolesDto) {
+  async bulkUpdateRoles(@Body() data: BulkUpdateUserRolesDto) {
     try {
       const { ids, role } = data;
       return await this.userService.bulkUpdateRoles(ids, role);

@@ -1,11 +1,11 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { ConflictException, Injectable } from '@nestjs/common';
 import {
-  ProfileAttributeCreatePayload,
-  ProfileAttributeUpdatePayload,
+  CreateUserProfileAttributePayload,
+  UpdateUserProfileAttributePayload,
 } from '@rh/shared';
-import { ProfileAttributeCreateBulkDto } from './user-attribute.dto';
-import { BulkUpdateUserAttributesPayload } from '@rh/shared/schemas';
+import { BulkCreateUserProfileAttributeDto } from './user-attribute.dto';
+import { BulkUpdateUserProfileAttributePayload } from '@rh/shared/schemas';
 import { makeResponse } from '@/models/api';
 import { UserAttribute } from '@rh/database/client';
 
@@ -19,7 +19,9 @@ interface IdParams {
 export class UserAttributeService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: ProfileAttributeCreatePayload & Pick<IdParams, 'userId'>) {
+  async create(
+    data: CreateUserProfileAttributePayload & Pick<IdParams, 'userId'>,
+  ) {
     return await this.prisma.userAttribute.create({
       data: {
         attributeId: data.attrId,
@@ -27,8 +29,8 @@ export class UserAttributeService {
       },
     });
   }
-  async createBulk(
-    data: ProfileAttributeCreateBulkDto & Pick<IdParams, 'userId'>,
+  async bulkCreate(
+    data: BulkCreateUserProfileAttributeDto & Pick<IdParams, 'userId'>,
   ): Promise<any> {
     return await this.prisma.userAttribute.createMany({
       data: data.ids.map((id) => ({
@@ -41,7 +43,7 @@ export class UserAttributeService {
 
   async update(
     { id, userId, version }: IdParams,
-    data: ProfileAttributeUpdatePayload,
+    data: UpdateUserProfileAttributePayload,
   ) {
     return await this.prisma.$transaction(async (tx) => {
       const results = await tx.userAttribute.updateManyAndReturn({
@@ -68,7 +70,7 @@ export class UserAttributeService {
 
   async bulkUpdate(
     { userId }: Pick<IdParams, 'userId'>,
-    data: BulkUpdateUserAttributesPayload,
+    data: BulkUpdateUserProfileAttributePayload,
   ) {
     const results = await Promise.allSettled(
       data.map((item) =>
@@ -96,8 +98,8 @@ export class UserAttributeService {
       ),
     );
 
-    const concurrent_modification: BulkUpdateUserAttributesPayload = [];
-    const failed_unknown: BulkUpdateUserAttributesPayload = [];
+    const concurrent_modification: BulkUpdateUserProfileAttributePayload = [];
+    const failed_unknown: BulkUpdateUserProfileAttributePayload = [];
     const modified: UserAttribute[] = [];
 
     results.forEach((result, index) => {
@@ -120,7 +122,7 @@ export class UserAttributeService {
     };
   }
 
-  async findUserAttributes(userId: string) {
+  async findByUserId(userId: string) {
     return await this.prisma.userAttribute.findMany({
       where: {
         userId,

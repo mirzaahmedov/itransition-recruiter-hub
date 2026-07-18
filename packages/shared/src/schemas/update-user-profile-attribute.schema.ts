@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ProfileAttributeUpdateSchema = z.object({
+export const UpdateUserProfileAttributeSchema = z.object({
   textValue: z.string().optional(),
   numberValue: z.number().optional(),
   booleanValue: z.boolean().optional(),
@@ -9,4 +9,4 @@ export const ProfileAttributeUpdateSchema = z.object({
   endDateValue: z.date().optional(),
   choiceId: z.string().optional(),
 });
-export type ProfileAttributeUpdatePayload = z.infer<typeof ProfileAttributeUpdateSchema>;
+export type UpdateUserProfileAttributePayload = z.infer<typeof UpdateUserProfileAttributeSchema>;

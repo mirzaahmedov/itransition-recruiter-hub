@@ -2,7 +2,7 @@ import { AttributeType } from "@rh/database/enums";
 import { z } from "zod";
 import { ZodIssueCode } from "zod/v3";
 
-export const AttributeCreateSchema = z
+export const CreateAttributeSchema = z
   .object({
     name: z.string(),
     type: z.enum([
@@ -34,4 +34,4 @@ export const AttributeCreateSchema = z
     }
   });
 
-export type AttributeCreatePayload = z.infer<typeof AttributeCreateSchema>;
+export type CreateAttributePayload = z.infer<typeof CreateAttributeSchema>;

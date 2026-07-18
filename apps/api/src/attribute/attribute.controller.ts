@@ -10,8 +10,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { AttributeRenamePayload } from '@rh/shared';
-import { AttributeCreateDto } from './attribute.dto';
+import { UpdateAttributePayload } from '@rh/shared';
+import { CreateAttributeDto } from './attribute.dto';
 import { AttributeService } from './attribute.service';
 
 @Controller('attributes')
@@ -19,7 +19,7 @@ export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
   @Post()
-  async create(@Body() data: AttributeCreateDto) {
+  async create(@Body() data: CreateAttributeDto) {
     try {
       const { name, type, categoryId, choices = [] } = data;
 
@@ -37,11 +37,11 @@ export class AttributeController {
   }
 
   @Patch(':id/rename')
-  async rename(@Body() data: AttributeRenamePayload, @Param() id: string) {
+  async update(@Body() data: UpdateAttributePayload, @Param() id: string) {
     try {
       const { name } = data;
 
-      const attr = await this.attributeService.rename(id, name);
+      const attr = await this.attributeService.update(id, name);
 
       return makeResponse(attr);
     } catch (err) {
@@ -69,7 +69,7 @@ export class AttributeController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.attributeService.remove(id);
+  async delete(@Param('id') id: string) {
+    return this.attributeService.delete(id);
   }
 }
