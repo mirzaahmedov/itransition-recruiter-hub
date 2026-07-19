@@ -80,7 +80,12 @@ export type PositionAttribute = Prisma.PositionAttributeModel
  */
 export type Position = Prisma.PositionModel
 /**
- * Model CV
+ * Model Resume
  * 
  */
-export type CV = Prisma.CVModel
+export type Resume = Prisma.ResumeModel
+/**
+ * Model ResumeAttribute
+ * 
+ */
+export type ResumeAttribute = Prisma.ResumeAttributeModel

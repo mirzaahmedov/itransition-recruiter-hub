@@ -30,3 +30,11 @@ export const AttributeType = {
 } as const
 
 export type AttributeType = (typeof AttributeType)[keyof typeof AttributeType]
+
+
+export const ResumeStatus = {
+  PENDING: 'PENDING',
+  PUBLISHED: 'PUBLISHED'
+} as const
+
+export type ResumeStatus = (typeof ResumeStatus)[keyof typeof ResumeStatus]

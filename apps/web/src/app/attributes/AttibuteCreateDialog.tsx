@@ -1,4 +1,4 @@
-import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { XIcon } from "@phosphor-icons/react";
 import { Form } from "@/components/ui/form";
@@ -57,7 +57,7 @@ export const AttibuteCreateDialog: FC<{
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {trigger}
+      <DialogTrigger>{trigger}</DialogTrigger>
       <DialogPopup>
         <DialogHeader>
           <DialogTitle>Create new attribute</DialogTitle>

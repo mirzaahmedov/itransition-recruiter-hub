@@ -168,6 +168,7 @@ export type PositionAttributeWhereInput = {
   positionId?: Prisma.StringFilter<"PositionAttribute"> | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
   position?: Prisma.XOR<Prisma.PositionScalarRelationFilter, Prisma.PositionWhereInput>
+  resumeAttribute?: Prisma.ResumeAttributeListRelationFilter
 }
 
 export type PositionAttributeOrderByWithRelationInput = {
@@ -176,6 +177,7 @@ export type PositionAttributeOrderByWithRelationInput = {
   positionId?: Prisma.SortOrder
   attribute?: Prisma.AttributeOrderByWithRelationInput
   position?: Prisma.PositionOrderByWithRelationInput
+  resumeAttribute?: Prisma.ResumeAttributeOrderByRelationAggregateInput
 }
 
 export type PositionAttributeWhereUniqueInput = Prisma.AtLeast<{
@@ -187,6 +189,7 @@ export type PositionAttributeWhereUniqueInput = Prisma.AtLeast<{
   positionId?: Prisma.StringFilter<"PositionAttribute"> | string
   attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>
   position?: Prisma.XOR<Prisma.PositionScalarRelationFilter, Prisma.PositionWhereInput>
+  resumeAttribute?: Prisma.ResumeAttributeListRelationFilter
 }, "id">
 
 export type PositionAttributeOrderByWithAggregationInput = {
@@ -211,24 +214,28 @@ export type PositionAttributeCreateInput = {
   id?: string
   attribute: Prisma.AttributeCreateNestedOneWithoutPositionAttributesInput
   position: Prisma.PositionCreateNestedOneWithoutAttributesInput
+  resumeAttribute?: Prisma.ResumeAttributeCreateNestedManyWithoutPositionAttributeInput
 }
 
 export type PositionAttributeUncheckedCreateInput = {
   id?: string
   attributeId: string
   positionId: string
+  resumeAttribute?: Prisma.ResumeAttributeUncheckedCreateNestedManyWithoutPositionAttributeInput
 }
 
 export type PositionAttributeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.AttributeUpdateOneRequiredWithoutPositionAttributesNestedInput
   position?: Prisma.PositionUpdateOneRequiredWithoutAttributesNestedInput
+  resumeAttribute?: Prisma.ResumeAttributeUpdateManyWithoutPositionAttributeNestedInput
 }
 
 export type PositionAttributeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
   positionId?: Prisma.StringFieldUpdateOperationsInput | string
+  resumeAttribute?: Prisma.ResumeAttributeUncheckedUpdateManyWithoutPositionAttributeNestedInput
 }
 
 export type PositionAttributeCreateManyInput = {
@@ -273,6 +280,11 @@ export type PositionAttributeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   attributeId?: Prisma.SortOrder
   positionId?: Prisma.SortOrder
+}
+
+export type PositionAttributeScalarRelationFilter = {
+  is?: Prisma.PositionAttributeWhereInput
+  isNot?: Prisma.PositionAttributeWhereInput
 }
 
 export type PositionAttributeCreateNestedManyWithoutAttributeInput = {
@@ -359,14 +371,30 @@ export type PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput = {
   deleteMany?: Prisma.PositionAttributeScalarWhereInput | Prisma.PositionAttributeScalarWhereInput[]
 }
 
+export type PositionAttributeCreateNestedOneWithoutResumeAttributeInput = {
+  create?: Prisma.XOR<Prisma.PositionAttributeCreateWithoutResumeAttributeInput, Prisma.PositionAttributeUncheckedCreateWithoutResumeAttributeInput>
+  connectOrCreate?: Prisma.PositionAttributeCreateOrConnectWithoutResumeAttributeInput
+  connect?: Prisma.PositionAttributeWhereUniqueInput
+}
+
+export type PositionAttributeUpdateOneRequiredWithoutResumeAttributeNestedInput = {
+  create?: Prisma.XOR<Prisma.PositionAttributeCreateWithoutResumeAttributeInput, Prisma.PositionAttributeUncheckedCreateWithoutResumeAttributeInput>
+  connectOrCreate?: Prisma.PositionAttributeCreateOrConnectWithoutResumeAttributeInput
+  upsert?: Prisma.PositionAttributeUpsertWithoutResumeAttributeInput
+  connect?: Prisma.PositionAttributeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PositionAttributeUpdateToOneWithWhereWithoutResumeAttributeInput, Prisma.PositionAttributeUpdateWithoutResumeAttributeInput>, Prisma.PositionAttributeUncheckedUpdateWithoutResumeAttributeInput>
+}
+
 export type PositionAttributeCreateWithoutAttributeInput = {
   id?: string
   position: Prisma.PositionCreateNestedOneWithoutAttributesInput
+  resumeAttribute?: Prisma.ResumeAttributeCreateNestedManyWithoutPositionAttributeInput
 }
 
 export type PositionAttributeUncheckedCreateWithoutAttributeInput = {
   id?: string
   positionId: string
+  resumeAttribute?: Prisma.ResumeAttributeUncheckedCreateNestedManyWithoutPositionAttributeInput
 }
 
 export type PositionAttributeCreateOrConnectWithoutAttributeInput = {
@@ -407,11 +435,13 @@ export type PositionAttributeScalarWhereInput = {
 export type PositionAttributeCreateWithoutPositionInput = {
   id?: string
   attribute: Prisma.AttributeCreateNestedOneWithoutPositionAttributesInput
+  resumeAttribute?: Prisma.ResumeAttributeCreateNestedManyWithoutPositionAttributeInput
 }
 
 export type PositionAttributeUncheckedCreateWithoutPositionInput = {
   id?: string
   attributeId: string
+  resumeAttribute?: Prisma.ResumeAttributeUncheckedCreateNestedManyWithoutPositionAttributeInput
 }
 
 export type PositionAttributeCreateOrConnectWithoutPositionInput = {
@@ -440,6 +470,46 @@ export type PositionAttributeUpdateManyWithWhereWithoutPositionInput = {
   data: Prisma.XOR<Prisma.PositionAttributeUpdateManyMutationInput, Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionInput>
 }
 
+export type PositionAttributeCreateWithoutResumeAttributeInput = {
+  id?: string
+  attribute: Prisma.AttributeCreateNestedOneWithoutPositionAttributesInput
+  position: Prisma.PositionCreateNestedOneWithoutAttributesInput
+}
+
+export type PositionAttributeUncheckedCreateWithoutResumeAttributeInput = {
+  id?: string
+  attributeId: string
+  positionId: string
+}
+
+export type PositionAttributeCreateOrConnectWithoutResumeAttributeInput = {
+  where: Prisma.PositionAttributeWhereUniqueInput
+  create: Prisma.XOR<Prisma.PositionAttributeCreateWithoutResumeAttributeInput, Prisma.PositionAttributeUncheckedCreateWithoutResumeAttributeInput>
+}
+
+export type PositionAttributeUpsertWithoutResumeAttributeInput = {
+  update: Prisma.XOR<Prisma.PositionAttributeUpdateWithoutResumeAttributeInput, Prisma.PositionAttributeUncheckedUpdateWithoutResumeAttributeInput>
+  create: Prisma.XOR<Prisma.PositionAttributeCreateWithoutResumeAttributeInput, Prisma.PositionAttributeUncheckedCreateWithoutResumeAttributeInput>
+  where?: Prisma.PositionAttributeWhereInput
+}
+
+export type PositionAttributeUpdateToOneWithWhereWithoutResumeAttributeInput = {
+  where?: Prisma.PositionAttributeWhereInput
+  data: Prisma.XOR<Prisma.PositionAttributeUpdateWithoutResumeAttributeInput, Prisma.PositionAttributeUncheckedUpdateWithoutResumeAttributeInput>
+}
+
+export type PositionAttributeUpdateWithoutResumeAttributeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  attribute?: Prisma.AttributeUpdateOneRequiredWithoutPositionAttributesNestedInput
+  position?: Prisma.PositionUpdateOneRequiredWithoutAttributesNestedInput
+}
+
+export type PositionAttributeUncheckedUpdateWithoutResumeAttributeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  attributeId?: Prisma.StringFieldUpdateOperationsInput | string
+  positionId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type PositionAttributeCreateManyAttributeInput = {
   id?: string
   positionId: string
@@ -448,11 +518,13 @@ export type PositionAttributeCreateManyAttributeInput = {
 export type PositionAttributeUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.PositionUpdateOneRequiredWithoutAttributesNestedInput
+  resumeAttribute?: Prisma.ResumeAttributeUpdateManyWithoutPositionAttributeNestedInput
 }
 
 export type PositionAttributeUncheckedUpdateWithoutAttributeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   positionId?: Prisma.StringFieldUpdateOperationsInput | string
+  resumeAttribute?: Prisma.ResumeAttributeUncheckedUpdateManyWithoutPositionAttributeNestedInput
 }
 
 export type PositionAttributeUncheckedUpdateManyWithoutAttributeInput = {
@@ -468,11 +540,13 @@ export type PositionAttributeCreateManyPositionInput = {
 export type PositionAttributeUpdateWithoutPositionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.AttributeUpdateOneRequiredWithoutPositionAttributesNestedInput
+  resumeAttribute?: Prisma.ResumeAttributeUpdateManyWithoutPositionAttributeNestedInput
 }
 
 export type PositionAttributeUncheckedUpdateWithoutPositionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attributeId?: Prisma.StringFieldUpdateOperationsInput | string
+  resumeAttribute?: Prisma.ResumeAttributeUncheckedUpdateManyWithoutPositionAttributeNestedInput
 }
 
 export type PositionAttributeUncheckedUpdateManyWithoutPositionInput = {
@@ -481,6 +555,35 @@ export type PositionAttributeUncheckedUpdateManyWithoutPositionInput = {
 }
 
 
+/**
+ * Count Type PositionAttributeCountOutputType
+ */
+
+export type PositionAttributeCountOutputType = {
+  resumeAttribute: number
+}
+
+export type PositionAttributeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  resumeAttribute?: boolean | PositionAttributeCountOutputTypeCountResumeAttributeArgs
+}
+
+/**
+ * PositionAttributeCountOutputType without action
+ */
+export type PositionAttributeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PositionAttributeCountOutputType
+   */
+  select?: Prisma.PositionAttributeCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PositionAttributeCountOutputType without action
+ */
+export type PositionAttributeCountOutputTypeCountResumeAttributeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ResumeAttributeWhereInput
+}
+
 
 export type PositionAttributeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -488,6 +591,8 @@ export type PositionAttributeSelect<ExtArgs extends runtime.Types.Extensions.Int
   positionId?: boolean
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
   position?: boolean | Prisma.PositionDefaultArgs<ExtArgs>
+  resumeAttribute?: boolean | Prisma.PositionAttribute$resumeAttributeArgs<ExtArgs>
+  _count?: boolean | Prisma.PositionAttributeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["positionAttribute"]>
 
 export type PositionAttributeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -516,6 +621,8 @@ export type PositionAttributeOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type PositionAttributeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
   position?: boolean | Prisma.PositionDefaultArgs<ExtArgs>
+  resumeAttribute?: boolean | Prisma.PositionAttribute$resumeAttributeArgs<ExtArgs>
+  _count?: boolean | Prisma.PositionAttributeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PositionAttributeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attribute?: boolean | Prisma.AttributeDefaultArgs<ExtArgs>
@@ -531,6 +638,7 @@ export type $PositionAttributePayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     attribute: Prisma.$AttributePayload<ExtArgs>
     position: Prisma.$PositionPayload<ExtArgs>
+    resumeAttribute: Prisma.$ResumeAttributePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -932,6 +1040,7 @@ export interface Prisma__PositionAttributeClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   attribute<T extends Prisma.AttributeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttributeDefaultArgs<ExtArgs>>): Prisma.Prisma__AttributeClient<runtime.Types.Result.GetResult<Prisma.$AttributePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   position<T extends Prisma.PositionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PositionDefaultArgs<ExtArgs>>): Prisma.Prisma__PositionClient<runtime.Types.Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  resumeAttribute<T extends Prisma.PositionAttribute$resumeAttributeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PositionAttribute$resumeAttributeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResumeAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1362,6 +1471,30 @@ export type PositionAttributeDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many PositionAttributes to delete.
    */
   limit?: number
+}
+
+/**
+ * PositionAttribute.resumeAttribute
+ */
+export type PositionAttribute$resumeAttributeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ResumeAttribute
+   */
+  select?: Prisma.ResumeAttributeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ResumeAttribute
+   */
+  omit?: Prisma.ResumeAttributeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ResumeAttributeInclude<ExtArgs> | null
+  where?: Prisma.ResumeAttributeWhereInput
+  orderBy?: Prisma.ResumeAttributeOrderByWithRelationInput | Prisma.ResumeAttributeOrderByWithRelationInput[]
+  cursor?: Prisma.ResumeAttributeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ResumeAttributeScalarFieldEnum | Prisma.ResumeAttributeScalarFieldEnum[]
 }
 
 /**

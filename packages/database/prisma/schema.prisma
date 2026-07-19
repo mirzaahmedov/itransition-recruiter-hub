@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated"
+  provider     = "prisma-client"
+  output       = "../src/generated"
   moduleFormat = "cjs"
 }
 
@@ -20,28 +20,25 @@ enum UserRole {
 }
 
 model Category {
-  id        String @id
+  id        String      @id
   name      String
   sortOrder Int
-  
   attrs     Attribute[]
 
   @@map("categories")
 }
 
-
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  avatar    String?
-  googleId  String?  @unique
-  role      UserRole
-  password  String?
-
-  profileAttrs     UserAttribute[]
-
-  createdAt DateTime @default(now())
+  id           String          @id @default(cuid())
+  email        String          @unique
+  name         String?
+  avatar       String?
+  googleId     String?         @unique
+  role         UserRole
+  password     String?
+  profileAttrs UserAttribute[]
+  createdAt    DateTime        @default(now())
+  resumes      Resume[]
 
   @@map("users")
 }
@@ -58,88 +55,106 @@ enum AttributeType {
 }
 
 model Attribute {
-  id                    String   @id @default(cuid())
-  name                  String
-  type                  AttributeType
-  system                Boolean  @default(false)
-  categoryId            String
-  category              Category @relation(fields: [categoryId], references: [id])
-  createdAt             DateTime @default(now())
-  choices               AttributeChoice[]
-  values                UserAttribute[]
-  positionAttributes    PositionAttribute[]
+  id                 String              @id @default(cuid())
+  name               String
+  type               AttributeType
+  system             Boolean             @default(false)
+  categoryId         String
+  category           Category            @relation(fields: [categoryId], references: [id])
+  createdAt          DateTime            @default(now())
+  choices            AttributeChoice[]
+  values             UserAttribute[]
+  positionAttributes PositionAttribute[]
 
   @@map("attributes")
 }
 
 model AttributeChoice {
-  id              String @id @default(cuid())
-  value           String
-  attribute       Attribute @relation(fields: [attributeId], references: [id])
-  attributeId     String
-  createdAt       DateTime @default(now())
-  
-  values          UserAttribute[]
+  id          String          @id @default(cuid())
+  value       String
+  attribute   Attribute       @relation(fields: [attributeId], references: [id])
+  attributeId String
+  createdAt   DateTime        @default(now())
+  values      UserAttribute[]
 
   @@unique([attributeId, value])
   @@map("attribute_choices")
 }
 
 model UserAttribute {
-  id              String           @id @default(cuid())
-  
-  attributeId     String
-  attribute       Attribute        @relation(fields: [attributeId], references: [id])
-
-  textValue       String?
-  numberValue     Float?
-  booleanValue    Boolean?
-  dateValue       DateTime?
-  startDateValue  DateTime?
-  endDateValue    DateTime?
-
-  choiceId        String?
-  choice          AttributeChoice? @relation(fields: [choiceId], references: [id])
-
-  userId          String
-  user            User             @relation(fields: [userId], references: [id])
-
-  createdAt       DateTime         @default(now())
-  version         Int              @default(1)
+  id               String            @id @default(cuid())
+  attributeId      String
+  attribute        Attribute         @relation(fields: [attributeId], references: [id])
+  textValue        String?
+  numberValue      Float?
+  booleanValue     Boolean?
+  dateValue        DateTime?
+  startDateValue   DateTime?
+  endDateValue     DateTime?
+  choiceId         String?
+  choice           AttributeChoice?  @relation(fields: [choiceId], references: [id])
+  userId           String
+  user             User              @relation(fields: [userId], references: [id])
+  createdAt        DateTime          @default(now())
+  version          Int               @default(1)
+  resumeAttributes ResumeAttribute[]
 
   @@unique([attributeId, userId])
   @@map("user_attributes")
 }
 
 model AccessRule {
-  id                String @id @default(cuid())
-  position          Position @relation(fields: [positionId], references: [id])
-  positionId        String
+  id         String   @id @default(cuid())
+  position   Position @relation(fields: [positionId], references: [id])
+  positionId String
 }
 
 model PositionAttribute {
-  id                String @id @default(cuid())
-  attribute         Attribute @relation(fields: [attributeId], references: [id])
-  attributeId       String
-  position          Position @relation(fields: [positionId], references: [id])
-  positionId        String
+  id              String            @id @default(cuid())
+  attribute       Attribute         @relation(fields: [attributeId], references: [id])
+  attributeId     String
+  position        Position          @relation(fields: [positionId], references: [id])
+  positionId      String
+  resumeAttribute ResumeAttribute[]
 }
 
 model Position {
-  id               String @id @default(cuid())
-  title            String
-  description      String
-
-  accessRules      AccessRule[]
-  attributes       PositionAttribute[]
+  id          String              @id @default(cuid())
+  title       String
+  description String
+  resumes     Resume[]
+  accessRules AccessRule[]
+  attributes  PositionAttribute[]
 
   @@map("positions")
 }
 
-model CV {
-  id              String @id @default(cuid())
-  name            String
-  email           String
+enum ResumeStatus {
+  PENDING
+  PUBLISHED
+}
 
-  @@map("cvs")
+model Resume {
+  id               String            @id @default(cuid())
+  positionId       String
+  position         Position          @relation(references: [id], fields: [positionId], onDelete: Cascade)
+  userId           String
+  user             User              @relation(references: [id], fields: [userId], onDelete: Cascade)
+  resumeAttributes ResumeAttribute[]
+  status           ResumeStatus      @default(PENDING)
+
+  @@unique([userId, positionId])
+  @@map("resumes")
+}
+
+model ResumeAttribute {
+  id                  String            @id @default(cuid())
+  resumeId            String
+  resume              Resume            @relation(references: [id], fields: [resumeId], onDelete: Cascade)
+  positionAttribute   PositionAttribute @relation(references: [id], fields: [positionAttributeId], onDelete: Cascade)
+  positionAttributeId String
+  userAttribute       UserAttribute     @relation(references: [id], fields: [userAttributeId], onDelete: Cascade)
+  userAttributeId     String
+
+  @@map("resume_attributes")
 }

@@ -59,7 +59,8 @@ export const ModelName = {
   AccessRule: 'AccessRule',
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
-  CV: 'CV'
+  Resume: 'Resume',
+  ResumeAttribute: 'ResumeAttribute'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -167,13 +168,24 @@ export const PositionScalarFieldEnum = {
 export type PositionScalarFieldEnum = (typeof PositionScalarFieldEnum)[keyof typeof PositionScalarFieldEnum]
 
 
-export const CVScalarFieldEnum = {
+export const ResumeScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  email: 'email'
+  positionId: 'positionId',
+  userId: 'userId',
+  status: 'status'
 } as const
 
-export type CVScalarFieldEnum = (typeof CVScalarFieldEnum)[keyof typeof CVScalarFieldEnum]
+export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum]
+
+
+export const ResumeAttributeScalarFieldEnum = {
+  id: 'id',
+  resumeId: 'resumeId',
+  positionAttributeId: 'positionAttributeId',
+  userAttributeId: 'userAttributeId'
+} as const
+
+export type ResumeAttributeScalarFieldEnum = (typeof ResumeAttributeScalarFieldEnum)[keyof typeof ResumeAttributeScalarFieldEnum]
 
 
 export const SortOrder = {

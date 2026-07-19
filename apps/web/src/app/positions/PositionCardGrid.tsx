@@ -1,14 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPositions } from "./api";
-import type { PositionGetPayload } from "@rh/database/models";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
+import type { PositionWithAttributes } from "./api";
 
-type Position = PositionGetPayload<{ include: { attributes: true } }>;
-
-const PositionCard = ({ position }: { position: Position }) => {
+const PositionCard = ({ position }: { position: PositionWithAttributes }) => {
   return (
     <Link
       to={`/positions/${position.id}`}
@@ -20,10 +18,13 @@ const PositionCard = ({ position }: { position: Position }) => {
         </h3>
         <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-brand transition-colors mt-0.5" />
       </div>
-      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{position.description}</p>
+      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+        {position.description}
+      </p>
       <div className="mt-4 flex items-center gap-2">
         <Badge variant="info">
-          {position.attributes.length} {position.attributes.length === 1 ? "attribute" : "attributes"}
+          {position.attributes.length}{" "}
+          {position.attributes.length === 1 ? "attribute" : "attributes"}
         </Badge>
       </div>
     </Link>
@@ -50,7 +51,9 @@ export const PositionCardGrid = () => {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <p className="text-muted-foreground">No positions yet.</p>
-        <p className="text-sm text-muted-foreground mt-1">Create your first position to get started.</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Create your first position to get started.
+        </p>
       </div>
     );
   }

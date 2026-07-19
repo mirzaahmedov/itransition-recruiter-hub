@@ -33,6 +33,7 @@ const attrColumns: ColumnDef<Attribute>[] = [
         id="selectAll"
         className="checkbox"
         checked={row.getIsSelected()}
+        disabled={!row.getCanSelect()}
         onCheckedChange={(checked) => row.toggleSelected(checked)}
       />
     ),
@@ -54,8 +55,11 @@ export const AttributePicker: FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelect: (values: string[], data: Attribute[]) => Promise<void>;
-}> = ({ open, onOpenChange, onSelect }) => {
+  disabledRows?: Record<string, boolean>;
+}> = ({ open, onOpenChange, onSelect, disabledRows = {} }) => {
   const timerRef = useRef<NodeJS.Timeout>(null);
+
+  console.log({ disabledRows });
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [rowSelectionData, setRowSelectionData] = useState<Record<string, Attribute>>({});
@@ -96,6 +100,12 @@ export const AttributePicker: FC<{
       rowSelection,
     },
     getRowId: (row) => row.id,
+    enableRowSelection(row) {
+      if (disabledRows[row.id]) {
+        return false;
+      }
+      return true;
+    },
     onRowSelectionChange: handleRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getGroupedRowModel: getGroupedRowModel(),

@@ -52,6 +52,34 @@ export class PositionController {
     }
   }
 
+  @Post(':id/attributes')
+  async addAttribute(
+    @Param('id') id: string,
+    @Body('attributeId') attributeId: string,
+  ) {
+    try {
+      return makeResponse(
+        await this.positionService.addAttribute(id, attributeId),
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Delete(':id/attributes/:attributeId')
+  async removeAttribute(
+    @Param('id') id: string,
+    @Param('attributeId') attributeId: string,
+  ) {
+    try {
+      return makeResponse(
+        await this.positionService.removeAttribute(id, attributeId),
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Delete(':id')
   async delete(@Param('id') id: string) {
     try {

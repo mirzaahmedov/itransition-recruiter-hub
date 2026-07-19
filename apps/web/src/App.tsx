@@ -11,6 +11,7 @@ import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
 import PositionsPage from "./app/positions/PositionsPage";
 import PositionPage from "./app/positions/PositionPage";
+import PositionCreatePage from "./app/positions/PositionCreatePage";
 import UserProfilePage from "./app/users/profile/UserProfilePage";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
           {
             path: "/positions",
             element: <PositionsPage />,
+          },
+          {
+            path: "/positions/new",
+            element: <PositionCreatePage />,
           },
           {
             path: "/positions/:id",
