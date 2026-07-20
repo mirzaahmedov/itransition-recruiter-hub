@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { deletePosition, fetchPosition, updatePosition, removePositionAttribute, type PositionWithAttributes, applyToPosition } from "./api";
+import { fetchPositionResumes } from "@/app/resumes/api";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PencilSimpleLineIcon, TrashIcon, ArrowLeftIcon, XIcon, FloppyDiskIcon, PlusIcon, XCircleIcon, ReadCvLogoIcon } from "@phosphor-icons/react";
+import { PencilSimpleLineIcon, TrashIcon, ArrowLeftIcon, XIcon, FloppyDiskIcon, PlusIcon, XCircleIcon, ReadCvLogoIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { useMemo, useState, type FC } from "react";
@@ -18,13 +19,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
 import type { Attribute } from "@rh/database/browser";
 import { addPositionAttribute } from "./api";
+import { Link } from "react-router-dom";
+import type { ResumeListItem } from "@/app/resumes/api";
 
 const PositionView: FC<{
   position: PositionWithAttributes;
+  resumes: ResumeListItem[];
   onEdit: VoidFunction;
   onDelete: VoidFunction;
   onApply: VoidFunction;
-}> = ({ position, onEdit, onDelete, onApply }) => {
+}> = ({ position, resumes, onEdit, onDelete, onApply }) => {
   return (
     <>
       <div className="flex items-start justify-between gap-4">
@@ -67,6 +71,31 @@ const PositionView: FC<{
           <p className="mt-4 text-sm text-muted-foreground">No attributes assigned to this position.</p>
         )}
       </div>
+
+      {resumes.length > 0 && (
+        <div className="mt-8 border-t pt-6">
+          <h2 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">
+            Applications ({resumes.length})
+          </h2>
+          <div className="mt-4 space-y-2">
+            {resumes.map((resume) => (
+              <Link
+                key={resume.id}
+                to={`/resumes/${resume.id}`}
+                className="flex items-center justify-between gap-4 rounded-lg border p-3 transition-colors hover:bg-accent/50"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium">{resume.user?.name ?? "Unnamed"}</span>
+                  <Badge variant={resume.status === "PUBLISHED" ? "success" : "warning"} size="sm">
+                    {resume.status}
+                  </Badge>
+                </div>
+                <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
@@ -221,6 +250,12 @@ const PositionPage = () => {
     enabled: !!id,
   });
 
+  const { data: resumesData } = useQuery({
+    queryKey: ["positions", id, "resumes"],
+    queryFn: () => fetchPositionResumes(id!),
+    enabled: !!id,
+  });
+
   const deleteMutation = useMutation({
     mutationFn: () => deletePosition(id!),
   });
@@ -234,10 +269,11 @@ const PositionPage = () => {
       onSuccess: () => {
         toast.success("Application sent");
         queryClient.invalidateQueries({ queryKey: ["positions"] });
-        // navigate("/positions");
+        queryClient.invalidateQueries({ queryKey: ["positions", id, "resumes"] });
+        queryClient.invalidateQueries({ queryKey: ["resumes"] });
       },
       onError: () => {
-        toast.error("Delete failed");
+        toast.error("Application failed");
       },
     });
   };
@@ -258,6 +294,7 @@ const PositionPage = () => {
   };
 
   const positionData = position?.data;
+  const resumes = resumesData?.data ?? [];
 
   return (
     <div className="relative min-h-full">
@@ -289,7 +326,7 @@ const PositionPage = () => {
                 }}
               />
             ) : (
-              <PositionView position={positionData} onEdit={() => setEditing(true)} onDelete={handleDelete} onApply={handleApply} />
+              <PositionView position={positionData} resumes={resumes} onEdit={() => setEditing(true)} onDelete={handleDelete} onApply={handleApply} />
             )}
           </div>
         </div>

@@ -14,6 +14,7 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
 import { StorageModule } from './storage/storage.module';
 import { ResumeModule } from './position/resume/resume.module';
+import { UserResumeModule } from './resume/resume.module';
 import { ResumeAttributeModule } from './resume-attribute/resume-attribute.module';
 
 @Module({
@@ -37,6 +38,7 @@ import { ResumeAttributeModule } from './resume-attribute/resume-attribute.modul
     PositionModule,
     StorageModule,
     ResumeModule,
+    UserResumeModule,
     ResumeAttributeModule,
   ],
   controllers: [AppController],

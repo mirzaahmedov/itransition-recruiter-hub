@@ -13,3 +13,5 @@ export * from "./update-user-profile.schema.js";
 export * from "./create-user-profile-attribute.schema.js";
 export * from "./update-user-profile-attribute.schema.js";
 export * from "./create-resume.schema.js";
+export * from "./user-register.schema.js";
+export * from "./user-login.schema.js";

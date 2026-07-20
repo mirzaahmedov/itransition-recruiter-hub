@@ -10,6 +10,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const NAV_LINKS = [
   { to: "/positions", label: "Positions" },
+  { to: "/resumes", label: "Resumes" },
   { to: "/users", label: "Users" },
   { to: "/profile", label: "Profile" },
   { to: "/attributes", label: "Attributes" },

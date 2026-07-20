@@ -6,20 +6,22 @@ import AppRoot from "./app/AppRoot";
 import { AttributesPage } from "./app/attributes/AttributesPage";
 import AuthSuccessPage from "./app/auth-success/AuthSuccessPage";
 import { NotFoundPage } from "./app/not-found/NotFoundPage";
-import SignInPage from "./app/sign-in/SignInPage";
+import AuthPage from "./app/auth/AuthPage";
 import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
 import PositionsPage from "./app/positions/PositionsPage";
 import PositionPage from "./app/positions/PositionPage";
 import PositionCreatePage from "./app/positions/PositionCreatePage";
 import UserProfilePage from "./app/users/profile/UserProfilePage";
+import ResumesPage from "./app/resumes/ResumesPage";
+import ResumePage from "./app/resumes/ResumePage";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: "/sign-in",
-    element: <SignInPage />,
+    path: "/auth",
+    element: <AuthPage />,
   },
   {
     path: "/auth-success",
@@ -58,6 +60,14 @@ const router = createBrowserRouter([
           {
             path: "/attributes",
             element: <AttributesPage />,
+          },
+          {
+            path: "/resumes",
+            element: <ResumesPage />,
+          },
+          {
+            path: "/resumes/:id",
+            element: <ResumePage />,
           },
           {
             path: "*",

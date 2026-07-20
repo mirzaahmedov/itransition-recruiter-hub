@@ -1,10 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateResumeDto } from './dto/create-resume.dto';
-import { UpdateResumeDto } from './dto/update-resume.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
 import { PositionService } from '../position.service';
-import { ResumeAttributeCreateInput } from '@rh/database/models';
+import type { ResumeStatus } from '@rh/database/client';
+
+const resumeInclude = {
+  position: true,
+  user: true,
+  resumeAttributes: {
+    include: {
+      positionAttribute: {
+        include: {
+          attribute: true,
+        },
+      },
+      userAttribute: {
+        include: {
+          attribute: true,
+          choice: true,
+        },
+      },
+    },
+  },
+} as const;
 
 @Injectable()
 export class ResumeService {
@@ -58,9 +80,11 @@ export class ResumeService {
     return resume;
   }
 
-  async findAll() {
+  async findAllByPosition(positionId: string) {
     return await this.prisma.resume.findMany({
+      where: { positionId },
       include: {
+        user: true,
         resumeAttributes: {
           include: {
             userAttribute: {
@@ -75,15 +99,58 @@ export class ResumeService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} resume`;
+  async findAllByUser(userId: string) {
+    return await this.prisma.resume.findMany({
+      where: { userId },
+      include: {
+        position: true,
+        resumeAttributes: {
+          include: {
+            positionAttribute: {
+              include: {
+                attribute: true,
+              },
+            },
+            userAttribute: {
+              include: {
+                attribute: true,
+                choice: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
-  update(id: number, updateResumeDto: UpdateResumeDto) {
-    return `This action updates a #${id} resume`;
+  async findOne(id: string) {
+    const resume = await this.prisma.resume.findUnique({
+      where: { id },
+      include: resumeInclude,
+    });
+
+    if (!resume) {
+      throw new NotFoundException(`Resume #${id} not found`);
+    }
+
+    return resume;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} resume`;
+  async updateStatus(id: string, status: ResumeStatus) {
+    await this.findOne(id);
+
+    return await this.prisma.resume.update({
+      where: { id },
+      data: { status },
+      include: resumeInclude,
+    });
+  }
+
+  async remove(id: string) {
+    await this.findOne(id);
+
+    return await this.prisma.resume.delete({
+      where: { id },
+    });
   }
 }

@@ -7,5 +7,6 @@ import { PositionService } from '../position.service';
 @Module({
   controllers: [ResumeController],
   providers: [ResumeService, UserAttributeService, PositionService],
+  exports: [ResumeService],
 })
 export class ResumeModule {}

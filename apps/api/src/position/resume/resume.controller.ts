@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
-import { UpdateResumeDto } from './dto/update-resume.dto';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { User } from '@rh/database/client';
+import { User, ResumeStatus } from '@rh/database/client';
 import { AuthGuard } from '@nestjs/passport';
+import { makeResponse } from '@/models/api';
 
 @Controller('positions/:positionId/resumes')
 export class ResumeController {
@@ -21,30 +21,41 @@ export class ResumeController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  create(@AuthUser() user: User, @Param('positionId') positionId: string) {
-    return this.resumeService.create({
-      userId: user.id,
-      positionId,
-    });
+  async create(
+    @AuthUser() user: User,
+    @Param('positionId') positionId: string,
+  ) {
+    return makeResponse(
+      await this.resumeService.create({ userId: user.id, positionId }),
+    );
   }
 
   @Get()
-  findAll() {
-    return this.resumeService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  async findAll(@Param('positionId') positionId: string) {
+    return makeResponse(
+      await this.resumeService.findAllByPosition(positionId),
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.resumeService.findOne(+id);
+  @UseGuards(AuthGuard('jwt'))
+  async findOne(@Param('id') id: string) {
+    return makeResponse(await this.resumeService.findOne(id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto) {
-    return this.resumeService.update(+id, updateResumeDto);
+  @UseGuards(AuthGuard('jwt'))
+  async update(
+    @Param('id') id: string,
+    @Body('status') status: ResumeStatus,
+  ) {
+    return makeResponse(await this.resumeService.updateStatus(id, status));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.resumeService.remove(+id);
+  @UseGuards(AuthGuard('jwt'))
+  async remove(@Param('id') id: string) {
+    return makeResponse(await this.resumeService.remove(id));
   }
 }
