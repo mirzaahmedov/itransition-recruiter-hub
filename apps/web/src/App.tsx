@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import AppRoot from "./app/AppRoot";
 import { AttributesPage } from "./app/attributes/AttributesPage";
-import AuthSuccessPage from "./app/auth-success/AuthSuccessPage";
+import AuthRedirect from "./app/auth/AuthRedirect";
 import { NotFoundPage } from "./app/not-found/NotFoundPage";
 import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
@@ -17,6 +17,7 @@ import ResumePage from "./app/resumes/ResumePage";
 import { AuthFormLayout } from "./app/auth/AuthFormLayout";
 import RegisterPage from "./app/auth/register/RegisterPage";
 import LoginPage from "./app/auth/login/LoginPage";
+import AuthProviderSuccessPage from "./app/auth/AuthProviderSuccess";
 
 const queryClient = new QueryClient();
 
@@ -39,15 +40,15 @@ const router = createBrowserRouter([
       },
       {
         path: "verify-email",
-        element: <AuthSuccessPage />,
+        element: <AuthRedirect />,
       },
       {
         path: "verify-email/success",
-        element: <AuthSuccessPage />,
+        element: <AuthRedirect />,
       },
       {
         path: "google/success",
-        element: <AuthSuccessPage />,
+        element: <AuthProviderSuccessPage />,
       },
     ],
   },
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <Navigate to="/positions" replace />,
+            element: <AuthRedirect />,
           },
           {
             path: "/users",

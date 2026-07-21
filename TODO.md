@@ -1,2 +1,2 @@
-[ ] July 10 mvp profile creation and cv generation
-[ ] Testing
+[x] Add link from resume to position
+[ ] position should only display your resume if user is not recruiter

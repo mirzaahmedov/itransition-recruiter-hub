@@ -2,7 +2,7 @@ import { UserRole } from "@rh/database/browser";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const AuthSuccessPage = () => {
+const AuthProviderSuccessPage = () => {
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const AuthSuccessPage = () => {
   useEffect(() => {
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      navigate("/users");
+      navigate("/");
     } else {
       navigate("/auth/login");
       localStorage.removeItem("accessToken");
@@ -27,4 +27,4 @@ const AuthSuccessPage = () => {
   );
 };
 
-export default AuthSuccessPage;
+export default AuthProviderSuccessPage;

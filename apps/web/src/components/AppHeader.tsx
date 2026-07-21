@@ -5,16 +5,16 @@ import { Sheet, SheetHeader, SheetPopup, SheetTitle, SheetDescription, SheetPane
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { fallbackName } from "@/utils/fallbackName";
 import { ListIcon, ReadCvLogoIcon, SignOutIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { UserRole } from "@rh/database/browser";
+import { Badge } from "./ui/badge";
 
-const NAV_LINKS = [
-  { to: "/positions", label: "Positions" },
-  { to: "/resumes", label: "Resumes" },
-  { to: "/users", label: "Users" },
-  { to: "/profile", label: "Profile" },
-  { to: "/attributes", label: "Attributes" },
-] as const;
+interface NavLinkItem {
+  to: string;
+  label: string;
+  roles: UserRole[];
+}
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `text-sm transition-colors ${isActive ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`;
@@ -34,6 +34,20 @@ export const AppHeader = () => {
 
   const userInitials = fallbackName(user?.name ?? "U");
 
+  const navLinks: NavLinkItem[] = useMemo(
+    () =>
+      user
+        ? [
+            { to: "/positions", label: "Positions", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER, UserRole.CANDIDATE] },
+            { to: "/resumes", label: "Resumes", roles: [UserRole.CANDIDATE] },
+            { to: "/users", label: "Users", roles: [UserRole.ADMINISTRATOR] },
+            { to: `/users/${user.id}/profile`, label: "Profile", roles: [UserRole.CANDIDATE] },
+            { to: "/attributes", label: "Attributes", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER] },
+          ].filter((link) => link.roles.includes(user.role))
+        : [],
+    [user],
+  );
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
@@ -47,7 +61,7 @@ export const AppHeader = () => {
 
           {!isMobile && (
             <nav className="flex items-center gap-6">
-              {NAV_LINKS.map((link) => (
+              {navLinks.map((link) => (
                 <NavLink key={link.to} to={link.to} className={navLinkClass}>
                   {link.label}
                 </NavLink>
@@ -62,9 +76,14 @@ export const AppHeader = () => {
               <AvatarImage src={user?.avatar ?? undefined} alt={user?.name ?? "Avatar"} />
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
-            {!isMobile && (
-              <span className="text-sm font-medium max-w-[120px] truncate">{user?.name ?? "User"}</span>
-            )}
+            <div className="flex flex-col gap-1 items-start">
+              {!isMobile && <span className="text-sm font-medium max-w-[120px] truncate">{user?.name ?? "User"}</span>}
+              {user && user.role !== UserRole.CANDIDATE ? (
+                <Badge variant="info" size="sm">
+                  {user.role}
+                </Badge>
+              ) : null}
+            </div>
           </div>
 
           <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">
@@ -87,7 +106,7 @@ export const AppHeader = () => {
           </SheetHeader>
           <SheetPanel>
             <nav className="flex flex-col gap-1">
-              {NAV_LINKS.map((link) => (
+              {navLinks.map((link) => (
                 <NavLink
                   key={link.to}
                   to={link.to}

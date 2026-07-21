@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { fetchResume } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
@@ -16,19 +16,11 @@ function formatValue(ra: ResumeAttributeItem): string {
     case "MARKDOWN":
       return userAttribute.textValue ?? "—";
     case "NUMERIC":
-      return userAttribute.numberValue != null
-        ? String(userAttribute.numberValue)
-        : "—";
+      return userAttribute.numberValue != null ? String(userAttribute.numberValue) : "—";
     case "BOOLEAN":
-      return userAttribute.booleanValue != null
-        ? userAttribute.booleanValue
-          ? "Yes"
-          : "No"
-        : "—";
+      return userAttribute.booleanValue != null ? (userAttribute.booleanValue ? "Yes" : "No") : "—";
     case "DATE":
-      return userAttribute.dateValue
-        ? new Date(userAttribute.dateValue).toLocaleDateString()
-        : "—";
+      return userAttribute.dateValue ? new Date(userAttribute.dateValue).toLocaleDateString() : "—";
     case "DATEPERIOD":
       if (userAttribute.startDateValue && userAttribute.endDateValue) {
         return `${new Date(userAttribute.startDateValue).toLocaleDateString()} — ${new Date(userAttribute.endDateValue).toLocaleDateString()}`;
@@ -43,22 +35,14 @@ function formatValue(ra: ResumeAttributeItem): string {
   }
 }
 
-function ResumeSection({
-  title,
-  items,
-}: {
-  title: string;
-  items: ResumeAttributeItem[];
-}) {
+function ResumeSection({ title, items }: { title: string; items: ResumeAttributeItem[] }) {
   return (
     <section className="resume-section">
       <h2 className="resume-section-title">{title}</h2>
       <dl className="resume-attribute-list">
         {items.map((ra) => (
           <div key={ra.id} className="resume-attribute-row">
-            <dt className="resume-attribute-name">
-              {ra.positionAttribute.attribute.name}
-            </dt>
+            <dt className="resume-attribute-name">{ra.positionAttribute.attribute.name}</dt>
             <dd className="resume-attribute-value">{formatValue(ra)}</dd>
           </div>
         ))}
@@ -80,9 +64,7 @@ const ResumeView = ({ resume }: { resume: ResumeDetail }) => {
     {} as Record<string, ResumeAttributeItem[]>,
   );
 
-  const sortedCategories = categories
-    .filter((cat) => groupedByCategory[cat.id])
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+  const sortedCategories = categories.filter((cat) => groupedByCategory[cat.id]).sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
     <div className="resume-page">
@@ -99,7 +81,9 @@ const ResumeView = ({ resume }: { resume: ResumeDetail }) => {
         </div>
         <div className="resume-position">
           <p className="resume-position-label">Applying for</p>
-          <p className="resume-position-title">{resume.position.title}</p>
+          <Link to={`/positions/${resume.position.id}`} className="resume-position-title">
+            {resume.position.title}
+          </Link>
         </div>
       </header>
 
@@ -158,9 +142,7 @@ const ResumePage = () => {
           Back to resumes
         </button>
         <div className="flex items-center gap-2">
-          <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>
-            {resumeData.status}
-          </Badge>
+          <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>{resumeData.status}</Badge>
           <Button variant="outline" onClick={() => window.print()}>
             <PrinterIcon />
             Print
@@ -238,6 +220,8 @@ const ResumePage = () => {
           font-size: 1rem;
           font-weight: 600;
           margin-top: 0.125rem;
+          text-decoration: underline;
+          color: var(--color-brand);
         }
 
         .resume-body {
