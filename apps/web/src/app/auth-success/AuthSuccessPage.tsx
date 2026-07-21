@@ -15,7 +15,7 @@ const AuthSuccessPage = () => {
       localStorage.setItem("accessToken", accessToken);
       navigate("/users");
     } else {
-      navigate("/sign-in");
+      navigate("/auth/login");
       localStorage.removeItem("accessToken");
     }
   }, [navigate, accessToken, userRole]);

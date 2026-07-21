@@ -28,7 +28,7 @@ const AppRoot = () => {
   useEffect(() => {
     const handleError = () => {
       logout();
-      navigate("/sign-in");
+      navigate("/auth/login");
     };
     fetchMeMutation.mutate(undefined, {
       onSuccess(res) {

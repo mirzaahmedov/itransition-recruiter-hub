@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -18,38 +17,22 @@ export class PositionController {
 
   @Post()
   async create(@Body() data: CreatePositionDto) {
-    try {
-      return makeResponse(await this.positionService.create(data));
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
+    return makeResponse(await this.positionService.create(data));
   }
 
   @Get()
   async findAll() {
-    try {
-      return makeResponse(await this.positionService.findAll());
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
+    return makeResponse(await this.positionService.findAll());
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      return makeResponse(await this.positionService.findOne(id));
-    } catch (error) {
-      throw error;
-    }
+    return makeResponse(await this.positionService.findOne(id));
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() payload: UpdatePositionDto) {
-    try {
-      return makeResponse(await this.positionService.update(id, payload));
-    } catch (error) {
-      throw error;
-    }
+    return makeResponse(await this.positionService.update(id, payload));
   }
 
   @Post(':id/attributes')
@@ -57,13 +40,9 @@ export class PositionController {
     @Param('id') id: string,
     @Body('attributeId') attributeId: string,
   ) {
-    try {
-      return makeResponse(
-        await this.positionService.addAttribute(id, attributeId),
-      );
-    } catch (error) {
-      throw error;
-    }
+    return makeResponse(
+      await this.positionService.addAttribute(id, attributeId),
+    );
   }
 
   @Delete(':id/attributes/:attributeId')
@@ -71,21 +50,13 @@ export class PositionController {
     @Param('id') id: string,
     @Param('attributeId') attributeId: string,
   ) {
-    try {
-      return makeResponse(
-        await this.positionService.removeAttribute(id, attributeId),
-      );
-    } catch (error) {
-      throw error;
-    }
+    return makeResponse(
+      await this.positionService.removeAttribute(id, attributeId),
+    );
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    try {
-      return makeResponse(await this.positionService.delete(id));
-    } catch (error) {
-      throw error;
-    }
+    return makeResponse(await this.positionService.delete(id));
   }
 }

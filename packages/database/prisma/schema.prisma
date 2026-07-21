@@ -37,10 +37,24 @@ model User {
   role         UserRole
   password     String?
   profileAttrs UserAttribute[]
+  projects     Project[]
   createdAt    DateTime        @default(now())
   resumes      Resume[]
 
   @@map("users")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  url         String?
+  image       String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@map("projects")
 }
 
 enum AttributeType {

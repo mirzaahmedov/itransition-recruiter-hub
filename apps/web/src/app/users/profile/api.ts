@@ -1,8 +1,8 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
-import type { User, UserAttribute } from "@rh/database/browser";
+import type { User, UserAttribute, Project } from "@rh/database/browser";
 import type { UserAttributeGetPayload } from "@rh/database/models";
-import type { UpdateUserProfileAttributePayload, BulkCreateUserProfileAttributePayload, BulkUpdateUserProfileAttributePayload, UpdateUserProfilePayload } from "@rh/shared/schemas";
+import type { UpdateUserProfileAttributePayload, BulkCreateUserProfileAttributePayload, BulkUpdateUserProfileAttributePayload, UpdateUserProfilePayload, CreateProjectPayload, UpdateProjectPayload } from "@rh/shared/schemas";
 
 export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
   include: {
@@ -73,5 +73,32 @@ export async function uploadProfilePicture(id: string, file: File) {
 
 export async function updateUserProfile(id: string, data: UpdateUserProfilePayload) {
   const res = await privateApi.patch<ApiResponse<User>>(`/users/${id}`, data);
+  return res.data;
+}
+
+export async function fetchUserProjects(userId: string) {
+  const res = await privateApi.get<ApiResponse<Project[]>>(`/users/${userId}/projects`);
+  return res.data;
+}
+
+export async function createProject(userId: string, data: CreateProjectPayload) {
+  const res = await privateApi.post<ApiResponse<Project>>(`/users/${userId}/projects`, data);
+  return res.data;
+}
+
+export async function updateProject(userId: string, projectId: string, data: UpdateProjectPayload) {
+  const res = await privateApi.patch<ApiResponse<Project>>(`/users/${userId}/projects/${projectId}`, data);
+  return res.data;
+}
+
+export async function deleteProject(userId: string, projectId: string) {
+  const res = await privateApi.delete<ApiResponse<Project>>(`/users/${userId}/projects/${projectId}`);
+  return res.data;
+}
+
+export async function uploadProjectImage(userId: string, projectId: string, file: File) {
+  const formData = new FormData();
+  formData.set("image", file);
+  const res = await privateApi.post<ApiResponse<Project>>(`/users/${userId}/projects/${projectId}/image`, formData);
   return res.data;
 }

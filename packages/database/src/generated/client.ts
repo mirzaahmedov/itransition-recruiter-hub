@@ -50,6 +50,11 @@ export type Category = Prisma.CategoryModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
  * Model Attribute
  * 
  */

@@ -28,8 +28,8 @@ export const AppHeader = () => {
 
   const handleLogOut = () => {
     logOut();
-    navigate("/sign-in");
     localStorage.removeItem("accessToken");
+    navigate("/auth/login");
   };
 
   const userInitials = fallbackName(user?.name ?? "U");

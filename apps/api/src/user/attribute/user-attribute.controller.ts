@@ -5,7 +5,6 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Patch,
@@ -21,7 +20,6 @@ import {
   UpdateUserProfileAttributeDto,
 } from './user-attribute.dto';
 import { UserAttributeService } from './user-attribute.service';
-import { BulkUpdateUserProfileAttributePayload } from '@rh/shared/schemas';
 
 @Controller('users/:userId/attributes')
 export class UserAttributeController {
@@ -34,31 +32,24 @@ export class UserAttributeController {
     @Param('userId') userId: string,
     @Body() data: BulkCreateUserProfileAttributeDto,
   ) {
-    try {
-      if (userId !== user.id) {
-        throw new ForbiddenException();
-      }
+    if (userId !== user.id) {
+      throw new ForbiddenException('You can only add attributes to your own profile');
+    }
 
-      return this.userAttributeService.bulkCreate({
+    return makeResponse(
+      await this.userAttributeService.bulkCreate({
         ids: data.ids,
         userId: user.id,
-      });
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
+      }),
+    );
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findAll(@AuthUser() user: User, @Param('userId') userId: string) {
-    try {
-      return makeResponse(
-        await this.userAttributeService.findByUserId(user.id),
-      );
-    } catch (error) {
-      console.log('error', error);
-      throw new InternalServerErrorException();
-    }
+    return makeResponse(
+      await this.userAttributeService.findByUserId(user.id),
+    );
   }
 
   @Patch('bulk')
@@ -68,23 +59,18 @@ export class UserAttributeController {
     @Param('userId') userId: string,
     @Body() data: BulkUpdateUserProfileAttributeDto,
   ) {
-    try {
-      if (userId !== user.id) {
-        throw new ForbiddenException();
-      }
-
-      return makeResponse(
-        await this.userAttributeService.bulkUpdate(
-          {
-            userId,
-          },
-          data,
-        ),
-      );
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException();
+    if (userId !== user.id) {
+      throw new ForbiddenException('You can only update your own attributes');
     }
+
+    return makeResponse(
+      await this.userAttributeService.bulkUpdate(
+        {
+          userId,
+        },
+        data,
+      ),
+    );
   }
 
   @Patch(':id')
@@ -96,24 +82,19 @@ export class UserAttributeController {
     @Query('version', ParseIntPipe) version: number,
     @Body() payload: UpdateUserProfileAttributeDto,
   ) {
-    try {
-      if (userId !== user.id) {
-        throw new ForbiddenException();
-      }
-
-      return makeResponse(
-        await this.userAttributeService.update(
-          {
-            id,
-            version,
-            userId,
-          },
-          payload,
-        ),
-      );
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException();
+    if (userId !== user.id) {
+      throw new ForbiddenException('You can only update your own attributes');
     }
+
+    return makeResponse(
+      await this.userAttributeService.update(
+        {
+          id,
+          version,
+          userId,
+        },
+        payload,
+      ),
+    );
   }
 }

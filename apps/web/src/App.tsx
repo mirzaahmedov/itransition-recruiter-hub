@@ -6,7 +6,6 @@ import AppRoot from "./app/AppRoot";
 import { AttributesPage } from "./app/attributes/AttributesPage";
 import AuthSuccessPage from "./app/auth-success/AuthSuccessPage";
 import { NotFoundPage } from "./app/not-found/NotFoundPage";
-import AuthPage from "./app/auth/AuthPage";
 import UsersPage from "./app/users/UsersPage";
 import { AppLayout } from "./components/AppLayout";
 import PositionsPage from "./app/positions/PositionsPage";
@@ -15,17 +14,42 @@ import PositionCreatePage from "./app/positions/PositionCreatePage";
 import UserProfilePage from "./app/users/profile/UserProfilePage";
 import ResumesPage from "./app/resumes/ResumesPage";
 import ResumePage from "./app/resumes/ResumePage";
+import { AuthFormLayout } from "./app/auth/AuthFormLayout";
+import RegisterPage from "./app/auth/register/RegisterPage";
+import LoginPage from "./app/auth/login/LoginPage";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: <AuthPage />,
-  },
-  {
-    path: "/auth-success",
-    element: <AuthSuccessPage />,
+    path: "auth",
+    children: [
+      {
+        element: <AuthFormLayout />,
+        children: [
+          {
+            path: "register",
+            element: <RegisterPage />,
+          },
+          {
+            path: "login",
+            element: <LoginPage />,
+          },
+        ],
+      },
+      {
+        path: "verify-email",
+        element: <AuthSuccessPage />,
+      },
+      {
+        path: "verify-email/success",
+        element: <AuthSuccessPage />,
+      },
+      {
+        path: "google/success",
+        element: <AuthSuccessPage />,
+      },
+    ],
   },
   {
     element: <AppRoot />,

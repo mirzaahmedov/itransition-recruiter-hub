@@ -19,7 +19,11 @@ export const GenericTable = <T,>({ instance, onRowClick }: GenericTableProps<T>)
       </TableHeader>
       <TableBody>
         {instance.getRowModel().rows.map((row) => (
-          <TableRow key={row.id} onClick={() => onRowClick?.(row)} className={typeof onRowClick === "function" ? "cursor-pointer" : ""}>
+          <TableRow key={row.id} onClick={(e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("button, input, [role='checkbox'], label")) return;
+            onRowClick?.(row);
+          }} className={typeof onRowClick === "function" ? "cursor-pointer" : ""}>
             {row.getVisibleCells().map((column) => (
               <TableCell key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</TableCell>
             ))}

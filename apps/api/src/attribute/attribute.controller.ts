@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -20,33 +19,25 @@ export class AttributeController {
 
   @Post()
   async create(@Body() data: CreateAttributeDto) {
-    try {
-      const { name, type, categoryId, choices = [] } = data;
+    const { name, type, categoryId, choices = [] } = data;
 
-      const attr = await this.attributeService.create({
-        name,
-        type,
-        categoryId,
-        choices,
-      });
+    const attr = await this.attributeService.create({
+      name,
+      type,
+      categoryId,
+      choices,
+    });
 
-      return makeResponse(attr);
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
+    return makeResponse(attr);
   }
 
   @Patch(':id/rename')
   async update(@Body() data: UpdateAttributePayload, @Param() id: string) {
-    try {
-      const { name } = data;
+    const { name } = data;
 
-      const attr = await this.attributeService.update(id, name);
+    const attr = await this.attributeService.update(id, name);
 
-      return makeResponse(attr);
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
+    return makeResponse(attr);
   }
 
   @Get('search')
@@ -65,11 +56,11 @@ export class AttributeController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.attributeService.findOne(id);
+    return makeResponse(await this.attributeService.findOne(id));
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    return this.attributeService.delete(id);
+    return makeResponse(await this.attributeService.delete(id));
   }
 }

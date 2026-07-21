@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { fetchUser, fetchUserAttributes } from "./api";
+import { fetchUser, fetchUserAttributes, fetchUserProjects } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { ProfileView } from "./ProfileView";
 import { useState } from "react";
@@ -25,11 +25,21 @@ const UserProfilePage = () => {
     queryFn: () => fetchUserAttributes(userId!),
     enabled: !!userId,
   });
+  const {
+    data: userProjects,
+    isFetching: isFetchingUserProjects,
+    refetch: refetchProjects,
+  } = useQuery({
+    queryKey: ["users", userId, "projects"],
+    queryFn: () => fetchUserProjects(userId!),
+    enabled: !!userId,
+  });
 
   const userData = user?.data;
   const userAttributesData = userAttributes?.data;
+  const userProjectsData = userProjects?.data ?? [];
 
-  const isLoading = isFetchingUser || isFetchingUserAttributes;
+  const isLoading = isFetchingUser || isFetchingUserAttributes || isFetchingUserProjects;
 
   return (
     <div className="relative min-h-full">
@@ -42,13 +52,15 @@ const UserProfilePage = () => {
           <ProfileForm
             user={userData}
             userAttributes={userAttributesData}
+            userProjects={userProjectsData}
             onStopEditing={() => {
               setEditing(false);
               refetchAttributes();
+              refetchProjects();
             }}
           />
         ) : (
-          <ProfileView user={userData} userAttributes={userAttributesData} onEdit={() => setEditing(true)} />
+          <ProfileView user={userData} userAttributes={userAttributesData} userProjects={userProjectsData} onEdit={() => setEditing(true)} />
         )
       ) : (
         <div className="text-center py-20 text-muted-foreground">Nothing to show</div>

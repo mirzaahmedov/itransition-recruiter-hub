@@ -10,6 +10,7 @@
  */
 export type * from './models/Category.js'
 export type * from './models/User.js'
+export type * from './models/Project.js'
 export type * from './models/Attribute.js'
 export type * from './models/AttributeChoice.js'
 export type * from './models/UserAttribute.js'

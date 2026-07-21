@@ -3,16 +3,17 @@ import { Card, CardDescription, CardFooter, CardHeader, CardPanel, CardTitle } f
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
 import { SignInIcon, UserPlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { AuthLoginForm } from "./AuthLoginForm";
-import { AuthRegisterForm } from "./AuthRegisterForm";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
-enum AuthTab {
+enum TabOption {
   REGISTER = "REGISTER",
   LOGIN = "LOGIN",
 }
 
-const AuthPage = () => {
-  const [tabValue, setTabValue] = useState(AuthTab.LOGIN);
+export const AuthFormLayout = () => {
+  const location = useLocation();
+
+  const [tabValue, setTabValue] = useState(location.pathname.endsWith("register") ? TabOption.REGISTER : TabOption.LOGIN);
 
   const handleLoginGoogle = () => {
     window.location.href = `${import.meta.env.VITE_API_HOST}/auth/google`;
@@ -25,28 +26,28 @@ const AuthPage = () => {
           <CardHeader className="border-b">
             <div className="flex items-center justify-center">
               <TabsList variant="underline">
-                <TabsTab value={AuthTab.REGISTER}>
+                <TabsTab value={TabOption.REGISTER} render={<NavLink to="/auth/register" />}>
                   <UserPlusIcon /> Register
                 </TabsTab>
-                <TabsTab value={AuthTab.LOGIN}>
+                <TabsTab value={TabOption.LOGIN} render={<NavLink to="/auth/login" />}>
                   <SignInIcon />
                   Login
                 </TabsTab>
               </TabsList>
             </div>
             <div className="mt-5 text-center">
-              <CardTitle>{tabValue === AuthTab.LOGIN ? "Login to your account" : "Register new account"}</CardTitle>
+              <CardTitle>{tabValue === TabOption.LOGIN ? "Login to your account" : "Register new account"}</CardTitle>
               <CardDescription className="mt-1">
-                {tabValue === AuthTab.LOGIN ? "Enter email and password to login" : "Enter name, email and password to register new account"}
+                {tabValue === TabOption.LOGIN ? "Enter email and password to login" : "Enter name, email and password to register new account"}
               </CardDescription>
             </div>
           </CardHeader>
           <CardPanel>
-            <TabsPanel value={AuthTab.LOGIN}>
-              <AuthLoginForm />
+            <TabsPanel value={TabOption.LOGIN}>
+              <Outlet />
             </TabsPanel>
-            <TabsPanel value={AuthTab.REGISTER}>
-              <AuthRegisterForm />
+            <TabsPanel value={TabOption.REGISTER}>
+              <Outlet />
             </TabsPanel>
           </CardPanel>
           <CardFooter className="border-t">
@@ -79,5 +80,3 @@ const AuthPage = () => {
     </div>
   );
 };
-
-export default AuthPage;
