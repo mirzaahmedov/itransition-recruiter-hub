@@ -1,6 +1,4 @@
-"use client";
-
-import { PencilSimpleIcon } from "@phosphor-icons/react";
+import { CameraIcon } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { useFileUpload, type FileWithPreview } from "@/hooks/use-file-upload";
@@ -42,7 +40,7 @@ const FileUploadAvatar: FC<FileUploadAvatarProps> = ({ onSelect, isPending, chil
           }}
           className="absolute -bottom-1 -right-1 z-10 bg-card!"
         >
-          <PencilSimpleIcon />
+          <CameraIcon />
         </Button>
       )}
     </div>

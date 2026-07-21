@@ -1,35 +1,25 @@
+import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchUser, fetchUserAttributes, fetchUserProjects } from "./api";
-import { Spinner } from "@/components/ui/spinner";
-import { ProfileView } from "./ProfileView";
-import { useState } from "react";
-import ProfileForm from "./ProfileForm";
+import { ProfileAttributes } from "./ProfileAttributes";
+import { ProfileHeader } from "./ProfileHeader";
+import { ProfileProjects } from "./ProfileProjects";
 
 const UserProfilePage = () => {
   const userId = useParams().id;
-
-  const [editing, setEditing] = useState(false);
 
   const { data: user, isFetching: isFetchingUser } = useQuery({
     queryKey: ["users", userId],
     queryFn: () => fetchUser(userId!),
     enabled: !!userId,
   });
-  const {
-    data: userAttributes,
-    isFetching: isFetchingUserAttributes,
-    refetch: refetchAttributes,
-  } = useQuery({
+  const { data: userAttributes, isFetching: isFetchingUserAttributes } = useQuery({
     queryKey: ["users", userId, "attributes"],
     queryFn: () => fetchUserAttributes(userId!),
     enabled: !!userId,
   });
-  const {
-    data: userProjects,
-    isFetching: isFetchingUserProjects,
-    refetch: refetchProjects,
-  } = useQuery({
+  const { data: userProjects, isFetching: isFetchingUserProjects } = useQuery({
     queryKey: ["users", userId, "projects"],
     queryFn: () => fetchUserProjects(userId!),
     enabled: !!userId,
@@ -48,20 +38,11 @@ const UserProfilePage = () => {
           <Spinner />
         </div>
       ) : userData && userAttributesData ? (
-        editing ? (
-          <ProfileForm
-            user={userData}
-            userAttributes={userAttributesData}
-            userProjects={userProjectsData}
-            onStopEditing={() => {
-              setEditing(false);
-              refetchAttributes();
-              refetchProjects();
-            }}
-          />
-        ) : (
-          <ProfileView user={userData} userAttributes={userAttributesData} userProjects={userProjectsData} onEdit={() => setEditing(true)} />
-        )
+        <div className="mx-auto max-w-4xl px-4 py-8">
+          <ProfileHeader user={userData} />
+          <ProfileAttributes user={userData} attributes={userAttributesData} />
+          <ProfileProjects user={userData} projects={userProjectsData} />
+        </div>
       ) : (
         <div className="text-center py-20 text-muted-foreground">Nothing to show</div>
       )}

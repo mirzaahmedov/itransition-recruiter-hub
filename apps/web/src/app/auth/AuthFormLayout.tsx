@@ -20,7 +20,7 @@ export const AuthFormLayout = () => {
   };
 
   return (
-    <div className="h-full flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-center">
       <Card className="w-full max-w-md">
         <Tabs value={tabValue} onValueChange={setTabValue}>
           <CardHeader className="border-b">

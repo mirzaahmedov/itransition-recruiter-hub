@@ -2,7 +2,14 @@ import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { User, UserAttribute, Project } from "@rh/database/browser";
 import type { UserAttributeGetPayload } from "@rh/database/models";
-import type { UpdateUserProfileAttributePayload, BulkCreateUserProfileAttributePayload, BulkUpdateUserProfileAttributePayload, UpdateUserProfilePayload, CreateProjectPayload, UpdateProjectPayload } from "@rh/shared/schemas";
+import type {
+  UpdateUserProfileAttributePayload,
+  BulkCreateUserProfileAttributePayload,
+  BulkUpdateUserProfileAttributePayload,
+  UpdateUserProfilePayload,
+  CreateProjectPayload,
+  UpdateProjectPayload,
+} from "@rh/shared/schemas";
 
 export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
   include: {
@@ -67,7 +74,7 @@ export async function uploadProfilePicture(id: string, file: File) {
 
   formData.set("image", file);
 
-  const res = await privateApi.put(`/users/${id}/profile-picture`, formData);
+  const res = await privateApi.put<ApiResponse<User>>(`/users/${id}/profile-picture`, formData);
   return res.data;
 }
 
