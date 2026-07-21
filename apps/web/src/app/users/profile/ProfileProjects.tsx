@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { LinkIcon, PencilSimpleLineIcon, PlusIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { LinkIcon, PencilSimpleLineIcon, PlusIcon, TrashIcon, UploadSimpleIcon, XIcon } from "@phosphor-icons/react";
 import type { Project, User } from "@rh/database/browser";
 import type { CreateProjectPayload } from "@rh/shared/schemas";
 import { useMutation } from "@tanstack/react-query";
@@ -111,10 +111,17 @@ export const ProfileProjects: FC<{
         <div className="rounded-2xl border bg-card p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
-            <Button variant="secondary" size="sm" onClick={projectDialog.openDialog}>
-              <PlusIcon />
-              Add
-            </Button>
+
+            <div className="flex items-center gap-1">
+              <Button variant="secondary" size="sm" onClick={projectDialog.openDialog}>
+                <PlusIcon />
+                Add
+              </Button>
+              <Button variant="link" onClick={() => setEditing(false)}>
+                <XIcon />
+                Close
+              </Button>
+            </div>
           </div>
           <div className="mt-4">
             {projects.length > 0 ? (

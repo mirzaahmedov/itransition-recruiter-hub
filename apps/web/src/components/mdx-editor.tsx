@@ -16,7 +16,8 @@ export const MDXEditor: FC<{
   hideToolbar?: boolean;
   value: string;
   onChange: (value: string) => void;
-}> = ({ hideToolbar = false, readOnly = false, value, onChange }) => {
+  onBlur: VoidFunction;
+}> = ({ hideToolbar = false, readOnly = false, value, onChange, onBlur }) => {
   const ref = useRef<MDXEditorMethods>(null);
 
   useEffect(() => {
@@ -51,6 +52,7 @@ export const MDXEditor: FC<{
         ref={ref}
         markdown={value}
         onChange={onChange}
+        onBlur={onBlur}
         plugins={plugins}
         contentEditableClassName="min-h-[200px] p-1 text-sm outline-none prose prose-strong:text-foreground dark:prose-invert"
       />

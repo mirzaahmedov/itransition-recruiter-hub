@@ -17,9 +17,10 @@ export const AttributeEditor: FC<{
   type: AttributeType;
   value: any;
   onValueChange: (value: any) => void;
+  onBlur: VoidFunction;
   choices?: AttributeChoice[];
   onImageUpload?: (file: File) => void;
-}> = ({ type, value, onValueChange, choices, onImageUpload }) => {
+}> = ({ type, value, onValueChange, onBlur, choices, onImageUpload }) => {
   const choiceOptions = useMemo(
     () =>
       (choices ?? []).map((choice) => ({
@@ -32,7 +33,7 @@ export const AttributeEditor: FC<{
   switch (type) {
     case AttributeType.NUMERIC:
       return (
-        <NumberField value={value} onValueChange={onValueChange} className="w-full max-w-full">
+        <NumberField value={value} onValueChange={onValueChange} onBlur={onBlur} className="w-full max-w-full">
           <NumberFieldGroup>
             <NumberFieldDecrement />
             <NumberFieldInput />
@@ -41,21 +42,21 @@ export const AttributeEditor: FC<{
         </NumberField>
       );
     case AttributeType.BOOLEAN:
-      return <Switch checked={value} onCheckedChange={onValueChange} />;
+      return <Switch checked={value} onCheckedChange={onValueChange} onBlur={onBlur} />;
     case AttributeType.DATE:
-      return <DatePicker value={value} onChange={onValueChange} />;
+      return <DatePicker value={value} onChange={onValueChange} onBlur={onBlur} />;
     case AttributeType.DATEPERIOD:
       return (
         <div className="flex items-center gap-2">
-          <DatePicker value={value?.[0] ?? null} onChange={(v) => onValueChange([v, value?.[1] ?? null])} />
+          <DatePicker value={value?.[0] ?? null} onChange={(v) => onValueChange([v, value?.[1] ?? null])} onBlur={onBlur} />
           <span className="text-muted-foreground">—</span>
-          <DatePicker value={value?.[1] ?? null} onChange={(v) => onValueChange([value?.[0] ?? null, v])} />
+          <DatePicker value={value?.[1] ?? null} onChange={(v) => onValueChange([value?.[0] ?? null, v])} onBlur={onBlur} />
         </div>
       );
     case AttributeType.CHOICE:
       return (
         <Select value={value ?? ""} onValueChange={onValueChange} items={choiceOptions}>
-          <SelectTrigger>
+          <SelectTrigger onBlur={onBlur}>
             <SelectValue placeholder="Select..." />
           </SelectTrigger>
           <SelectPopup>
@@ -68,17 +69,17 @@ export const AttributeEditor: FC<{
         </Select>
       );
     case AttributeType.MARKDOWN:
-      return <MDXEditor value={value ?? ""} onChange={onValueChange} />;
+      return <MDXEditor value={value ?? ""} onChange={onValueChange} onBlur={onBlur} />;
     case AttributeType.IMAGE:
       return <ImageUpload value={value} onChange={onValueChange} onUpload={onImageUpload} />;
     case AttributeType.TEXT:
-      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" />;
+      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" onBlur={onBlur} />;
     default:
-      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" />;
+      return <Input value={value} onChange={(e) => onValueChange(e.target.value)} className="w-full max-w-full" onBlur={onBlur} />;
   }
 };
 
-const DatePicker: FC<{ value: string | null; onChange: (v: string | null) => void }> = ({ value, onChange }) => {
+const DatePicker: FC<{ value: string | null; onChange: (v: string | null) => void; onBlur: VoidFunction }> = ({ value, onChange, onBlur }) => {
   const date = value ? new Date(value) : undefined;
 
   return (
@@ -91,7 +92,7 @@ const DatePicker: FC<{ value: string | null; onChange: (v: string | null) => voi
           </Button>
         }
       ></PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent onBlur={onBlur}>
         <Calendar mode="single" selected={date} onSelect={(d) => onChange(d ? d.toISOString() : null)} autoFocus />
       </PopoverContent>
     </Popover>

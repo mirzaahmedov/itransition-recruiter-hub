@@ -88,7 +88,7 @@ const ProfileAttibutesForm: FC<{
         });
       });
   }, []);
-  const { queueUpdate, flush, isSaving } = useAutoSave<UserAttributeUpdateArgs>(handleSave);
+  const { queueUpdate, flush } = useAutoSave<UserAttributeUpdateArgs>(handleSave);
 
   useEffect(() => {
     if (Array.isArray(userAttributes)) {
@@ -176,6 +176,10 @@ const ProfileAttibutesForm: FC<{
                                       payload: getDynamicValueObject(value, attr.attr.attribute.type),
                                     });
                                     field.onChange(value);
+                                  }}
+                                  onBlur={() => {
+                                    flush();
+                                    field.onBlur();
                                   }}
                                   choices={(attr.attr.attribute as any).choices ?? []}
                                 />
