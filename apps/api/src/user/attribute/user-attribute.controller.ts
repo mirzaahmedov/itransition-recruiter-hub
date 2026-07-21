@@ -33,7 +33,9 @@ export class UserAttributeController {
     @Body() data: BulkCreateUserProfileAttributeDto,
   ) {
     if (userId !== user.id) {
-      throw new ForbiddenException('You can only add attributes to your own profile');
+      throw new ForbiddenException(
+        'You can only add attributes to your own profile',
+      );
     }
 
     return makeResponse(
@@ -46,9 +48,9 @@ export class UserAttributeController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findAll(@AuthUser() user: User, @Param('userId') userId: string) {
+  async findAll(@Param('userId') userId: string) {
     return makeResponse(
-      await this.userAttributeService.findByUserId(user.id),
+      await this.userAttributeService.findByUserId(userId, true),
     );
   }
 

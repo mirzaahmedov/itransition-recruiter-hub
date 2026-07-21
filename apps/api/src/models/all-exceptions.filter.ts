@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { ZodValidationException } from 'nestjs-zod';
 import type { Response } from 'express';
 import { err } from '@/models/api';
 
@@ -35,7 +36,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
 
-    if (exception instanceof HttpException) {
+    if (exception instanceof ZodValidationException) {
+      status = HttpStatus.BAD_REQUEST;
+      const zodError = exception.getZodError() as any;
+      const issues = zodError?.issues ?? [];
+      message = issues.map((issue: any) => ({
+        path: issue.path?.join('.'),
+        message: issue.message,
+      }));
+    } else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exResponse = exception.getResponse();
       message =

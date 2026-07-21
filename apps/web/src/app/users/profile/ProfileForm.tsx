@@ -9,7 +9,7 @@ import { useCategoryStore } from "@/store/useCategoryStore";
 import { fallbackName } from "@/utils/fallbackName";
 import { FloppyDiskIcon, LinkIcon, PlusIcon, TrashIcon, UploadSimpleIcon, WarningCircleIcon, XIcon } from "@phosphor-icons/react";
 import type { Project, User } from "@rh/database/browser";
-import type { CreateProjectPayload, UpdateUserProfileAttributePayload } from "@rh/shared";
+import type { CreateProjectPayload, UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState, type FC } from "react";
@@ -132,7 +132,7 @@ const ProfileForm: FC<{
         })),
       })
       .then((res) => {
-        const { concurrent_modification = [] } = res?.data ?? {};
+        const { concurrent_modification = [], modified } = res?.data ?? {};
 
         if (concurrent_modification.length) {
           setConflicts(
@@ -145,6 +145,10 @@ const ProfileForm: FC<{
             ),
           );
         }
+
+        modified.forEach((item) => {
+          form.setValue(`attrs.${item.id}.attr.version`, item.version);
+        });
       });
   }, []);
   const { queueUpdate, flush, isSaving } = useAutoSave<UserAttributeUpdateArgs>(handleSave);
@@ -276,28 +280,33 @@ const ProfileForm: FC<{
                 {attrs.length > 0 ? (
                   <ul className="space-y-3">
                     {attrs.map(([attrId, attr]) => (
-                      <li key={attrId} className="flex items-center gap-4">
-                        <span className="text-sm text-muted-foreground shrink-0 w-32">{attr.attr.attribute.name}</span>
-                        <span className="flex-1 max-w-80">
-                          <Controller
-                            control={form.control}
-                            name={`attrs.${attrId}.value`}
-                            render={({ field }) => (
-                              <AttributeEditor
-                                type={attr.attr.attribute.type}
-                                value={field.value}
-                                onValueChange={(value) => {
-                                  queueUpdate({
-                                    id: attr.attr.id,
-                                    version: attr.attr.version,
-                                    payload: getDynamicValueObject(value, attr.attr.attribute.type),
-                                  });
-                                  field.onChange(value);
-                                }}
-                                choices={(attr.attr.attribute as any).choices ?? []}
-                              />
-                            )}
-                          />
+                      <li key={attrId} className="flex items-start justify-between gap-10">
+                        <div className="flex items-end w-full max-w-40 shrink-0 gap-4">
+                          <span className="text-sm text-muted-foreground">{attr.attr.attribute.name}</span>
+                          <span className="flex-1 border-b border-dotted border-border" />
+                        </div>
+                        <span className="flex-1 w-full ">
+                          <span className="max-w-100">
+                            <Controller
+                              control={form.control}
+                              name={`attrs.${attrId}.value`}
+                              render={({ field }) => (
+                                <AttributeEditor
+                                  type={attr.attr.attribute.type}
+                                  value={field.value}
+                                  onValueChange={(value) => {
+                                    queueUpdate({
+                                      id: attr.attr.id,
+                                      version: attr.attr.version,
+                                      payload: getDynamicValueObject(value, attr.attr.attribute.type),
+                                    });
+                                    field.onChange(value);
+                                  }}
+                                  choices={(attr.attr.attribute as any).choices ?? []}
+                                />
+                              )}
+                            />
+                          </span>
                         </span>
                         <span className="w-20">
                           {conflicts[attr.attr.id] ? (
@@ -331,11 +340,7 @@ const ProfileForm: FC<{
                 {projects.map((project) => (
                   <div key={project.id} className="flex items-start gap-4">
                     {project.image ? (
-                      <img
-                        src={project.image}
-                        alt={project.name}
-                        className="size-16 rounded-lg object-cover shrink-0"
-                      />
+                      <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
                     ) : (
                       <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
                         <input
@@ -372,9 +377,7 @@ const ProfileForm: FC<{
                           </a>
                         )}
                       </div>
-                      {project.description && (
-                        <p className="text-sm text-muted-foreground mt-1">{project.description}</p>
-                      )}
+                      {project.description && <p className="text-sm text-muted-foreground mt-1">{project.description}</p>}
                     </div>
                     <Button
                       variant="ghost"
@@ -405,11 +408,7 @@ const ProfileForm: FC<{
                 <label className="text-sm font-medium">Image</label>
                 <div className="mt-1 flex items-center gap-3">
                   {newProjectImage ? (
-                    <img
-                      src={URL.createObjectURL(newProjectImage)}
-                      alt="Preview"
-                      className="size-16 rounded-lg object-cover"
-                    />
+                    <img src={URL.createObjectURL(newProjectImage)} alt="Preview" className="size-16 rounded-lg object-cover" />
                   ) : (
                     <div className="size-16 rounded-lg bg-muted flex items-center justify-center">
                       <UploadSimpleIcon className="size-6 text-muted-foreground" />

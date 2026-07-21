@@ -11,7 +11,7 @@ import { AppLayout } from "./components/AppLayout";
 import PositionsPage from "./app/positions/PositionsPage";
 import PositionPage from "./app/positions/PositionPage";
 import PositionCreatePage from "./app/positions/PositionCreatePage";
-import UserProfilePage from "./app/users/profile/UserProfilePage";
+import UserProfilePage from "./app/users/profile/ProfilePage";
 import ResumesPage from "./app/resumes/ResumesPage";
 import ResumePage from "./app/resumes/ResumePage";
 import { AuthFormLayout } from "./app/auth/AuthFormLayout";

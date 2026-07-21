@@ -121,14 +121,23 @@ export class UserAttributeService {
     };
   }
 
-  async findByUserId(userId: string) {
+  async findByUserId(userId: string, withChoices = false) {
     return await this.prisma.userAttribute.findMany({
       where: {
         userId,
       },
+      orderBy: {
+        id: 'asc',
+      },
       include: {
         choice: true,
-        attribute: true,
+        attribute: withChoices
+          ? {
+              include: {
+                choices: true,
+              },
+            }
+          : true,
       },
     });
   }

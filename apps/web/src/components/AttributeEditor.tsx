@@ -1,17 +1,17 @@
-import { AttributeType, type AttributeChoice } from "@rh/database/enums";
-import type { FC } from "react";
-import { Input } from "./ui/input";
-import { Switch } from "./ui/switch";
-import { Textarea } from "./ui/textarea";
-import { NumberField, NumberFieldDecrement, NumberFieldGroup, NumberFieldIncrement, NumberFieldInput } from "./ui/number-field";
-import { Select, SelectButton, SelectContent, SelectItem, SelectPopup, SelectValue } from "./ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "./ui/calendar";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { AttributeType } from "@rh/database/enums";
+import type { AttributeChoice } from "@rh/database/browser";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useMemo, type FC } from "react";
 import { MDXEditor } from "./mdx-editor";
+import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
+import { Input } from "./ui/input";
+import { NumberField, NumberFieldDecrement, NumberFieldGroup, NumberFieldIncrement, NumberFieldInput } from "./ui/number-field";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "./ui/select";
+import { Switch } from "./ui/switch";
 
 export const AttributeEditor: FC<{
   type: AttributeType;
@@ -20,6 +20,15 @@ export const AttributeEditor: FC<{
   choices?: AttributeChoice[];
   onImageUpload?: (file: File) => void;
 }> = ({ type, value, onValueChange, choices, onImageUpload }) => {
+  const choiceOptions = useMemo(
+    () =>
+      (choices ?? []).map((choice) => ({
+        value: choice.id,
+        label: choice.value,
+      })),
+    [choices],
+  );
+
   switch (type) {
     case AttributeType.NUMERIC:
       return (
@@ -32,7 +41,7 @@ export const AttributeEditor: FC<{
         </NumberField>
       );
     case AttributeType.BOOLEAN:
-      return <Switch checked={value} onCheckedChange={onValueChange} className="w-full max-w-full" />;
+      return <Switch checked={value} onCheckedChange={onValueChange} />;
     case AttributeType.DATE:
       return <DatePicker value={value} onChange={onValueChange} />;
     case AttributeType.DATEPERIOD:
@@ -45,14 +54,14 @@ export const AttributeEditor: FC<{
       );
     case AttributeType.CHOICE:
       return (
-        <Select value={value ?? ""} onValueChange={onValueChange}>
-          <SelectButton>
+        <Select value={value ?? ""} onValueChange={onValueChange} items={choiceOptions}>
+          <SelectTrigger>
             <SelectValue placeholder="Select..." />
-          </SelectButton>
+          </SelectTrigger>
           <SelectPopup>
-            {(choices ?? []).map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.value}
+            {choiceOptions.map((c) => (
+              <SelectItem key={c.value} value={c.value}>
+                {c.label}
               </SelectItem>
             ))}
           </SelectPopup>
@@ -74,22 +83,16 @@ const DatePicker: FC<{ value: string | null; onChange: (v: string | null) => voi
 
   return (
     <Popover>
-      <PopoverTrigger render={<div />}>
-        <Button
-          variant="outline"
-          className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
-        >
-          <CalendarIcon className="mr-2 size-4" />
-          {date ? format(date, "PPP") : "Pick a date"}
-        </Button>
-      </PopoverTrigger>
+      <PopoverTrigger
+        render={
+          <Button variant="outline" className={cn("w-44 justify-start text-left font-normal", !date && "text-muted-foreground")}>
+            <CalendarIcon className="mr-2 size-4" />
+            {date ? format(date, "PPP") : "Pick a date"}
+          </Button>
+        }
+      ></PopoverTrigger>
       <PopoverContent>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(d) => onChange(d ? d.toISOString() : null)}
-          initialFocus
-        />
+        <Calendar mode="single" selected={date} onSelect={(d) => onChange(d ? d.toISOString() : null)} autoFocus />
       </PopoverContent>
     </Popover>
   );
@@ -117,7 +120,7 @@ const ImageUpload: FC<{
       <Input
         type="file"
         accept="image/*"
-        className="max-w-40"
+        className="w-full max-w-full"
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file && onUpload) {

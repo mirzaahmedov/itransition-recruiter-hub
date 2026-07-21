@@ -1,15 +1,12 @@
 @import "tailwindcss";
+@import "editor.css";
 
-@custom-variant dark (&:is(.dark *));
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&: is(.dark *));
 
 @theme {
   --color-base-divider: color-mix(in oklab, var(--color-base-content) 10%, transparent);
-}
-
-html,
-body,
-#root {
-  height: 100%;
 }
 
 @utility icon {
