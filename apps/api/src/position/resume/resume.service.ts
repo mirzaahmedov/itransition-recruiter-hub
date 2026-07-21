@@ -1,12 +1,14 @@
 import {
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
 import { PositionService } from '../position.service';
-import type { ResumeStatus } from '@rh/database/client';
+import type { ResumeStatus, User } from '@rh/database/client';
+import { UserRole } from '@rh/database/enums';
 
 const resumeInclude = {
   position: true,
@@ -80,9 +82,17 @@ export class ResumeService {
     return resume;
   }
 
-  async findAllByPosition(positionId: string) {
+  async findAllByPosition(positionId: string, user?: User) {
+    const where: Record<string, unknown> = { positionId };
+
+    if (user && user.role === UserRole.CANDIDATE) {
+      where.userId = user.id;
+    } else if (user) {
+      where.status = 'PUBLISHED' as ResumeStatus;
+    }
+
     return await this.prisma.resume.findMany({
-      where: { positionId },
+      where,
       include: {
         user: true,
         resumeAttributes: {
@@ -142,6 +152,46 @@ export class ResumeService {
     return await this.prisma.resume.update({
       where: { id },
       data: { status },
+      include: resumeInclude,
+    });
+  }
+
+  async publish(id: string, userId: string) {
+    const resume = await this.findOne(id);
+
+    if (resume.userId !== userId) {
+      throw new NotFoundException(`Resume #${id} not found`);
+    }
+
+    if (resume.status === 'PUBLISHED') {
+      return resume;
+    }
+
+    const emptyAttrs = resume.resumeAttributes.filter((ra) => {
+      const ua = ra.userAttribute;
+      return (
+        ua.textValue == null &&
+        ua.numberValue == null &&
+        ua.booleanValue == null &&
+        ua.dateValue == null &&
+        ua.startDateValue == null &&
+        ua.endDateValue == null &&
+        ua.choiceId == null
+      );
+    });
+
+    if (emptyAttrs.length > 0) {
+      const names = emptyAttrs.map(
+        (ra) => ra.positionAttribute.attribute.name,
+      );
+      throw new BadRequestException(
+        `Cannot publish: the following attributes are empty: ${names.join(', ')}`,
+      );
+    }
+
+    return await this.prisma.resume.update({
+      where: { id },
+      data: { status: 'PUBLISHED' },
       include: resumeInclude,
     });
   }

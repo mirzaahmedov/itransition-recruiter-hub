@@ -69,6 +69,13 @@ export async function fetchPositionResumes(positionId: string) {
   return res.data;
 }
 
+export async function publishResume(positionId: string, id: string) {
+  const res = await privateApi.post<ApiResponse<ResumeDetail>>(
+    `/positions/${positionId}/resumes/${id}/publish`,
+  );
+  return res.data;
+}
+
 export async function updateResumeStatus(
   positionId: string,
   id: string,

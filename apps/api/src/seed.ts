@@ -45,14 +45,9 @@ export async function seedDatabase(prisma: PrismaClient) {
         sortOrder: 8,
       },
       {
-        id: 'projects',
-        name: 'Projects',
-        sortOrder: 9,
-      },
-      {
         id: 'portfolio-links',
         name: 'Portfolio & Links',
-        sortOrder: 10,
+        sortOrder: 9,
       },
     ],
   });

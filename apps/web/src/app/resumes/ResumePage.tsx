@@ -1,12 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { fetchResume } from "./api";
+import { fetchResume, publishResume } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeftIcon, PrinterIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PaperPlaneTiltIcon, PrinterIcon } from "@phosphor-icons/react";
 import { useCategoryStore } from "@/store/useCategoryStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import toast from "react-hot-toast";
 import type { ResumeAttributeItem, ResumeDetail } from "./api";
 
 function formatValue(ra: ResumeAttributeItem): string {
@@ -101,6 +103,8 @@ const ResumeView = ({ resume }: { resume: ResumeDetail }) => {
 const ResumePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const user = useAuthStore((store) => store.user);
 
   const { data: resume, isFetching } = useQuery({
     queryKey: ["resumes", id],
@@ -108,7 +112,20 @@ const ResumePage = () => {
     enabled: !!id,
   });
 
+  const publishMutation = useMutation({
+    mutationFn: () => publishResume(resumeData!.positionId, id!),
+    onSuccess: () => {
+      toast.success("Resume published");
+      queryClient.invalidateQueries({ queryKey: ["resumes", id] });
+    },
+    onError: (err: { response?: { data?: { data?: string } } }) => {
+      const msg = err.response?.data?.data ?? "Failed to publish resume";
+      toast.error(msg);
+    },
+  });
+
   const resumeData = resume?.data;
+  const isOwner = user && resumeData && user.id === resumeData.userId;
 
   if (isFetching) {
     return (
@@ -143,6 +160,12 @@ const ResumePage = () => {
         </button>
         <div className="flex items-center gap-2">
           <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>{resumeData.status}</Badge>
+          {isOwner && resumeData.status === "PENDING" && (
+            <Button onClick={() => publishMutation.mutate()} loading={publishMutation.isPending}>
+              <PaperPlaneTiltIcon />
+              Publish
+            </Button>
+          )}
           <Button variant="outline" onClick={() => window.print()}>
             <PrinterIcon />
             Print

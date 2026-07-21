@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserRole } from "@rh/database/browser";
 import { Badge } from "./ui/badge";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface NavLinkItem {
   to: string;
@@ -22,6 +23,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export const AppHeader = () => {
   const user = useAuthStore((store) => store.user);
   const logOut = useAuthStore((store) => store.logOut);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("max-md");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,6 +32,7 @@ export const AppHeader = () => {
     logOut();
     localStorage.removeItem("accessToken");
     navigate("/auth/login");
+    queryClient.clear();
   };
 
   const userInitials = fallbackName(user?.name ?? "U");

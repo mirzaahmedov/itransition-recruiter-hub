@@ -21,6 +21,7 @@ import type { Attribute } from "@rh/database/browser";
 import { addPositionAttribute } from "./api";
 import { Link } from "react-router-dom";
 import type { ResumeListItem } from "@/app/resumes/api";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const PositionView: FC<{
   position: PositionWithAttributes;
@@ -28,7 +29,10 @@ const PositionView: FC<{
   onEdit: VoidFunction;
   onDelete: VoidFunction;
   onApply: VoidFunction;
-}> = ({ position, resumes, onEdit, onDelete, onApply }) => {
+  userRole: string;
+}> = ({ position, resumes, onEdit, onDelete, onApply, userRole }) => {
+  const isCandidate = userRole === "CANDIDATE";
+
   return (
     <>
       <div className="flex items-start justify-between gap-4">
@@ -44,10 +48,12 @@ const PositionView: FC<{
           <Button variant="destructive-outline" onClick={onDelete}>
             <TrashIcon /> Delete
           </Button>
-          <Button onClick={onApply}>
-            <ReadCvLogoIcon />
-            Apply
-          </Button>
+          {isCandidate && (
+            <Button onClick={onApply}>
+              <ReadCvLogoIcon />
+              Apply
+            </Button>
+          )}
         </div>
       </div>
 
@@ -243,6 +249,7 @@ const PositionPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
+  const user = useAuthStore((store) => store.user);
 
   const { data: position, isFetching } = useQuery({
     queryKey: ["positions", id],
@@ -326,7 +333,7 @@ const PositionPage = () => {
                 }}
               />
             ) : (
-              <PositionView position={positionData} resumes={resumes} onEdit={() => setEditing(true)} onDelete={handleDelete} onApply={handleApply} />
+              <PositionView position={positionData} resumes={resumes} onEdit={() => setEditing(true)} onDelete={handleDelete} onApply={handleApply} userRole={user?.role ?? "CANDIDATE"} />
             )}
           </div>
         </div>

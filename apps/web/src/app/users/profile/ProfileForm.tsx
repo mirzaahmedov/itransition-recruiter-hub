@@ -294,6 +294,7 @@ const ProfileForm: FC<{
                                   });
                                   field.onChange(value);
                                 }}
+                                choices={(attr.attr.attribute as any).choices ?? []}
                               />
                             )}
                           />

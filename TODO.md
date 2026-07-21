@@ -1,2 +1,2 @@
 [x] Add link from resume to position
-[ ] position should only display your resume if user is not recruiter
+[x] position should only display your resume if user is not recruiter

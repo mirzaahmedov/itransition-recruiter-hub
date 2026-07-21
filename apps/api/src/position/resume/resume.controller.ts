@@ -32,9 +32,12 @@ export class ResumeController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findAll(@Param('positionId') positionId: string) {
+  async findAll(
+    @AuthUser() user: User,
+    @Param('positionId') positionId: string,
+  ) {
     return makeResponse(
-      await this.resumeService.findAllByPosition(positionId),
+      await this.resumeService.findAllByPosition(positionId, user),
     );
   }
 
@@ -42,6 +45,14 @@ export class ResumeController {
   @UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id') id: string) {
     return makeResponse(await this.resumeService.findOne(id));
+  }
+
+  @Post(':id/publish')
+  @UseGuards(AuthGuard('jwt'))
+  async publish(@AuthUser() user: User, @Param('id') id: string) {
+    return makeResponse(
+      await this.resumeService.publish(id, user.id),
+    );
   }
 
   @Patch(':id')
