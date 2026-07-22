@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { countSelectRows, rowDataWithFallback, rowSelectionToArray } from "@/lib/table/utils";
-import { TrashIcon, ShieldCheckIcon } from "@phosphor-icons/react";
+import { TrashIcon, ShieldCheckIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { UserRole, type User } from "@rh/database/browser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
@@ -22,6 +22,9 @@ import { useNavigate } from "react-router-dom";
 import { bulkDeleteUsers, bulkUpdateRoles, fetchUsers } from "./api";
 import { userColumns } from "./columns";
 import { Spinner } from "@/components/ui/spinner";
+import { usePaginationState } from "@/hooks/use-pagination-state";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const roleOptions = [
   { value: UserRole.ADMINISTRATOR, label: "Administrator" },
@@ -33,17 +36,42 @@ const UsersPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [newRole, setNewRole] = useState<string>(UserRole.ADMINISTRATOR);
 
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
+  const [search, setSearch] = useState("");
+
+  const debouncedSearch = useDebounce(search, 500);
+
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const selectedCount = countSelectRows(rowSelection);
   const selectedIds = rowSelectionToArray(rowSelection);
 
   const { data: users, isLoading } = useQuery({
-    queryKey: ["users"],
-    queryFn: fetchUsers,
+    queryKey: [
+      "users",
+      {
+        pageIndex,
+        pageSize,
+        debouncedSearch,
+      },
+    ],
+    queryFn: () =>
+      fetchUsers({
+        pageIndex,
+        pageSize,
+        search: debouncedSearch,
+      }),
   });
 
   const rowData = rowDataWithFallback(users?.data);
+  const pagination = usePaginationState({
+    totalCount: users?.totalCount ?? 0,
+    pageIndex,
+    pageSize,
+    setPageIndex,
+    setPageSize,
+  });
 
   const updateUserRolesMutation = useMutation({
     mutationFn: (role: UserRole) => bulkUpdateRoles(selectedIds, role),
@@ -87,6 +115,13 @@ const UsersPage = () => {
           <h1 className="text-2xl font-bold">Users</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage user accounts and roles</p>
         </div>
+
+        <InputGroup className="max-w-60">
+          <InputGroupInput size="lg" aria-label="Search" placeholder="Search" type="search" value={search} onValueChange={setSearch} />
+          <InputGroupAddon>
+            <MagnifyingGlassIcon aria-hidden="true" />
+          </InputGroupAddon>
+        </InputGroup>
       </div>
 
       {selectedCount > 0 && (
@@ -111,11 +146,7 @@ const UsersPage = () => {
             </SelectPopup>
           </Select>
 
-          <Button
-            size="sm"
-            loading={updateUserRolesMutation.isPending}
-            onClick={() => updateUserRolesMutation.mutate(newRole as UserRole)}
-          >
+          <Button size="sm" loading={updateUserRolesMutation.isPending} onClick={() => updateUserRolesMutation.mutate(newRole as UserRole)}>
             Update role
           </Button>
 
@@ -132,10 +163,11 @@ const UsersPage = () => {
             />
             <AlertDialogPopup>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete {selectedCount} user{selectedCount !== 1 ? "s" : ""}?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Delete {selectedCount} user{selectedCount !== 1 ? "s" : ""}?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. The selected users and all their data will be permanently
-                  deleted.
+                  This action cannot be undone. The selected users and all their data will be permanently deleted.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -152,13 +184,13 @@ const UsersPage = () => {
         </div>
       )}
 
-      <div className="rounded-2xl border bg-card overflow-hidden">
+      <div className="overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <Spinner />
           </div>
         ) : (
-          <GenericTable instance={table} onRowClick={(row) => navigate(`${row.original.id}/profile`)} />
+          <GenericTable pagination={pagination} table={table} onRowClick={(row) => navigate(`${row.original.id}/profile`)} />
         )}
       </div>
     </div>

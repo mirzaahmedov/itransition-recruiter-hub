@@ -50,8 +50,8 @@ export class AttributeController {
   }
 
   @Get()
-  async findAll(@Query('categoryId') categoryId?: string) {
-    const attrs = await this.attributeService.findAll(categoryId);
+  async findMany(@Query('categoryId') categoryId?: string) {
+    const attrs = await this.attributeService.findMany(categoryId);
     return makeResponse(attrs);
   }
 

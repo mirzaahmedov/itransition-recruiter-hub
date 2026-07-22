@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ZodValidationException } from 'nestjs-zod';
 import type { Response } from 'express';
-import { err } from '@/models/api';
+import { makeErrorResponse } from '@/models/api';
 
 const logger = new Logger('ExceptionFilter');
 
@@ -59,7 +59,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       logger.error(`Unhandled error: ${exception.message}`, exception.stack);
     }
 
-    response.status(status).json(err(message));
+    response.status(status).json(makeErrorResponse(message));
   }
 
   private mapPrismaCode(code: string): number {

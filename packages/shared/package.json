@@ -16,6 +16,11 @@
       "import": "./dist/schemas/index.js",
       "require": "./dist/schemas/index.cjs"
     },
+    "./models": {
+      "types": "./dist/models/index.d.ts",
+      "import": "./dist/models/index.js",
+      "require": "./dist/models/index.cjs"
+    },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
       "import": "./dist/utils/index.js",

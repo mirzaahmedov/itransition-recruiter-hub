@@ -394,7 +394,8 @@ export const ModelName = {
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
   Resume: 'Resume',
-  ResumeAttribute: 'ResumeAttribute'
+  ResumeAttribute: 'ResumeAttribute',
+  ResumeLike: 'ResumeLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "user" | "project" | "attribute" | "attributeChoice" | "userAttribute" | "accessRule" | "positionAttribute" | "position" | "resume" | "resumeAttribute"
+    modelProps: "category" | "user" | "project" | "attribute" | "attributeChoice" | "userAttribute" | "accessRule" | "positionAttribute" | "position" | "resume" | "resumeAttribute" | "resumeLike"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1229,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ResumeLike: {
+      payload: Prisma.$ResumeLikePayload<ExtArgs>
+      fields: Prisma.ResumeLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ResumeLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ResumeLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>
+        }
+        findFirst: {
+          args: Prisma.ResumeLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ResumeLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>
+        }
+        findMany: {
+          args: Prisma.ResumeLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>[]
+        }
+        create: {
+          args: Prisma.ResumeLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>
+        }
+        createMany: {
+          args: Prisma.ResumeLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ResumeLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>[]
+        }
+        delete: {
+          args: Prisma.ResumeLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>
+        }
+        update: {
+          args: Prisma.ResumeLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.ResumeLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ResumeLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ResumeLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.ResumeLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResumeLikePayload>
+        }
+        aggregate: {
+          args: Prisma.ResumeLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateResumeLike>
+        }
+        groupBy: {
+          args: Prisma.ResumeLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResumeLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ResumeLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResumeLikeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1388,6 +1463,15 @@ export const ResumeAttributeScalarFieldEnum = {
 } as const
 
 export type ResumeAttributeScalarFieldEnum = (typeof ResumeAttributeScalarFieldEnum)[keyof typeof ResumeAttributeScalarFieldEnum]
+
+
+export const ResumeLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  resumeId: 'resumeId'
+} as const
+
+export type ResumeLikeScalarFieldEnum = (typeof ResumeLikeScalarFieldEnum)[keyof typeof ResumeLikeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1645,6 +1729,7 @@ export type GlobalOmitConfig = {
   position?: Prisma.PositionOmit
   resume?: Prisma.ResumeOmit
   resumeAttribute?: Prisma.ResumeAttributeOmit
+  resumeLike?: Prisma.ResumeLikeOmit
 }
 
 /* Types for Logging */

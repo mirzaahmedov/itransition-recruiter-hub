@@ -3,6 +3,12 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { UserCreateInput, UserUpdateInput } from '@rh/database/models';
 
+interface UserFindManyArgs {
+  search?: string;
+  pageIndex: number;
+  pageSize: number;
+}
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
@@ -40,9 +46,31 @@ export class UserService {
     });
   }
 
-  async findMany() {
-    const users = await this.prisma.user.findMany();
-    return users;
+  async findMany({ search, pageIndex, pageSize }: UserFindManyArgs) {
+    const [users, totalCount] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where: {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        skip: (pageIndex - 1) * pageSize,
+        take: pageSize,
+      }),
+      this.prisma.user.count({
+        where: {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      }),
+    ]);
+    return {
+      users,
+      totalCount,
+    };
   }
   async findCandidates() {
     const users = await this.prisma.user.findMany({

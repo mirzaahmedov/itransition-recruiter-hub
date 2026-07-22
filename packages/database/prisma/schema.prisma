@@ -37,10 +37,13 @@ model User {
   githubId     String?         @unique
   role         UserRole
   password     String?
+  createdAt    DateTime        @default(now())
+
   profileAttrs UserAttribute[]
   projects     Project[]
-  createdAt    DateTime        @default(now())
   resumes      Resume[]
+  likes        ResumeLike[]
+
 
   @@map("users")
 }
@@ -155,8 +158,10 @@ model Resume {
   position         Position          @relation(references: [id], fields: [positionId], onDelete: Cascade)
   userId           String
   user             User              @relation(references: [id], fields: [userId], onDelete: Cascade)
-  resumeAttributes ResumeAttribute[]
   status           ResumeStatus      @default(PENDING)
+
+  resumeAttributes ResumeAttribute[]
+  likes            ResumeLike[]
 
   @@unique([userId, positionId])
   @@map("resumes")
@@ -172,4 +177,17 @@ model ResumeAttribute {
   userAttributeId     String
 
   @@map("resume_attributes")
+}
+
+model ResumeLike {
+  id                  String            @id @default(cuid())
+
+  user                User              @relation(references: [id], fields: [userId], onDelete: Cascade)
+  userId              String        
+
+  resume              Resume            @relation(references: [id], fields: [resumeId], onDelete: Cascade)
+  resumeId            String
+
+  @@unique([userId, resumeId])
+  @@map("resume_likes")    
 }

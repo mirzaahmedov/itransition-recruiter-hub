@@ -61,7 +61,8 @@ export const ModelName = {
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
   Resume: 'Resume',
-  ResumeAttribute: 'ResumeAttribute'
+  ResumeAttribute: 'ResumeAttribute',
+  ResumeLike: 'ResumeLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -201,6 +202,15 @@ export const ResumeAttributeScalarFieldEnum = {
 } as const
 
 export type ResumeAttributeScalarFieldEnum = (typeof ResumeAttributeScalarFieldEnum)[keyof typeof ResumeAttributeScalarFieldEnum]
+
+
+export const ResumeLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  resumeId: 'resumeId'
+} as const
+
+export type ResumeLikeScalarFieldEnum = (typeof ResumeLikeScalarFieldEnum)[keyof typeof ResumeLikeScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -72,3 +72,8 @@ export type Resume = Prisma.ResumeModel
  * 
  */
 export type ResumeAttribute = Prisma.ResumeAttributeModel
+/**
+ * Model ResumeLike
+ * 
+ */
+export type ResumeLike = Prisma.ResumeLikeModel

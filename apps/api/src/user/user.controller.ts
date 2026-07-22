@@ -7,8 +7,10 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Put,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -32,6 +34,7 @@ import { extname } from 'path';
 import { StorageService } from '@/storage/storage.service';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
+import { makePaginatedResponse } from '@rh/shared/models';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -43,9 +46,18 @@ export class UserController {
 
   @Get()
   @Roles(UserRole.ADMINISTRATOR)
-  async findAll() {
-    const users = await this.userService.findMany();
-    return makeResponse(users);
+  async findAll(
+    @Query('search') search: string,
+    @Query('pageIndex', ParseIntPipe) pageIndex: number,
+    @Query('pageSize', ParseIntPipe) pageSize: number,
+  ) {
+    const { users, totalCount } = await this.userService.findMany({
+      search,
+      pageIndex,
+      pageSize,
+    });
+
+    return makePaginatedResponse(users, totalCount);
   }
 
   @Get('candidates')

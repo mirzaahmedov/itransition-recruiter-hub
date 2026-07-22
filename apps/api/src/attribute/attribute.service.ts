@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateAttributePayload } from '@rh/shared';
+import { CreateAttributePayload } from '@rh/shared/schemas';
 
 @Injectable()
 export class AttributeService {
@@ -34,7 +34,7 @@ export class AttributeService {
     });
   }
 
-  async findAll(categoryId?: string) {
+  async findMany(categoryId?: string) {
     return await this.prisma.attribute.findMany({
       where: {
         categoryId: categoryId || undefined,

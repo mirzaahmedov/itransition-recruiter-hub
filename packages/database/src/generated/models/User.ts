@@ -217,6 +217,7 @@ export type UserWhereInput = {
   profileAttrs?: Prisma.UserAttributeListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   resumes?: Prisma.ResumeListRelationFilter
+  likes?: Prisma.ResumeLikeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -232,6 +233,7 @@ export type UserOrderByWithRelationInput = {
   profileAttrs?: Prisma.UserAttributeOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   resumes?: Prisma.ResumeOrderByRelationAggregateInput
+  likes?: Prisma.ResumeLikeOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -250,6 +252,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profileAttrs?: Prisma.UserAttributeListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   resumes?: Prisma.ResumeListRelationFilter
+  likes?: Prisma.ResumeLikeListRelationFilter
 }, "id" | "email" | "googleId" | "githubId">
 
 export type UserOrderByWithAggregationInput = {
@@ -295,6 +298,7 @@ export type UserCreateInput = {
   profileAttrs?: Prisma.UserAttributeCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -310,6 +314,7 @@ export type UserUncheckedCreateInput = {
   profileAttrs?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -325,6 +330,7 @@ export type UserUpdateInput = {
   profileAttrs?: Prisma.UserAttributeUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -340,6 +346,7 @@ export type UserUncheckedUpdateInput = {
   profileAttrs?: Prisma.UserAttributeUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -473,6 +480,20 @@ export type UserUpdateOneRequiredWithoutResumesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutResumesInput, Prisma.UserUpdateWithoutResumesInput>, Prisma.UserUncheckedUpdateWithoutResumesInput>
 }
 
+export type UserCreateNestedOneWithoutLikesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLikesInput, Prisma.UserUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLikesInput, Prisma.UserUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLikesInput
+  upsert?: Prisma.UserUpsertWithoutLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLikesInput, Prisma.UserUpdateWithoutLikesInput>, Prisma.UserUncheckedUpdateWithoutLikesInput>
+}
+
 export type UserCreateWithoutProjectsInput = {
   id?: string
   email: string
@@ -485,6 +506,7 @@ export type UserCreateWithoutProjectsInput = {
   createdAt?: Date | string
   profileAttrs?: Prisma.UserAttributeCreateNestedManyWithoutUserInput
   resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -499,6 +521,7 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   createdAt?: Date | string
   profileAttrs?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutUserInput
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -529,6 +552,7 @@ export type UserUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAttrs?: Prisma.UserAttributeUpdateManyWithoutUserNestedInput
   resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -543,6 +567,7 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAttrs?: Prisma.UserAttributeUncheckedUpdateManyWithoutUserNestedInput
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProfileAttrsInput = {
@@ -557,6 +582,7 @@ export type UserCreateWithoutProfileAttrsInput = {
   createdAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileAttrsInput = {
@@ -571,6 +597,7 @@ export type UserUncheckedCreateWithoutProfileAttrsInput = {
   createdAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileAttrsInput = {
@@ -601,6 +628,7 @@ export type UserUpdateWithoutProfileAttrsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileAttrsInput = {
@@ -615,6 +643,7 @@ export type UserUncheckedUpdateWithoutProfileAttrsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutResumesInput = {
@@ -629,6 +658,7 @@ export type UserCreateWithoutResumesInput = {
   createdAt?: Date | string
   profileAttrs?: Prisma.UserAttributeCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutResumesInput = {
@@ -643,6 +673,7 @@ export type UserUncheckedCreateWithoutResumesInput = {
   createdAt?: Date | string
   profileAttrs?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  likes?: Prisma.ResumeLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutResumesInput = {
@@ -673,6 +704,7 @@ export type UserUpdateWithoutResumesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAttrs?: Prisma.UserAttributeUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutResumesInput = {
@@ -687,6 +719,83 @@ export type UserUncheckedUpdateWithoutResumesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAttrs?: Prisma.UserAttributeUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  likes?: Prisma.ResumeLikeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLikesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  avatar?: string | null
+  googleId?: string | null
+  githubId?: string | null
+  role: $Enums.UserRole
+  password?: string | null
+  createdAt?: Date | string
+  profileAttrs?: Prisma.UserAttributeCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  resumes?: Prisma.ResumeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLikesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  avatar?: string | null
+  googleId?: string | null
+  githubId?: string | null
+  role: $Enums.UserRole
+  password?: string | null
+  createdAt?: Date | string
+  profileAttrs?: Prisma.UserAttributeUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLikesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLikesInput, Prisma.UserUncheckedCreateWithoutLikesInput>
+}
+
+export type UserUpsertWithoutLikesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLikesInput, Prisma.UserUncheckedUpdateWithoutLikesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLikesInput, Prisma.UserUncheckedCreateWithoutLikesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLikesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLikesInput, Prisma.UserUncheckedUpdateWithoutLikesInput>
+}
+
+export type UserUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileAttrs?: Prisma.UserAttributeUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  resumes?: Prisma.ResumeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileAttrs?: Prisma.UserAttributeUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  resumes?: Prisma.ResumeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -698,12 +807,14 @@ export type UserCountOutputType = {
   profileAttrs: number
   projects: number
   resumes: number
+  likes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profileAttrs?: boolean | UserCountOutputTypeCountProfileAttrsArgs
   projects?: boolean | UserCountOutputTypeCountProjectsArgs
   resumes?: boolean | UserCountOutputTypeCountResumesArgs
+  likes?: boolean | UserCountOutputTypeCountLikesArgs
 }
 
 /**
@@ -737,6 +848,13 @@ export type UserCountOutputTypeCountResumesArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.ResumeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ResumeLikeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -751,6 +869,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profileAttrs?: boolean | Prisma.User$profileAttrsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   resumes?: boolean | Prisma.User$resumesArgs<ExtArgs>
+  likes?: boolean | Prisma.User$likesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -795,6 +914,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   profileAttrs?: boolean | Prisma.User$profileAttrsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   resumes?: boolean | Prisma.User$resumesArgs<ExtArgs>
+  likes?: boolean | Prisma.User$likesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -806,6 +926,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     profileAttrs: Prisma.$UserAttributePayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     resumes: Prisma.$ResumePayload<ExtArgs>[]
+    likes: Prisma.$ResumeLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1214,6 +1335,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   profileAttrs<T extends Prisma.User$profileAttrsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileAttrsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.User$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   resumes<T extends Prisma.User$resumesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$resumesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.User$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResumeLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1714,6 +1836,30 @@ export type User$resumesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.ResumeScalarFieldEnum | Prisma.ResumeScalarFieldEnum[]
+}
+
+/**
+ * User.likes
+ */
+export type User$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ResumeLike
+   */
+  select?: Prisma.ResumeLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ResumeLike
+   */
+  omit?: Prisma.ResumeLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ResumeLikeInclude<ExtArgs> | null
+  where?: Prisma.ResumeLikeWhereInput
+  orderBy?: Prisma.ResumeLikeOrderByWithRelationInput | Prisma.ResumeLikeOrderByWithRelationInput[]
+  cursor?: Prisma.ResumeLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ResumeLikeScalarFieldEnum | Prisma.ResumeLikeScalarFieldEnum[]
 }
 
 /**

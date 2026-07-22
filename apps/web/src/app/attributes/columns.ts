@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { AttributeWithUsage } from "./api";
+import { format } from "date-fns";
 
 export const attributeColumns: ColumnDef<AttributeWithUsage>[] = [
   {
@@ -33,5 +34,8 @@ export const attributeColumns: ColumnDef<AttributeWithUsage>[] = [
   {
     accessorKey: "createdAt",
     header: "Created At",
+    cell({ getValue }) {
+      return format(new Date(getValue<string>()), "PPPP");
+    },
   },
 ];

@@ -15,16 +15,34 @@ import { AttributeDetailDialog } from "./AttributeDetailDialog";
 import { attributeColumns } from "./columns";
 import { useState } from "react";
 import type { AttributeWithUsage } from "./api";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
+import { usePaginationState } from "@/hooks/use-pagination-state";
 
 export const AttributesPage = () => {
+  const [selectedAttribute, setSelectedAttribute] = useState<AttributeWithUsage | null>(null);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
+  const [search, setSearch] = useState("");
+
   const createDialog = useDialogState();
   const detailDialog = useDialogState();
-  const [selectedAttribute, setSelectedAttribute] = useState<AttributeWithUsage | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: attributes, isLoading } = useQuery({
+  const {
+    data: attributes,
+    isLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["attributes"],
     queryFn: () => fetchAttributes(),
+  });
+
+  const pagination = usePaginationState({
+    totalCount: attributes?.totalCount ?? 0,
+    pageIndex,
+    pageSize,
+    setPageIndex,
+    setPageSize,
   });
 
   const createAttributeMutation = useMutation({
@@ -34,8 +52,7 @@ export const AttributesPage = () => {
 
   const renameAttributeMutation = useMutation({
     mutationKey: ["renameAttribute"],
-    mutationFn: ({ id, payload }: { id: string; payload: UpdateAttributePayload }) =>
-      renameAttribute(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: UpdateAttributePayload }) => renameAttribute(id, payload),
     onSuccess() {
       refetchQueries();
       toast.success("Renamed successfully");
@@ -132,13 +149,13 @@ export const AttributesPage = () => {
         />
       </div>
 
-      <div className="rounded-2xl border bg-card overflow-hidden">
+      <div className="overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <Spinner />
           </div>
         ) : (
-          <GenericTable instance={table} onRowClick={handleRowClick} />
+          <GenericTable table={table} onRowClick={handleRowClick} pagination={pagination} />
         )}
       </div>
 

@@ -181,7 +181,7 @@ export const AttributePicker: FC<{
                 <Spinner />
               </div>
             ) : (
-              <GenericTable instance={table} />
+              <GenericTable table={table} />
             )}
           </div>
         </DialogPanel>
