@@ -3,6 +3,7 @@ import type { ApiResponse } from "@/models/api";
 import type { Attribute } from "@rh/database/browser";
 import type { AttributeGetPayload } from "@rh/database/models";
 import type { CreateAttributePayload, UpdateAttributePayload } from "@rh/shared";
+import type { PaginatedResponse } from "@rh/shared/models";
 
 export type AttributeWithChoices = AttributeGetPayload<{
   include: {
@@ -23,11 +24,9 @@ export type AttributeWithUsage = AttributeGetPayload<{
   };
 }>;
 
-export async function fetchAttributes(categoryId?: string) {
-  const res = await privateApi.get<ApiResponse<AttributeWithUsage[]>>("/attributes", {
-    params: {
-      categoryId,
-    },
+export async function fetchAttributes(params: { categoryId?: string; search: string; pageIndex: number; pageSize: number }) {
+  const res = await privateApi.get<PaginatedResponse<AttributeWithUsage[]>>("/attributes", {
+    params,
   });
   return res.data;
 }

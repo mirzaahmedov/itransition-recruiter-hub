@@ -6,6 +6,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -13,6 +14,7 @@ import {
 import { UpdateAttributePayload } from '@rh/shared';
 import { CreateAttributeDto } from './attribute.dto';
 import { AttributeService } from './attribute.service';
+import { makePaginatedResponse } from '@rh/shared/models';
 
 @Controller('attributes')
 export class AttributeController {
@@ -50,9 +52,19 @@ export class AttributeController {
   }
 
   @Get()
-  async findMany(@Query('categoryId') categoryId?: string) {
-    const attrs = await this.attributeService.findMany(categoryId);
-    return makeResponse(attrs);
+  async findMany(
+    @Query('search') search: string,
+    @Query('pageIndex', ParseIntPipe) pageIndex: number,
+    @Query('pageSize', ParseIntPipe) pageSize: number,
+    @Query('categoryId') categoryId?: string,
+  ) {
+    const { attributes, totalCount } = await this.attributeService.findMany({
+      categoryId,
+      search,
+      pageIndex,
+      pageSize,
+    });
+    return makePaginatedResponse(attributes, totalCount);
   }
 
   @Get(':id')

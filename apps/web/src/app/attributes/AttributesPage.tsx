@@ -8,15 +8,16 @@ import { createAttribute, deleteAttribute, fetchAttributes, renameAttribute } fr
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useDialogState } from "@/hooks/use-dialog-state";
-import { PlusIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
 import type { CreateAttributePayload, UpdateAttributePayload } from "@rh/shared";
 import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
 import { AttributeDetailDialog } from "./AttributeDetailDialog";
 import { attributeColumns } from "./columns";
 import { useState } from "react";
 import type { AttributeWithUsage } from "./api";
-import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { usePaginationState } from "@/hooks/use-pagination-state";
+import { useDebounce } from "@uidotdev/usehooks";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 
 export const AttributesPage = () => {
   const [selectedAttribute, setSelectedAttribute] = useState<AttributeWithUsage | null>(null);
@@ -28,13 +29,27 @@ export const AttributesPage = () => {
   const detailDialog = useDialogState();
   const queryClient = useQueryClient();
 
+  const debouncedSearch = useDebounce(search, 500);
+
   const {
     data: attributes,
     isLoading,
     isFetching,
   } = useQuery({
-    queryKey: ["attributes"],
-    queryFn: () => fetchAttributes(),
+    queryKey: [
+      "attributes",
+      {
+        pageIndex,
+        pageSize,
+        debouncedSearch,
+      },
+    ],
+    queryFn: () =>
+      fetchAttributes({
+        pageIndex,
+        pageSize,
+        search: debouncedSearch,
+      }),
   });
 
   const pagination = usePaginationState({
@@ -135,18 +150,27 @@ export const AttributesPage = () => {
           <h1 className="text-2xl font-bold">Attributes</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage attribute definitions</p>
         </div>
-        <AttibuteCreateDialog
-          open={createDialog.open}
-          onOpenChange={createDialog.setOpen}
-          onSubmit={handleCreateSubmit}
-          isSubmitting={createAttributeMutation.isPending}
-          trigger={
-            <Button>
-              <PlusIcon />
-              New Attribute
-            </Button>
-          }
-        />
+
+        <div className="flex items-center gap-5">
+          <InputGroup className="max-w-60">
+            <InputGroupInput size="lg" aria-label="Search" placeholder="Search" type="search" value={search} onValueChange={setSearch} />
+            <InputGroupAddon>
+              <MagnifyingGlassIcon aria-hidden="true" />
+            </InputGroupAddon>
+          </InputGroup>
+          <AttibuteCreateDialog
+            open={createDialog.open}
+            onOpenChange={createDialog.setOpen}
+            onSubmit={handleCreateSubmit}
+            isSubmitting={createAttributeMutation.isPending}
+            trigger={
+              <Button>
+                <PlusIcon />
+                Create attribute
+              </Button>
+            }
+          />
+        </div>
       </div>
 
       <div className="overflow-hidden">

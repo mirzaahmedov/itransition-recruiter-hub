@@ -2,6 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateAttributePayload } from '@rh/shared/schemas';
 
+interface AttributeFindManyArgs {
+  categoryId?: string;
+  pageIndex: number;
+  pageSize: number;
+  search: string;
+}
+
 @Injectable()
 export class AttributeService {
   constructor(private prisma: PrismaService) {}
@@ -34,22 +41,49 @@ export class AttributeService {
     });
   }
 
-  async findMany(categoryId?: string) {
-    return await this.prisma.attribute.findMany({
-      where: {
-        categoryId: categoryId || undefined,
-      },
-      include: {
-        choices: true,
-        category: true,
-        _count: {
-          select: {
-            values: true,
-            positionAttributes: true,
+  async findMany({
+    categoryId,
+    pageIndex,
+    pageSize,
+    search,
+  }: AttributeFindManyArgs) {
+    const [attributes, totalCount] = await this.prisma.$transaction([
+      this.prisma.attribute.findMany({
+        where: {
+          categoryId: categoryId || undefined,
+          name: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
-      },
-    });
+        skip: (pageIndex - 1) * pageSize,
+        take: pageSize,
+        include: {
+          choices: true,
+          category: true,
+          _count: {
+            select: {
+              values: true,
+              positionAttributes: true,
+            },
+          },
+        },
+      }),
+      this.prisma.attribute.count({
+        where: {
+          categoryId: categoryId || undefined,
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      }),
+    ]);
+
+    return {
+      attributes,
+      totalCount,
+    };
   }
 
   async isUsed(id: string) {
