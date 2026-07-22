@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ResumeAttributeService } from './resume-attribute.service';
 import { CreateResumeAttributeDto } from './dto/create-resume-attribute.dto';
 import { UpdateResumeAttributeDto } from './dto/update-resume-attribute.dto';
 
 @Controller('resume-attribute')
 export class ResumeAttributeController {
-  constructor(private readonly resumeAttributeService: ResumeAttributeService) {}
+  constructor(
+    private readonly resumeAttributeService: ResumeAttributeService,
+  ) {}
 
   @Post()
   create(@Body() createResumeAttributeDto: CreateResumeAttributeDto) {
@@ -23,7 +33,10 @@ export class ResumeAttributeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumeAttributeDto: UpdateResumeAttributeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateResumeAttributeDto: UpdateResumeAttributeDto,
+  ) {
     return this.resumeAttributeService.update(+id, updateResumeAttributeDto);
   }
 

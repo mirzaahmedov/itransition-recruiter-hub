@@ -1,5 +1,6 @@
 import { makeResponse } from '@/models/api';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -49,7 +50,7 @@ export class AttributeController {
   }
 
   @Get()
-  async findAll(@Query('categoryId') categoryId: string) {
+  async findAll(@Query('categoryId') categoryId?: string) {
     const attrs = await this.attributeService.findAll(categoryId);
     return makeResponse(attrs);
   }
@@ -61,6 +62,12 @@ export class AttributeController {
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    const used = await this.attributeService.isUsed(id);
+    if (used) {
+      throw new BadRequestException(
+        'Attribute is in use and cannot be deleted',
+      );
+    }
     return makeResponse(await this.attributeService.delete(id));
   }
 }

@@ -56,7 +56,9 @@ export class ProjectController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     if (userId !== user.id) {
-      throw new ForbiddenException('You can only upload images for your own projects');
+      throw new ForbiddenException(
+        'You can only upload images for your own projects',
+      );
     }
 
     const key = nanoid() + extname(image.originalname);

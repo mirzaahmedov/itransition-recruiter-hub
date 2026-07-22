@@ -34,16 +34,40 @@ export class AttributeService {
     });
   }
 
-  async findAll(categoryId: string) {
+  async findAll(categoryId?: string) {
     return await this.prisma.attribute.findMany({
       where: {
-        categoryId,
+        categoryId: categoryId || undefined,
       },
       include: {
         choices: true,
         category: true,
+        _count: {
+          select: {
+            values: true,
+            positionAttributes: true,
+          },
+        },
       },
     });
+  }
+
+  async isUsed(id: string) {
+    const counts = await this.prisma.attribute.findUnique({
+      where: { id },
+      select: {
+        _count: {
+          select: {
+            values: true,
+            positionAttributes: true,
+          },
+        },
+      },
+    });
+
+    if (!counts) return false;
+
+    return counts._count.values > 0 || counts._count.positionAttributes > 0;
   }
 
   async search(query: string, categoryId?: string) {

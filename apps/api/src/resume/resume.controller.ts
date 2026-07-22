@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import { User } from '@rh/database/client';
@@ -17,9 +12,7 @@ export class ResumeController {
 
   @Get()
   async findMine(@AuthUser() user: User) {
-    return makeResponse(
-      await this.resumeService.findAllByUser(user.id),
-    );
+    return makeResponse(await this.resumeService.findAllByUser(user.id));
   }
 
   @Get(':id')

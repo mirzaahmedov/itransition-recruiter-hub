@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PositionAttributeService } from './position-attribute.service';
 import { CreatePositionAttributeDto } from './dto/create-position-attribute.dto';
 import { UpdatePositionAttributeDto } from './dto/update-position-attribute.dto';
 
 @Controller('position-attribute')
 export class PositionAttributeController {
-  constructor(private readonly positionAttributeService: PositionAttributeService) {}
+  constructor(
+    private readonly positionAttributeService: PositionAttributeService,
+  ) {}
 
   @Post()
   create(@Body() createPositionAttributeDto: CreatePositionAttributeDto) {
@@ -23,8 +33,14 @@ export class PositionAttributeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePositionAttributeDto: UpdatePositionAttributeDto) {
-    return this.positionAttributeService.update(+id, updatePositionAttributeDto);
+  update(
+    @Param('id') id: string,
+    @Body() updatePositionAttributeDto: UpdatePositionAttributeDto,
+  ) {
+    return this.positionAttributeService.update(
+      +id,
+      updatePositionAttributeDto,
+    );
   }
 
   @Delete(':id')

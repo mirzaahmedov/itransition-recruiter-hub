@@ -1,16 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteResume, fetchMyResumes } from "./api";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMyResumes } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRightIcon, TrashIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import type { ResumeListItem } from "./api";
-import { useState } from "react";
 
 const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
-  const queryClient = useQueryClient();
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
   const filledCount = resume.resumeAttributes.filter(
     (ra) =>
       ra.userAttribute.textValue ||

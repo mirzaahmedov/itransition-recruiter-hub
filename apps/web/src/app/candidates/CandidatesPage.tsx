@@ -1,7 +1,6 @@
 import { GenericTable } from "@/components/GenericTable/GenericTable";
 import { Spinner } from "@/components/ui/spinner";
 import { rowDataWithFallback } from "@/lib/table/utils";
-import { UserRole } from "@rh/database/browser";
 import { useQuery } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";

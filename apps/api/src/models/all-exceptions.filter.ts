@@ -50,7 +50,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message =
         typeof exResponse === 'string'
           ? exResponse
-          : (exResponse as any).message ?? exception.message;
+          : ((exResponse as any).message ?? exception.message);
     } else if (isPrismaKnownError(exception)) {
       status = this.mapPrismaCode(exception.code);
       message = this.getPrismaMessage(exception);

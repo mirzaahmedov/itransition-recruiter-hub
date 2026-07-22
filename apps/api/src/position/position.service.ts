@@ -104,13 +104,12 @@ export class PositionService {
   async removeAttribute(positionId: string, attributeId: string) {
     await this.findOne(positionId);
 
-    const positionAttribute =
-      await this.prisma.positionAttribute.findFirst({
-        where: {
-          positionId,
-          attributeId,
-        },
-      });
+    const positionAttribute = await this.prisma.positionAttribute.findFirst({
+      where: {
+        positionId,
+        attributeId,
+      },
+    });
 
     if (!positionAttribute) {
       throw new NotFoundException(

@@ -3,18 +3,23 @@ import { rowDataWithFallback } from "@/lib/table/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import toast from "react-hot-toast";
-import { createAttribute, fetchAttributes } from "./api";
+import { createAttribute, deleteAttribute, fetchAttributes, renameAttribute } from "./api";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { PlusIcon } from "@phosphor-icons/react";
-import type { CreateAttributePayload } from "@rh/shared";
+import type { CreateAttributePayload, UpdateAttributePayload } from "@rh/shared";
 import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
+import { AttributeDetailDialog } from "./AttributeDetailDialog";
 import { attributeColumns } from "./columns";
+import { useState } from "react";
+import type { AttributeWithUsage } from "./api";
 
 export const AttributesPage = () => {
   const createDialog = useDialogState();
+  const detailDialog = useDialogState();
+  const [selectedAttribute, setSelectedAttribute] = useState<AttributeWithUsage | null>(null);
   const queryClient = useQueryClient();
 
   const { data: attributes, isLoading } = useQuery({
@@ -27,10 +32,41 @@ export const AttributesPage = () => {
     mutationFn: createAttribute,
   });
 
+  const renameAttributeMutation = useMutation({
+    mutationKey: ["renameAttribute"],
+    mutationFn: ({ id, payload }: { id: string; payload: UpdateAttributePayload }) =>
+      renameAttribute(id, payload),
+    onSuccess() {
+      refetchQueries();
+      toast.success("Renamed successfully");
+      detailDialog.closeDialog();
+      setSelectedAttribute(null);
+    },
+    onError() {
+      toast.error("Rename failed");
+    },
+  });
+
+  const deleteAttributeMutation = useMutation({
+    mutationKey: ["deleteAttribute"],
+    mutationFn: deleteAttribute,
+    onSuccess() {
+      refetchQueries();
+      toast.success("Deleted successfully");
+      detailDialog.closeDialog();
+      setSelectedAttribute(null);
+    },
+    onError(error: any) {
+      const message = error?.response?.data?.message || "Delete failed";
+      toast.error(message);
+    },
+  });
+
   const table = useReactTable({
     getCoreRowModel: getCoreRowModel(),
     data: rowDataWithFallback(attributes?.data),
     columns: attributeColumns,
+    onRowSelectionChange: () => {},
   });
 
   const refetchQueries = () => {
@@ -39,7 +75,7 @@ export const AttributesPage = () => {
     });
   };
 
-  const handleSubmit = (payload: CreateAttributePayload) => {
+  const handleCreateSubmit = (payload: CreateAttributePayload) => {
     const { name, type, choices, categoryId } = payload;
 
     createAttributeMutation.mutate(
@@ -62,6 +98,19 @@ export const AttributesPage = () => {
     );
   };
 
+  const handleRename = (id: string, payload: UpdateAttributePayload) => {
+    renameAttributeMutation.mutate({ id, payload });
+  };
+
+  const handleDelete = (id: string) => {
+    deleteAttributeMutation.mutate(id);
+  };
+
+  const handleRowClick = (row: any) => {
+    setSelectedAttribute(row.original);
+    detailDialog.openDialog();
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="flex items-center justify-between mb-8">
@@ -72,7 +121,7 @@ export const AttributesPage = () => {
         <AttibuteCreateDialog
           open={createDialog.open}
           onOpenChange={createDialog.setOpen}
-          onSubmit={handleSubmit}
+          onSubmit={handleCreateSubmit}
           isSubmitting={createAttributeMutation.isPending}
           trigger={
             <Button>
@@ -89,9 +138,19 @@ export const AttributesPage = () => {
             <Spinner />
           </div>
         ) : (
-          <GenericTable instance={table} />
+          <GenericTable instance={table} onRowClick={handleRowClick} />
         )}
       </div>
+
+      <AttributeDetailDialog
+        open={detailDialog.open}
+        onOpenChange={detailDialog.setOpen}
+        attribute={selectedAttribute}
+        onRename={handleRename}
+        onDelete={handleDelete}
+        isRenaming={renameAttributeMutation.isPending}
+        isDeleting={deleteAttributeMutation.isPending}
+      />
     </div>
   );
 };

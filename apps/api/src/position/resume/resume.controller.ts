@@ -50,17 +50,12 @@ export class ResumeController {
   @Post(':id/publish')
   @UseGuards(AuthGuard('jwt'))
   async publish(@AuthUser() user: User, @Param('id') id: string) {
-    return makeResponse(
-      await this.resumeService.publish(id, user.id),
-    );
+    return makeResponse(await this.resumeService.publish(id, user.id));
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
-  async update(
-    @Param('id') id: string,
-    @Body('status') status: ResumeStatus,
-  ) {
+  async update(@Param('id') id: string, @Body('status') status: ResumeStatus) {
     return makeResponse(await this.resumeService.updateStatus(id, status));
   }
 

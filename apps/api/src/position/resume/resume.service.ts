@@ -88,7 +88,7 @@ export class ResumeService {
     if (user && user.role === UserRole.CANDIDATE) {
       where.userId = user.id;
     } else if (user) {
-      where.status = 'PUBLISHED' as ResumeStatus;
+      where.status = 'PUBLISHED';
     }
 
     return await this.prisma.resume.findMany({
@@ -181,9 +181,7 @@ export class ResumeService {
     });
 
     if (emptyAttrs.length > 0) {
-      const names = emptyAttrs.map(
-        (ra) => ra.positionAttribute.attribute.name,
-      );
+      const names = emptyAttrs.map((ra) => ra.positionAttribute.attribute.name);
       throw new BadRequestException(
         `Cannot publish: the following attributes are empty: ${names.join(', ')}`,
       );
