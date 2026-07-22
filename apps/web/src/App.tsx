@@ -17,9 +17,29 @@ import ResumePage from "./app/resumes/ResumePage";
 import { AuthFormLayout } from "./app/auth/AuthFormLayout";
 import RegisterPage from "./app/auth/register/RegisterPage";
 import LoginPage from "./app/auth/login/LoginPage";
-import AuthProviderSuccessPage from "./app/auth/AuthProviderSuccess";
+import AuthOauthCallbackPage from "./app/auth/AuthProviderSuccess";
+import { RouteGuard } from "./app/RouteGuard";
+import { UserRole } from "@rh/database/browser";
+import axios from "axios";
+import CandidatesPage from "./app/candidates/CandidatesPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        if (axios.isAxiosError(error)) {
+          const status = error.response?.status;
+
+          if (status === 401 || status === 403) {
+            return false;
+          }
+        }
+
+        return failureCount < 3;
+      },
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -47,8 +67,8 @@ const router = createBrowserRouter([
         element: <AuthRedirect />,
       },
       {
-        path: "google/success",
-        element: <AuthProviderSuccessPage />,
+        path: "oauth/callback",
+        element: <AuthOauthCallbackPage />,
       },
     ],
   },
@@ -64,11 +84,30 @@ const router = createBrowserRouter([
           },
           {
             path: "/users",
-            element: <UsersPage />,
+            element: (
+              <RouteGuard roles={[UserRole.ADMINISTRATOR]}>
+                <UsersPage />
+              </RouteGuard>
+            ),
+          },
+          {
+            path: "/candidates",
+            element: (
+              <RouteGuard roles={[UserRole.ADMINISTRATOR, UserRole.RECRUITER]}>
+                <CandidatesPage />
+              </RouteGuard>
+            ),
           },
           {
             path: "/users/:id/profile",
-            element: <UserProfilePage />,
+            element: (
+              <RouteGuard
+                roles={[UserRole.ADMINISTRATOR, UserRole.CANDIDATE, UserRole.RECRUITER]}
+                canView={({ user, params }) => (user.role === UserRole.CANDIDATE && user.id !== params.id ? false : true)}
+              >
+                <UserProfilePage />
+              </RouteGuard>
+            ),
           },
           {
             path: "/positions",
@@ -84,7 +123,11 @@ const router = createBrowserRouter([
           },
           {
             path: "/attributes",
-            element: <AttributesPage />,
+            element: (
+              <RouteGuard roles={[UserRole.RECRUITER, UserRole.ADMINISTRATOR]}>
+                <AttributesPage />
+              </RouteGuard>
+            ),
           },
           {
             path: "/resumes",

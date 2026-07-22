@@ -6,6 +6,7 @@ import { fetchMe } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { fetchCategories } from "./categories/api";
 import { useCategoryStore } from "@/store/useCategoryStore";
+import { CaslProvider } from "./auth/CaslProvider";
 
 const AppRoot = () => {
   const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
@@ -51,7 +52,9 @@ const AppRoot = () => {
   }, []);
 
   return isAuthenticated ? (
-    <Outlet />
+    <CaslProvider>
+      <Outlet />
+    </CaslProvider>
   ) : (
     <div className="h-full grid place-content-center">
       <Spinner size={40} />

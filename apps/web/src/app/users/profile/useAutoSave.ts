@@ -50,5 +50,20 @@ export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => 
     };
   }, [flush]);
 
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (!Object.keys(dirtyQueue.current).length) return;
+
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handler);
+
+    return () => {
+      window.removeEventListener("beforeunload", handler);
+    };
+  }, []);
+
   return { queueUpdate, flush, isSaving };
 }

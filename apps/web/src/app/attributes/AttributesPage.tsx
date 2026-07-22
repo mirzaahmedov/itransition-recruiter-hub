@@ -1,51 +1,17 @@
 import { GenericTable } from "@/components/GenericTable/GenericTable";
 import { rowDataWithFallback } from "@/lib/table/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import toast from "react-hot-toast";
 import { createAttribute, fetchAttributes } from "./api";
 
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { useDialogState } from "@/hooks/use-dialog-state";
+import { PlusIcon } from "@phosphor-icons/react";
 import type { CreateAttributePayload } from "@rh/shared";
 import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
-import { useDialogState } from "@/hooks/use-dialog-state";
-import type { AttributeGetPayload } from "@rh/database/models";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@phosphor-icons/react";
-
-const columns: ColumnDef<
-  AttributeGetPayload<{
-    include: {
-      choices: true;
-      category: true;
-    };
-  }>
->[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    id: "category",
-    header: "Category",
-    cell: ({ row }) => row.original.category.name,
-  },
-  {
-    accessorKey: "type",
-    header: "Type",
-  },
-  {
-    accessorKey: "choices",
-    header: "Choices",
-    cell({ row }) {
-      return row.original.choices.length;
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-  },
-];
+import { attributeColumns } from "./columns";
 
 export const AttributesPage = () => {
   const createDialog = useDialogState();
@@ -64,7 +30,7 @@ export const AttributesPage = () => {
   const table = useReactTable({
     getCoreRowModel: getCoreRowModel(),
     data: rowDataWithFallback(attributes?.data),
-    columns,
+    columns: attributeColumns,
   });
 
   const refetchQueries = () => {

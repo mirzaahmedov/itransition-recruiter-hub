@@ -18,6 +18,9 @@ export const AuthFormLayout = () => {
   const handleLoginGoogle = () => {
     window.location.href = `${import.meta.env.VITE_API_HOST}/auth/google`;
   };
+  const handleLoginGithub = () => {
+    window.location.href = `${import.meta.env.VITE_API_HOST}/auth/github`;
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -52,7 +55,7 @@ export const AuthFormLayout = () => {
           </CardPanel>
           <CardFooter className="border-t">
             <div className="w-full flex items-center justify-center gap-5">
-              <Button size="lg" variant="secondary" className="bg-black text-white border-black hover:bg-black/80">
+              <Button size="lg" onClick={handleLoginGithub} variant="secondary" className="bg-black text-white border-black hover:bg-black/80">
                 <svg aria-label="GitHub logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     fill="white"

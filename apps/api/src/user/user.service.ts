@@ -1,4 +1,4 @@
-import { UserRole } from '@rh/database/enums';
+import { ResumeStatus, UserRole } from '@rh/database/enums';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { UserCreateInput, UserUpdateInput } from '@rh/database/models';
@@ -44,6 +44,22 @@ export class UserService {
     const users = await this.prisma.user.findMany();
     return users;
   }
+  async findCandidates() {
+    const users = await this.prisma.user.findMany({
+      where: {
+        role: UserRole.CANDIDATE,
+        resumes: {
+          some: {
+            status: ResumeStatus.PUBLISHED,
+          },
+        },
+      },
+      include: {
+        resumes: true,
+      },
+    });
+    return users;
+  }
 
   async bulkUpdateRoles(userIds: string[], role: UserRole): Promise<void> {
     await this.prisma.user.updateMany({
@@ -54,6 +70,16 @@ export class UserService {
       },
       data: {
         role,
+      },
+    });
+  }
+
+  async bulkDelete(userIds: string[]): Promise<void> {
+    await this.prisma.user.deleteMany({
+      where: {
+        id: {
+          in: userIds,
+        },
       },
     });
   }

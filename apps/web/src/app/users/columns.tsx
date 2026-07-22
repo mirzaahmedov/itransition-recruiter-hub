@@ -1,8 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { fallbackName } from "@/utils/fallbackName";
-import type { User } from "@rh/database/browser";
+import { UserRole, type User } from "@rh/database/browser";
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+
+const roleBadgeVariant: Record<UserRole, "default" | "info" | "secondary"> = {
+  [UserRole.ADMINISTRATOR]: "default",
+  [UserRole.RECRUITER]: "info",
+  [UserRole.CANDIDATE]: "secondary",
+};
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -47,9 +55,13 @@ export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
+    cell: ({ row }) => <Badge variant={roleBadgeVariant[row.original.role]}>{row.original.role}</Badge>,
   },
   {
     accessorKey: "createdAt",
     header: "Created At",
+    cell: ({ getValue }) => {
+      return format(new Date(getValue<string>()), "PPPP");
+    },
   },
 ];

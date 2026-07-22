@@ -8,17 +8,18 @@ import { RegisterUserSchema, type RegisterUserPayload } from "@rh/shared/schemas
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { register as registerUser } from "../api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 const RegisterPage = () => {
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+  const [formErrors, setFormErrors] = useState<Record<string, string | string[]>>({});
+
   const navigate = useNavigate();
 
   const form = useForm<RegisterUserPayload>({
-    resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -42,13 +43,19 @@ const RegisterPage = () => {
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
+    const result = RegisterUserSchema.safeParse(values);
+    if (!result.success) {
+      setFormErrors(z.flattenError(result.error).fieldErrors);
+      return;
+    }
+
     await registerMutation.mutateAsync(values);
   });
 
   const togglePasswordHidden = () => setIsPasswordHidden((prev) => !prev);
 
   return (
-    <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
+    <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit} errors={formErrors}>
       <Field>
         <InputGroup>
           <Input size="lg" placeholder="Enter your name" type="text" {...form.register("name")} />

@@ -9,18 +9,19 @@ import { LoginUserSchema, type LoginUserPayload } from "@rh/shared/schemas";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { login } from "../api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 const LoginPage = () => {
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+  const [formErrors, setFormErrors] = useState<Record<string, string[] | string>>();
+
   const setUserProfile = useAuthStore((store) => store.setUserProfile);
   const navigate = useNavigate();
 
   const form = useForm<LoginUserPayload>({
-    resolver: zodResolver(LoginUserSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -46,13 +47,21 @@ const LoginPage = () => {
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
+    const result = LoginUserSchema.safeParse(values);
+    if (!result.success) {
+      setFormErrors(z.flattenError(result.error).fieldErrors);
+      return;
+    }
+
     await loginMutation.mutateAsync(values);
   });
 
   const togglePasswordHidden = () => setIsPasswordHidden((prev) => !prev);
 
+  console.log({ formErrors });
+
   return (
-    <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
+    <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit} errors={formErrors}>
       <Field>
         <InputGroup>
           <Input size="lg" placeholder="Enter your email" type="email" {...form.register("email")} />

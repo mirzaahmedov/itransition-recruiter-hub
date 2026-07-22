@@ -1,25 +1,42 @@
 import { GenericTable } from "@/components/GenericTable/GenericTable";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverPopup, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogPopup,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { countSelectRows, rowDataWithFallback, rowSelectionToArray } from "@/lib/table/utils";
-import { ShieldCheckIcon } from "@phosphor-icons/react";
+import { TrashIcon, ShieldCheckIcon } from "@phosphor-icons/react";
 import { UserRole, type User } from "@rh/database/browser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { bulkUpdateRoles, fetchUsers } from "./api";
+import { bulkDeleteUsers, bulkUpdateRoles, fetchUsers } from "./api";
 import { userColumns } from "./columns";
 import { Spinner } from "@/components/ui/spinner";
 
+const roleOptions = [
+  { value: UserRole.ADMINISTRATOR, label: "Administrator" },
+  { value: UserRole.CANDIDATE, label: "Candidate" },
+  { value: UserRole.RECRUITER, label: "Recruiter" },
+];
+
 const UsersPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [newRole, setNewRole] = useState<UserRole>(UserRole.ADMINISTRATOR);
+  const [newRole, setNewRole] = useState<string>(UserRole.ADMINISTRATOR);
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const selectedCount = countSelectRows(rowSelection);
+  const selectedIds = rowSelectionToArray(rowSelection);
 
   const { data: users, isLoading } = useQuery({
     queryKey: ["users"],
@@ -29,7 +46,27 @@ const UsersPage = () => {
   const rowData = rowDataWithFallback(users?.data);
 
   const updateUserRolesMutation = useMutation({
-    mutationFn: (role: UserRole) => bulkUpdateRoles(rowSelectionToArray(rowSelection), role),
+    mutationFn: (role: UserRole) => bulkUpdateRoles(selectedIds, role),
+    onSuccess() {
+      toast.success(`Updated ${selectedCount} users`);
+      setRowSelection({});
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError() {
+      toast.error("Update failed");
+    },
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: () => bulkDeleteUsers(selectedIds),
+    onSuccess() {
+      toast.success(`Deleted ${selectedCount} users`);
+      setRowSelection({});
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError() {
+      toast.error("Delete failed");
+    },
   });
 
   const table = useReactTable<User>({
@@ -50,85 +87,69 @@ const UsersPage = () => {
           <h1 className="text-2xl font-bold">Users</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage user accounts and roles</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Popover>
-            <PopoverTrigger
-              render={
-                <Button disabled={!selectedCount}>
-                  <ShieldCheckIcon className="size-5" />
-                  Assign new role
-                </Button>
-              }
-            ></PopoverTrigger>
-            <PopoverPopup>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-
-                  updateUserRolesMutation.mutate(newRole, {
-                    onSuccess() {
-                      toast.success(`Updated ${selectedCount} users`);
-                      setRowSelection({});
-                      queryClient.invalidateQueries({
-                        queryKey: ["users"],
-                      });
-                    },
-                    onError() {
-                      toast.error(`Update failed`);
-                    },
-                  });
-                }}
-                className="w-48 flex flex-col items-start gap-5"
-              >
-                <fieldset className="fieldset">
-                  <legend className="fieldset-legend pt-0">New role</legend>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      id={UserRole.ADMINISTRATOR}
-                      value={UserRole.ADMINISTRATOR}
-                      checked={newRole === UserRole.ADMINISTRATOR}
-                      onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    />
-                    <label htmlFor={UserRole.ADMINISTRATOR}>Administrator</label>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      id={UserRole.CANDIDATE}
-                      value={UserRole.CANDIDATE}
-                      checked={newRole === UserRole.CANDIDATE}
-                      onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    />
-                    <label htmlFor={UserRole.CANDIDATE}>Candidate</label>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      id={UserRole.RECRUITER}
-                      value={UserRole.RECRUITER}
-                      checked={newRole === UserRole.RECRUITER}
-                      onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    />
-                    <label htmlFor={UserRole.RECRUITER}>Recruiter</label>
-                  </div>
-                </fieldset>
-
-                <Button type="submit" className="self-end">
-                  Change role
-                </Button>
-              </form>
-            </PopoverPopup>
-          </Popover>
-        </div>
       </div>
 
       {selectedCount > 0 && (
-        <p className="text-sm text-muted-foreground mb-4">
-          <b>{selectedCount}</b> user{selectedCount !== 1 ? "s" : ""} selected
-        </p>
+        <div className="flex items-center gap-3 mb-4 rounded-xl border bg-card p-3">
+          <span className="text-sm text-muted-foreground mr-1">
+            <b>{selectedCount}</b> user{selectedCount !== 1 ? "s" : ""} selected
+          </span>
+
+          <div className="h-5 w-px bg-border" />
+
+          <ShieldCheckIcon className="size-4 text-muted-foreground" />
+          <Select value={newRole} onValueChange={(v) => v && setNewRole(v)} items={roleOptions}>
+            <SelectTrigger size="sm" className="w-44">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectPopup>
+              {roleOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
+
+          <Button
+            size="sm"
+            loading={updateUserRolesMutation.isPending}
+            onClick={() => updateUserRolesMutation.mutate(newRole as UserRole)}
+          >
+            Update role
+          </Button>
+
+          <div className="h-5 w-px bg-border" />
+
+          <AlertDialog>
+            <AlertDialogTrigger
+              render={
+                <Button size="sm" variant="destructive-outline">
+                  <TrashIcon className="size-4" />
+                  Delete
+                </Button>
+              }
+            />
+            <AlertDialogPopup>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete {selectedCount} user{selectedCount !== 1 ? "s" : ""}?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. The selected users and all their data will be permanently
+                  deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
+                <AlertDialogClose
+                  render={<Button variant="destructive" loading={bulkDeleteMutation.isPending} />}
+                  onClick={() => bulkDeleteMutation.mutate()}
+                >
+                  Delete
+                </AlertDialogClose>
+              </AlertDialogFooter>
+            </AlertDialogPopup>
+          </AlertDialog>
+        </div>
       )}
 
       <div className="rounded-2xl border bg-card overflow-hidden">

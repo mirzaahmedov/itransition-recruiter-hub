@@ -2,7 +2,7 @@ import { UserRole } from "@rh/database/browser";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const AuthProviderSuccessPage = () => {
+const AuthOauthCallbackPage = () => {
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -27,4 +27,4 @@ const AuthProviderSuccessPage = () => {
   );
 };
 
-export default AuthProviderSuccessPage;
+export default AuthOauthCallbackPage;

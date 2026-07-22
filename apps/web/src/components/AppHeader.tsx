@@ -44,6 +44,7 @@ export const AppHeader = () => {
             { to: "/positions", label: "Positions", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER, UserRole.CANDIDATE] },
             { to: "/resumes", label: "Resumes", roles: [UserRole.CANDIDATE] },
             { to: "/users", label: "Users", roles: [UserRole.ADMINISTRATOR] },
+            { to: "/candidates", label: "Candidates", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER] },
             { to: `/users/${user.id}/profile`, label: "Profile", roles: [UserRole.CANDIDATE] },
             { to: "/attributes", label: "Attributes", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER] },
           ].filter((link) => link.roles.includes(user.role))

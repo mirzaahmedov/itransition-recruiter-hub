@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   NotFoundException,
   Post,
@@ -18,6 +19,7 @@ import type { User } from '@rh/database/client';
 import { makeResponse } from '@/models/api';
 import { LoginUserDto, RegisterUserDto } from './auth.dto';
 import bcrypt from 'bcryptjs';
+import { IGithubUser } from './strategies/github.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -33,8 +35,37 @@ export class AuthController {
     const { accessToken, user } = await this.authService.googleLogin(
       req.user as IGoogleUser,
     );
+
+    if (!user.googleId) {
+      throw new ForbiddenException(
+        'User was not registered using google oauth',
+      );
+    }
+
     res.redirect(
-      `${process.env.WEB_HOST}/auth/google/success?accessToken=${accessToken}&userRole=${user.role}`,
+      `${process.env.WEB_HOST}/auth/oauth/callback?accessToken=${accessToken}&userRole=${user.role}`,
+    );
+  }
+
+  @Get('github')
+  @UseGuards(AuthGuard('github'))
+  githubLogin() {}
+
+  @Get('github/callback')
+  @UseGuards(AuthGuard('github'))
+  async githubCallback(@Req() req: Request, @Res() res: Response) {
+    const { accessToken, user } = await this.authService.githubLogin(
+      req.user as IGithubUser,
+    );
+
+    if (!user.githubId) {
+      throw new ForbiddenException(
+        'User was not registered using github oauth',
+      );
+    }
+
+    res.redirect(
+      `${process.env.WEB_HOST}/auth/oauth/callback?accessToken=${accessToken}&userRole=${user.role}`,
     );
   }
 

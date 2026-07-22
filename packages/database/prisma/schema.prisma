@@ -34,6 +34,7 @@ model User {
   name         String?
   avatar       String?
   googleId     String?         @unique
+  githubId     String?         @unique
   role         UserRole
   password     String?
   profileAttrs UserAttribute[]

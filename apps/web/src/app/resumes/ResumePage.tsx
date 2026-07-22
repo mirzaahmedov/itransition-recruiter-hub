@@ -1,15 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { fetchResume, publishResume } from "./api";
-import { Spinner } from "@/components/ui/spinner";
+import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeftIcon, PaperPlaneTiltIcon, PrinterIcon } from "@phosphor-icons/react";
-import { useCategoryStore } from "@/store/useCategoryStore";
+import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useCategoryStore } from "@/store/useCategoryStore";
+import { ArrowLeftIcon, PaperPlaneTiltIcon, PrinterIcon, TrashIcon } from "@phosphor-icons/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import type { ResumeAttributeItem, ResumeDetail } from "./api";
+import { deleteResume, fetchResume, publishResume } from "./api";
 
 function formatValue(ra: ResumeAttributeItem): string {
   const { userAttribute } = ra;
@@ -124,6 +125,13 @@ const ResumePage = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteResume(resume?.data?.positionId!, resume?.data?.id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
+    },
+  });
+
   const resumeData = resume?.data;
   const isOwner = user && resumeData && user.id === resumeData.userId;
 
@@ -161,10 +169,26 @@ const ResumePage = () => {
         <div className="flex items-center gap-2">
           <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>{resumeData.status}</Badge>
           {isOwner && resumeData.status === "PENDING" && (
-            <Button onClick={() => publishMutation.mutate()} loading={publishMutation.isPending}>
-              <PaperPlaneTiltIcon />
-              Publish
-            </Button>
+            <>
+              <Button onClick={() => publishMutation.mutate()} loading={publishMutation.isPending}>
+                <PaperPlaneTiltIcon />
+                Publish
+              </Button>
+              <DeleteConfirmDialog
+                render={
+                  <Button
+                    loading={deleteMutation.isPending}
+                    variant="destructive"
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    <TrashIcon /> Delete
+                  </Button>
+                }
+                onConfirm={deleteMutation.mutate}
+              />
+            </>
           )}
           <Button variant="outline" onClick={() => window.print()}>
             <PrinterIcon />
@@ -172,11 +196,9 @@ const ResumePage = () => {
           </Button>
         </div>
       </div>
-
       <div className="resume-container rounded-2xl border bg-card shadow-sm">
         <ResumeView resume={resumeData} />
       </div>
-
       <style>{`
         @media print {
           .no-print { display: none !important; }

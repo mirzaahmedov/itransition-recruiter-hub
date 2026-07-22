@@ -7,12 +7,12 @@ import { AttributeTypeSelectItems } from "./data";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CreateAttributeSchema, type CreateAttributePayload } from "@rh/shared";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateAttributeSchema, type CreateAttributePayload } from "@rh/shared/schemas";
 
-import { useEffect, useMemo, type FC, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FC, type ReactNode } from "react";
 import { AttributeType } from "@rh/database/enums";
 import { useCategories } from "../categories/useCategories";
+import { z } from "zod";
 
 export const AttibuteCreateDialog: FC<{
   open: boolean;
@@ -23,8 +23,9 @@ export const AttibuteCreateDialog: FC<{
 }> = ({ open, onOpenChange, onSubmit, isSubmitting = false, trigger }) => {
   const categories = useCategories();
 
+  const [formErrors, setFormErrors] = useState<Record<string, string | string[]>>({});
+
   const form = useForm({
-    resolver: zodResolver(CreateAttributeSchema),
     defaultValues: {
       name: "",
       type: "TEXT",
@@ -39,6 +40,12 @@ export const AttibuteCreateDialog: FC<{
   });
 
   const handleSubmit = form.handleSubmit((values) => {
+    const result = CreateAttributeSchema.safeParse(values);
+    if (!result.success) {
+      setFormErrors(z.flattenError(result.error).fieldErrors);
+      return;
+    }
+
     onSubmit(values);
   });
 
@@ -55,6 +62,8 @@ export const AttibuteCreateDialog: FC<{
     }));
   }, [categories]);
 
+  console.log({ formErrors });
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger>{trigger}</DialogTrigger>
@@ -62,7 +71,7 @@ export const AttibuteCreateDialog: FC<{
         <DialogHeader>
           <DialogTitle>Create new attribute</DialogTitle>
         </DialogHeader>
-        <Form className="contents" onSubmit={handleSubmit}>
+        <Form className="contents" onSubmit={handleSubmit} errors={formErrors}>
           <DialogPanel className="grid gap-4">
             <Field>
               <FieldLabel>Category</FieldLabel>
@@ -70,7 +79,14 @@ export const AttibuteCreateDialog: FC<{
                 control={form.control}
                 name="categoryId"
                 render={({ field }) => (
-                  <Select inputRef={field.ref} value={field.value} onValueChange={field.onChange} disabled={field.disabled} items={categoryOptions}>
+                  <Select
+                    name={field.name}
+                    inputRef={field.ref}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={field.disabled}
+                    items={categoryOptions}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -100,6 +116,7 @@ export const AttibuteCreateDialog: FC<{
                 <Field>
                   <FieldLabel>Type</FieldLabel>
                   <Select
+                    name={field.name}
                     items={AttributeTypeSelectItems}
                     inputRef={field.ref}
                     value={field.value}

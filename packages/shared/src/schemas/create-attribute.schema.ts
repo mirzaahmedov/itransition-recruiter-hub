@@ -4,7 +4,7 @@ import { ZodIssueCode } from "zod/v3";
 
 export const CreateAttributeSchema = z
   .object({
-    name: z.string(),
+    name: z.string().nonempty("Required field"),
     type: z.enum([
       AttributeType.TEXT,
       AttributeType.MARKDOWN,
@@ -15,7 +15,7 @@ export const CreateAttributeSchema = z
       AttributeType.DATEPERIOD,
       AttributeType.CHOICE,
     ]),
-    categoryId: z.string(),
+    categoryId: z.string().nonempty("Required field"),
     choices: z
       .array(
         z.object({

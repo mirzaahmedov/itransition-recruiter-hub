@@ -14,3 +14,10 @@ export async function bulkUpdateRoles(ids: string[], role: UserRole) {
   });
   return res.data;
 }
+
+export async function bulkDeleteUsers(ids: string[]) {
+  const res = await privateApi.delete<ApiResponse<{ deleted: number }>>("/users/bulk", {
+    data: { ids },
+  });
+  return res.data;
+}

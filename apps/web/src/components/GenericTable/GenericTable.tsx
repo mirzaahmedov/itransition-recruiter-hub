@@ -6,6 +6,8 @@ type GenericTableProps<T> = {
   onRowClick?: (row: Row<T>) => void;
 };
 export const GenericTable = <T,>({ instance, onRowClick }: GenericTableProps<T>) => {
+  const rows = instance.getRowModel().rows;
+
   return (
     <Table>
       <TableHeader>
@@ -18,17 +20,29 @@ export const GenericTable = <T,>({ instance, onRowClick }: GenericTableProps<T>)
         ))}
       </TableHeader>
       <TableBody>
-        {instance.getRowModel().rows.map((row) => (
-          <TableRow key={row.id} onClick={(e) => {
-            const target = e.target as HTMLElement;
-            if (target.closest("button, input, [role='checkbox'], label")) return;
-            onRowClick?.(row);
-          }} className={typeof onRowClick === "function" ? "cursor-pointer" : ""}>
-            {row.getVisibleCells().map((column) => (
-              <TableCell key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</TableCell>
-            ))}
+        {rows.length > 0 ? (
+          rows.map((row) => (
+            <TableRow
+              key={row.id}
+              onClick={(e) => {
+                const target = e.target as HTMLElement;
+                if (target.closest("button, input, [role='checkbox'], label")) return;
+                onRowClick?.(row);
+              }}
+              className={typeof onRowClick === "function" ? "cursor-pointer" : ""}
+            >
+              {row.getVisibleCells().map((column) => (
+                <TableCell key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={100}>
+              <p className="text-sm text-muted-foreground text-center py-4">Nothing here to show</p>
+            </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

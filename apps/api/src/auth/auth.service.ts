@@ -3,6 +3,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IGoogleUser } from './strategies/google.strategy';
 import { UserRole } from '@rh/database/enums';
+import { IGithubUser } from './strategies/github.strategy';
 
 @Injectable()
 export class AuthService {
@@ -62,6 +63,31 @@ export class AuthService {
           name: googleUser.name,
           avatar: googleUser.avatar,
           googleId: googleUser.googleId,
+          role: UserRole.CANDIDATE,
+        },
+      });
+    }
+
+    const token = this.signToken(user.id, user.email);
+
+    return {
+      accessToken: token,
+      user,
+    };
+  }
+
+  async githubLogin(githubUser: IGithubUser) {
+    let user = await this.prisma.user.findUnique({
+      where: { email: githubUser.email },
+    });
+
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          email: githubUser.email,
+          name: githubUser.name,
+          avatar: githubUser.avatar,
+          githubId: githubUser.githubId,
           role: UserRole.CANDIDATE,
         },
       });

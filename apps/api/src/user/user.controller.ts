@@ -2,6 +2,7 @@ import { makeResponse } from '@/models/api';
 import {
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   NotFoundException,
@@ -16,8 +17,12 @@ import {
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { User } from '@rh/database/client';
-import { BulkUpdateUserRolesDto, UpdateUserProfileDto } from './user.dto';
+import { User, UserRole } from '@rh/database/client';
+import {
+  BulkDeleteUsersDto,
+  BulkUpdateUserRolesDto,
+  UpdateUserProfileDto,
+} from './user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { nanoid } from 'nanoid';
 
@@ -25,8 +30,11 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import type { Express, Request } from 'express';
 import { extname } from 'path';
 import { StorageService } from '@/storage/storage.service';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class UserController {
   constructor(
     private userService: UserService,
@@ -34,13 +42,19 @@ export class UserController {
   ) {}
 
   @Get()
+  @Roles(UserRole.ADMINISTRATOR)
   async findAll() {
     const users = await this.userService.findMany();
     return makeResponse(users);
   }
 
+  @Get('candidates')
+  async findCandidates() {
+    const users = await this.userService.findCandidates();
+    return makeResponse(users);
+  }
+
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
   async findById(@Param('id') id: string) {
     const user = await this.userService.findById(id);
     if (!user) {
@@ -50,7 +64,6 @@ export class UserController {
   }
 
   @Put(':id/profile-picture')
-  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('image'))
   async uploadProfilePicture(
     @Req() req: Request,
@@ -59,7 +72,9 @@ export class UserController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     if (user.id !== id) {
-      throw new ForbiddenException('You can only update your own profile picture');
+      throw new ForbiddenException(
+        'You can only update your own profile picture',
+      );
     }
 
     const key = nanoid() + extname(image.originalname);
@@ -90,8 +105,14 @@ export class UserController {
     return makeResponse({ updated: ids.length });
   }
 
+  @Delete('bulk')
+  async bulkDelete(@Body() data: BulkDeleteUsersDto) {
+    const { ids } = data;
+    await this.userService.bulkDelete(ids);
+    return makeResponse({ deleted: ids.length });
+  }
+
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt'))
   async update(
     @AuthUser() user: User,
     @Param('id') id: string,
