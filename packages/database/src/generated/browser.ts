@@ -48,11 +48,6 @@ export type AttributeChoice = Prisma.AttributeChoiceModel
  */
 export type UserAttribute = Prisma.UserAttributeModel
 /**
- * Model AccessRule
- * 
- */
-export type AccessRule = Prisma.AccessRuleModel
-/**
  * Model PositionAttribute
  * 
  */

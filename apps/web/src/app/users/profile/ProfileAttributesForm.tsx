@@ -83,7 +83,9 @@ const ProfileAttibutesForm: FC<{
         }
 
         modified.forEach((item) => {
-          form.setValue(`attrs.${item.id}.attr.version`, item.version);
+          if (form.getValues(`attrs.${item.id}.attr.version`) < item.version) {
+            form.setValue(`attrs.${item.id}.attr.version`, item.version);
+          }
         });
       });
   }, []);

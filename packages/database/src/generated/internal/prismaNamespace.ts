@@ -390,7 +390,6 @@ export const ModelName = {
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
   UserAttribute: 'UserAttribute',
-  AccessRule: 'AccessRule',
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
   Resume: 'Resume',
@@ -411,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "user" | "project" | "attribute" | "attributeChoice" | "userAttribute" | "accessRule" | "positionAttribute" | "position" | "resume" | "resumeAttribute" | "resumeLike"
+    modelProps: "category" | "user" | "project" | "attribute" | "attributeChoice" | "userAttribute" | "positionAttribute" | "position" | "resume" | "resumeAttribute" | "resumeLike"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -856,80 +855,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserAttributeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserAttributeCountAggregateOutputType> | number
-        }
-      }
-    }
-    AccessRule: {
-      payload: Prisma.$AccessRulePayload<ExtArgs>
-      fields: Prisma.AccessRuleFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AccessRuleFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AccessRuleFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>
-        }
-        findFirst: {
-          args: Prisma.AccessRuleFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AccessRuleFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>
-        }
-        findMany: {
-          args: Prisma.AccessRuleFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>[]
-        }
-        create: {
-          args: Prisma.AccessRuleCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>
-        }
-        createMany: {
-          args: Prisma.AccessRuleCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AccessRuleCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>[]
-        }
-        delete: {
-          args: Prisma.AccessRuleDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>
-        }
-        update: {
-          args: Prisma.AccessRuleUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>
-        }
-        deleteMany: {
-          args: Prisma.AccessRuleDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AccessRuleUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AccessRuleUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>[]
-        }
-        upsert: {
-          args: Prisma.AccessRuleUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRulePayload>
-        }
-        aggregate: {
-          args: Prisma.AccessRuleAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAccessRule>
-        }
-        groupBy: {
-          args: Prisma.AccessRuleGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AccessRuleGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AccessRuleCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AccessRuleCountAggregateOutputType> | number
         }
       }
     }
@@ -1419,14 +1344,6 @@ export const UserAttributeScalarFieldEnum = {
 export type UserAttributeScalarFieldEnum = (typeof UserAttributeScalarFieldEnum)[keyof typeof UserAttributeScalarFieldEnum]
 
 
-export const AccessRuleScalarFieldEnum = {
-  id: 'id',
-  positionId: 'positionId'
-} as const
-
-export type AccessRuleScalarFieldEnum = (typeof AccessRuleScalarFieldEnum)[keyof typeof AccessRuleScalarFieldEnum]
-
-
 export const PositionAttributeScalarFieldEnum = {
   id: 'id',
   attributeId: 'attributeId',
@@ -1724,7 +1641,6 @@ export type GlobalOmitConfig = {
   attribute?: Prisma.AttributeOmit
   attributeChoice?: Prisma.AttributeChoiceOmit
   userAttribute?: Prisma.UserAttributeOmit
-  accessRule?: Prisma.AccessRuleOmit
   positionAttribute?: Prisma.PositionAttributeOmit
   position?: Prisma.PositionOmit
   resume?: Prisma.ResumeOmit

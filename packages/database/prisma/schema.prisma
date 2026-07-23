@@ -13,6 +13,11 @@ datasource db {
   provider = "postgresql"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+
 enum UserRole {
   CANDIDATE
   RECRUITER
@@ -121,17 +126,11 @@ model UserAttribute {
   @@map("user_attributes")
 }
 
-model AccessRule {
-  id         String   @id @default(cuid())
-  position   Position @relation(fields: [positionId], references: [id])
-  positionId String
-}
-
 model PositionAttribute {
   id              String            @id @default(cuid())
-  attribute       Attribute         @relation(fields: [attributeId], references: [id])
+  attribute       Attribute         @relation(fields: [attributeId], references: [id], onDelete: Cascade)
   attributeId     String
-  position        Position          @relation(fields: [positionId], references: [id])
+  position        Position          @relation(fields: [positionId], references: [id], onDelete: Cascade)
   positionId      String
   resumeAttribute ResumeAttribute[]
 }
@@ -141,7 +140,6 @@ model Position {
   title       String
   description String
   resumes     Resume[]
-  accessRules AccessRule[]
   attributes  PositionAttribute[]
 
   @@map("positions")
@@ -175,7 +173,7 @@ model ResumeAttribute {
   positionAttributeId String
   userAttribute       UserAttribute     @relation(references: [id], fields: [userAttributeId], onDelete: Cascade)
   userAttributeId     String
-
+  
   @@map("resume_attributes")
 }
 

@@ -1,14 +1,15 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
-import { CreateResumeDto } from './dto/create-resume.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
-import { PositionService } from '../position.service';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { ResumeAttribute } from '@rh/database/browser';
 import type { ResumeStatus, User } from '@rh/database/client';
 import { UserRole } from '@rh/database/enums';
+import { PositionService } from '../position.service';
+import { CreateResumeDto } from './dto/create-resume.dto';
 
 const resumeInclude = {
   position: true,
@@ -210,6 +211,13 @@ export class ResumeService {
 
     return await this.prisma.resume.delete({
       where: { id },
+    });
+  }
+
+  async bulkAddAttributes(data: Omit<ResumeAttribute, 'id'>[]) {
+    await this.prisma.resumeAttribute.createMany({
+      data,
+      skipDuplicates: true,
     });
   }
 }

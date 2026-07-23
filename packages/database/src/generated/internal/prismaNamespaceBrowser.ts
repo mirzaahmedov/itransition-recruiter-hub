@@ -57,7 +57,6 @@ export const ModelName = {
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
   UserAttribute: 'UserAttribute',
-  AccessRule: 'AccessRule',
   PositionAttribute: 'PositionAttribute',
   Position: 'Position',
   Resume: 'Resume',
@@ -156,14 +155,6 @@ export const UserAttributeScalarFieldEnum = {
 } as const
 
 export type UserAttributeScalarFieldEnum = (typeof UserAttributeScalarFieldEnum)[keyof typeof UserAttributeScalarFieldEnum]
-
-
-export const AccessRuleScalarFieldEnum = {
-  id: 'id',
-  positionId: 'positionId'
-} as const
-
-export type AccessRuleScalarFieldEnum = (typeof AccessRuleScalarFieldEnum)[keyof typeof AccessRuleScalarFieldEnum]
 
 
 export const PositionAttributeScalarFieldEnum = {

@@ -160,13 +160,10 @@ const ResumePage = () => {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="no-print flex items-center justify-between mb-6">
-        <button
-          onClick={() => navigate("/resumes")}
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
+        <Button variant="ghost" onClick={() => navigate("/resumes")}>
           <ArrowLeftIcon className="size-4" />
           Back to resumes
-        </button>
+        </Button>
         <div className="flex items-center gap-2">
           <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>{resumeData.status}</Badge>
           {isOwner && resumeData.status === "PENDING" && (

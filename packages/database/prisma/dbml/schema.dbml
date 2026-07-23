@@ -1,0 +1,192 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table categories {
+  id String [pk]
+  name String [not null]
+  sortOrder Int [not null]
+  attrs attributes [not null]
+}
+
+Table users {
+  id String [pk]
+  email String [unique, not null]
+  name String
+  avatar String
+  googleId String [unique]
+  githubId String [unique]
+  role UserRole [not null]
+  password String
+  createdAt DateTime [default: `now()`, not null]
+  profileAttrs user_attributes [not null]
+  projects projects [not null]
+  resumes resumes [not null]
+  likes resume_likes [not null]
+}
+
+Table projects {
+  id String [pk]
+  name String [not null]
+  description String
+  url String
+  image String
+  userId String [not null]
+  user users [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table attributes {
+  id String [pk]
+  name String [not null]
+  type AttributeType [not null]
+  system Boolean [not null, default: false]
+  categoryId String [not null]
+  category categories [not null]
+  createdAt DateTime [default: `now()`, not null]
+  choices attribute_choices [not null]
+  values user_attributes [not null]
+  positionAttributes PositionAttribute [not null]
+}
+
+Table attribute_choices {
+  id String [pk]
+  value String [not null]
+  attribute attributes [not null]
+  attributeId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  values user_attributes [not null]
+
+  indexes {
+    (attributeId, value) [unique]
+  }
+}
+
+Table user_attributes {
+  id String [pk]
+  attributeId String [not null]
+  attribute attributes [not null]
+  textValue String
+  numberValue Float
+  booleanValue Boolean
+  dateValue DateTime
+  startDateValue DateTime
+  endDateValue DateTime
+  choiceId String
+  choice attribute_choices
+  userId String [not null]
+  user users [not null]
+  createdAt DateTime [default: `now()`, not null]
+  version Int [not null, default: 1]
+  resumeAttributes resume_attributes [not null]
+
+  indexes {
+    (attributeId, userId) [unique]
+  }
+}
+
+Table PositionAttribute {
+  id String [pk]
+  attribute attributes [not null]
+  attributeId String [not null]
+  position positions [not null]
+  positionId String [not null]
+  resumeAttribute resume_attributes [not null]
+}
+
+Table positions {
+  id String [pk]
+  title String [not null]
+  description String [not null]
+  resumes resumes [not null]
+  attributes PositionAttribute [not null]
+}
+
+Table resumes {
+  id String [pk]
+  positionId String [not null]
+  position positions [not null]
+  userId String [not null]
+  user users [not null]
+  status ResumeStatus [not null, default: 'PENDING']
+  resumeAttributes resume_attributes [not null]
+  likes resume_likes [not null]
+
+  indexes {
+    (userId, positionId) [unique]
+  }
+}
+
+Table resume_attributes {
+  id String [pk]
+  resumeId String [not null]
+  resume resumes [not null]
+  positionAttribute PositionAttribute [not null]
+  positionAttributeId String [not null]
+  userAttribute user_attributes [not null]
+  userAttributeId String [not null]
+}
+
+Table resume_likes {
+  id String [pk]
+  user users [not null]
+  userId String [not null]
+  resume resumes [not null]
+  resumeId String [not null]
+
+  indexes {
+    (userId, resumeId) [unique]
+  }
+}
+
+Enum UserRole {
+  CANDIDATE
+  RECRUITER
+  ADMINISTRATOR
+}
+
+Enum AttributeType {
+  TEXT
+  MARKDOWN
+  IMAGE
+  NUMERIC
+  DATE
+  DATEPERIOD
+  BOOLEAN
+  CHOICE
+}
+
+Enum ResumeStatus {
+  PENDING
+  PUBLISHED
+}
+
+Ref: projects.userId > users.id [delete: Cascade]
+
+Ref: attributes.categoryId > categories.id
+
+Ref: attribute_choices.attributeId > attributes.id
+
+Ref: user_attributes.attributeId > attributes.id
+
+Ref: user_attributes.choiceId > attribute_choices.id
+
+Ref: user_attributes.userId > users.id
+
+Ref: PositionAttribute.attributeId > attributes.id [delete: Cascade]
+
+Ref: PositionAttribute.positionId > positions.id [delete: Cascade]
+
+Ref: resumes.positionId > positions.id [delete: Cascade]
+
+Ref: resumes.userId > users.id [delete: Cascade]
+
+Ref: resume_attributes.resumeId > resumes.id [delete: Cascade]
+
+Ref: resume_attributes.positionAttributeId > PositionAttribute.id [delete: Cascade]
+
+Ref: resume_attributes.userAttributeId > user_attributes.id [delete: Cascade]
+
+Ref: resume_likes.userId > users.id [delete: Cascade]
+
+Ref: resume_likes.resumeId > resumes.id [delete: Cascade]

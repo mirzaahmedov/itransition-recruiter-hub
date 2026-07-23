@@ -1,5 +1,6 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
+import type { Resume } from "@rh/database/browser";
 import type { PositionGetPayload } from "@rh/database/models";
 import type { CreatePositionPayload, UpdatePositionPayload } from "@rh/shared";
 
@@ -41,8 +42,8 @@ export async function deletePosition(id: string) {
   return res.data;
 }
 
-export async function addPositionAttribute(positionId: string, attributeId: string) {
-  const res = await privateApi.post<ApiResponse<PositionWithAttributes>>(`/positions/${positionId}/attributes`, { attributeId });
+export async function bulkAddPositionAttributes(positionId: string, ids: string[]) {
+  const res = await privateApi.post<ApiResponse<PositionWithAttributes>>(`/positions/${positionId}/attributes/bulk-create`, { ids });
   return res.data;
 }
 
@@ -52,6 +53,6 @@ export async function removePositionAttribute(positionId: string, attributeId: s
 }
 
 export async function applyToPosition(positionId: string) {
-  const res = await privateApi.post(`/positions/${positionId}/resumes`);
+  const res = await privateApi.post<ApiResponse<Resume>>(`/positions/${positionId}/resumes`);
   return res.data;
 }

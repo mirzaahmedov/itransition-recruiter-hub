@@ -9,7 +9,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CreatePositionDto, UpdatePositionDto } from './position.dto';
+import {
+  BulkCreatePositionAttributesDto,
+  CreatePositionDto,
+  UpdatePositionDto,
+} from './position.dto';
 import { PositionService } from './position.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@/auth/guards/roles.guard';
@@ -44,14 +48,13 @@ export class PositionController {
     return makeResponse(await this.positionService.update(id, payload));
   }
 
-  @Post(':id/attributes')
-  async addAttribute(
+  @Post(':id/attributes/bulk-create')
+  async addAttributes(
     @Param('id') id: string,
-    @Body('attributeId') attributeId: string,
+    @Body() data: BulkCreatePositionAttributesDto,
   ) {
-    return makeResponse(
-      await this.positionService.addAttribute(id, attributeId),
-    );
+    const { ids } = data;
+    return makeResponse(await this.positionService.bulkAddAttributes(id, ids));
   }
 
   @Delete(':id/attributes/:attributeId')

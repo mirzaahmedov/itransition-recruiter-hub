@@ -1,10 +1,13 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import {
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
-  ConflictException,
 } from '@nestjs/common';
 import { CreatePositionPayload, UpdatePositionPayload } from '@rh/shared';
+import { ResumeService } from './resume/resume.service';
+import { UserAttributeService } from '@/user/attribute/user-attribute.service';
 
 const positionInclude = {
   attributes: {
@@ -16,7 +19,12 @@ const positionInclude = {
 
 @Injectable()
 export class PositionService {
-  constructor(readonly prisma: PrismaService) {}
+  constructor(
+    readonly prisma: PrismaService,
+    @Inject(forwardRef(() => ResumeService))
+    readonly resumeService: ResumeService,
+    readonly userAttributeService: UserAttributeService,
+  ) {}
 
   async create(payload: CreatePositionPayload) {
     return await this.prisma.position.create({
@@ -84,30 +92,50 @@ export class PositionService {
     });
   }
 
-  async addAttribute(positionId: string, attributeId: string) {
+  async bulkAddAttributes(positionId: string, ids: string[]) {
     await this.findOne(positionId);
 
-    const existing = await this.prisma.positionAttribute.findFirst({
+    const positionAttributes =
+      await this.prisma.positionAttribute.createManyAndReturn({
+        data: ids.map((id) => ({
+          positionId,
+          attributeId: id,
+        })),
+        skipDuplicates: true,
+      });
+
+    const resumes = await this.resumeService.findAllByPosition(positionId);
+
+    await this.prisma.userAttribute.createManyAndReturn({
+      data: resumes.flatMap((resume) => {
+        return positionAttributes.map((attribute) => ({
+          userId: resume.userId,
+          attributeId: attribute.attributeId,
+        }));
+      }),
+      skipDuplicates: true,
+    });
+
+    const userAttributes = await this.prisma.userAttribute.findMany({
       where: {
-        positionId,
-        attributeId,
+        userId: {
+          in: resumes.map((r) => r.userId),
+        },
+        attributeId: {
+          in: positionAttributes.map((r) => r.attributeId),
+        },
       },
     });
 
-    if (existing) {
-      throw new ConflictException(
-        'Attribute is already assigned to this position',
-      );
-    }
-
-    await this.prisma.positionAttribute.create({
-      data: {
-        positionId,
-        attributeId,
-      },
+    await this.prisma.resumeAttribute.createMany({
+      data: userAttributes.map((userAttribute) => ({
+        userAttributeId: userAttribute.id,
+        positionAttributeId: positionAttributes.find(
+          (pa) => pa.attributeId === userAttribute.attributeId,
+        )!.id,
+        resumeId: resumes.find((r) => r.userId === userAttribute.userId)!.id,
+      })),
     });
-
-    return this.findOne(positionId);
   }
 
   async removeAttribute(positionId: string, attributeId: string) {

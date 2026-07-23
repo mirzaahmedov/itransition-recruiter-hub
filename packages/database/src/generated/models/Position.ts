@@ -167,7 +167,6 @@ export type PositionWhereInput = {
   title?: Prisma.StringFilter<"Position"> | string
   description?: Prisma.StringFilter<"Position"> | string
   resumes?: Prisma.ResumeListRelationFilter
-  accessRules?: Prisma.AccessRuleListRelationFilter
   attributes?: Prisma.PositionAttributeListRelationFilter
 }
 
@@ -176,7 +175,6 @@ export type PositionOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   resumes?: Prisma.ResumeOrderByRelationAggregateInput
-  accessRules?: Prisma.AccessRuleOrderByRelationAggregateInput
   attributes?: Prisma.PositionAttributeOrderByRelationAggregateInput
 }
 
@@ -188,7 +186,6 @@ export type PositionWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Position"> | string
   description?: Prisma.StringFilter<"Position"> | string
   resumes?: Prisma.ResumeListRelationFilter
-  accessRules?: Prisma.AccessRuleListRelationFilter
   attributes?: Prisma.PositionAttributeListRelationFilter
 }, "id">
 
@@ -215,7 +212,6 @@ export type PositionCreateInput = {
   title: string
   description: string
   resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
-  accessRules?: Prisma.AccessRuleCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
 }
 
@@ -224,7 +220,6 @@ export type PositionUncheckedCreateInput = {
   title: string
   description: string
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
-  accessRules?: Prisma.AccessRuleUncheckedCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
 }
 
@@ -233,7 +228,6 @@ export type PositionUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
-  accessRules?: Prisma.AccessRuleUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
 }
 
@@ -242,7 +236,6 @@ export type PositionUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
-  accessRules?: Prisma.AccessRuleUncheckedUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
 }
 
@@ -287,20 +280,6 @@ export type PositionMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
 }
 
-export type PositionCreateNestedOneWithoutAccessRulesInput = {
-  create?: Prisma.XOR<Prisma.PositionCreateWithoutAccessRulesInput, Prisma.PositionUncheckedCreateWithoutAccessRulesInput>
-  connectOrCreate?: Prisma.PositionCreateOrConnectWithoutAccessRulesInput
-  connect?: Prisma.PositionWhereUniqueInput
-}
-
-export type PositionUpdateOneRequiredWithoutAccessRulesNestedInput = {
-  create?: Prisma.XOR<Prisma.PositionCreateWithoutAccessRulesInput, Prisma.PositionUncheckedCreateWithoutAccessRulesInput>
-  connectOrCreate?: Prisma.PositionCreateOrConnectWithoutAccessRulesInput
-  upsert?: Prisma.PositionUpsertWithoutAccessRulesInput
-  connect?: Prisma.PositionWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PositionUpdateToOneWithWhereWithoutAccessRulesInput, Prisma.PositionUpdateWithoutAccessRulesInput>, Prisma.PositionUncheckedUpdateWithoutAccessRulesInput>
-}
-
 export type PositionCreateNestedOneWithoutAttributesInput = {
   create?: Prisma.XOR<Prisma.PositionCreateWithoutAttributesInput, Prisma.PositionUncheckedCreateWithoutAttributesInput>
   connectOrCreate?: Prisma.PositionCreateOrConnectWithoutAttributesInput
@@ -329,60 +308,11 @@ export type PositionUpdateOneRequiredWithoutResumesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PositionUpdateToOneWithWhereWithoutResumesInput, Prisma.PositionUpdateWithoutResumesInput>, Prisma.PositionUncheckedUpdateWithoutResumesInput>
 }
 
-export type PositionCreateWithoutAccessRulesInput = {
-  id?: string
-  title: string
-  description: string
-  resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
-  attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
-}
-
-export type PositionUncheckedCreateWithoutAccessRulesInput = {
-  id?: string
-  title: string
-  description: string
-  resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
-  attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
-}
-
-export type PositionCreateOrConnectWithoutAccessRulesInput = {
-  where: Prisma.PositionWhereUniqueInput
-  create: Prisma.XOR<Prisma.PositionCreateWithoutAccessRulesInput, Prisma.PositionUncheckedCreateWithoutAccessRulesInput>
-}
-
-export type PositionUpsertWithoutAccessRulesInput = {
-  update: Prisma.XOR<Prisma.PositionUpdateWithoutAccessRulesInput, Prisma.PositionUncheckedUpdateWithoutAccessRulesInput>
-  create: Prisma.XOR<Prisma.PositionCreateWithoutAccessRulesInput, Prisma.PositionUncheckedCreateWithoutAccessRulesInput>
-  where?: Prisma.PositionWhereInput
-}
-
-export type PositionUpdateToOneWithWhereWithoutAccessRulesInput = {
-  where?: Prisma.PositionWhereInput
-  data: Prisma.XOR<Prisma.PositionUpdateWithoutAccessRulesInput, Prisma.PositionUncheckedUpdateWithoutAccessRulesInput>
-}
-
-export type PositionUpdateWithoutAccessRulesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
-  attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
-}
-
-export type PositionUncheckedUpdateWithoutAccessRulesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
-  attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
-}
-
 export type PositionCreateWithoutAttributesInput = {
   id?: string
   title: string
   description: string
   resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
-  accessRules?: Prisma.AccessRuleCreateNestedManyWithoutPositionInput
 }
 
 export type PositionUncheckedCreateWithoutAttributesInput = {
@@ -390,7 +320,6 @@ export type PositionUncheckedCreateWithoutAttributesInput = {
   title: string
   description: string
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
-  accessRules?: Prisma.AccessRuleUncheckedCreateNestedManyWithoutPositionInput
 }
 
 export type PositionCreateOrConnectWithoutAttributesInput = {
@@ -414,7 +343,6 @@ export type PositionUpdateWithoutAttributesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
-  accessRules?: Prisma.AccessRuleUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionUncheckedUpdateWithoutAttributesInput = {
@@ -422,14 +350,12 @@ export type PositionUncheckedUpdateWithoutAttributesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
-  accessRules?: Prisma.AccessRuleUncheckedUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionCreateWithoutResumesInput = {
   id?: string
   title: string
   description: string
-  accessRules?: Prisma.AccessRuleCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
 }
 
@@ -437,7 +363,6 @@ export type PositionUncheckedCreateWithoutResumesInput = {
   id?: string
   title: string
   description: string
-  accessRules?: Prisma.AccessRuleUncheckedCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
 }
 
@@ -461,7 +386,6 @@ export type PositionUpdateWithoutResumesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  accessRules?: Prisma.AccessRuleUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
 }
 
@@ -469,7 +393,6 @@ export type PositionUncheckedUpdateWithoutResumesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  accessRules?: Prisma.AccessRuleUncheckedUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
 }
 
@@ -480,13 +403,11 @@ export type PositionUncheckedUpdateWithoutResumesInput = {
 
 export type PositionCountOutputType = {
   resumes: number
-  accessRules: number
   attributes: number
 }
 
 export type PositionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resumes?: boolean | PositionCountOutputTypeCountResumesArgs
-  accessRules?: boolean | PositionCountOutputTypeCountAccessRulesArgs
   attributes?: boolean | PositionCountOutputTypeCountAttributesArgs
 }
 
@@ -510,13 +431,6 @@ export type PositionCountOutputTypeCountResumesArgs<ExtArgs extends runtime.Type
 /**
  * PositionCountOutputType without action
  */
-export type PositionCountOutputTypeCountAccessRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AccessRuleWhereInput
-}
-
-/**
- * PositionCountOutputType without action
- */
 export type PositionCountOutputTypeCountAttributesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PositionAttributeWhereInput
 }
@@ -527,7 +441,6 @@ export type PositionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   title?: boolean
   description?: boolean
   resumes?: boolean | Prisma.Position$resumesArgs<ExtArgs>
-  accessRules?: boolean | Prisma.Position$accessRulesArgs<ExtArgs>
   attributes?: boolean | Prisma.Position$attributesArgs<ExtArgs>
   _count?: boolean | Prisma.PositionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["position"]>
@@ -553,7 +466,6 @@ export type PositionSelectScalar = {
 export type PositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description", ExtArgs["result"]["position"]>
 export type PositionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resumes?: boolean | Prisma.Position$resumesArgs<ExtArgs>
-  accessRules?: boolean | Prisma.Position$accessRulesArgs<ExtArgs>
   attributes?: boolean | Prisma.Position$attributesArgs<ExtArgs>
   _count?: boolean | Prisma.PositionCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -564,7 +476,6 @@ export type $PositionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Position"
   objects: {
     resumes: Prisma.$ResumePayload<ExtArgs>[]
-    accessRules: Prisma.$AccessRulePayload<ExtArgs>[]
     attributes: Prisma.$PositionAttributePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -966,7 +877,6 @@ readonly fields: PositionFieldRefs;
 export interface Prisma__PositionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   resumes<T extends Prisma.Position$resumesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Position$resumesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  accessRules<T extends Prisma.Position$accessRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Position$accessRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attributes<T extends Prisma.Position$attributesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Position$attributesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1414,30 +1324,6 @@ export type Position$resumesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ResumeScalarFieldEnum | Prisma.ResumeScalarFieldEnum[]
-}
-
-/**
- * Position.accessRules
- */
-export type Position$accessRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AccessRule
-   */
-  select?: Prisma.AccessRuleSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AccessRule
-   */
-  omit?: Prisma.AccessRuleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AccessRuleInclude<ExtArgs> | null
-  where?: Prisma.AccessRuleWhereInput
-  orderBy?: Prisma.AccessRuleOrderByWithRelationInput | Prisma.AccessRuleOrderByWithRelationInput[]
-  cursor?: Prisma.AccessRuleWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AccessRuleScalarFieldEnum | Prisma.AccessRuleScalarFieldEnum[]
 }
 
 /**
