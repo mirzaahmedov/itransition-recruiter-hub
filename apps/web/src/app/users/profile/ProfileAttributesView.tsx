@@ -1,14 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { renderDynamicValue } from "@/utils/renderDynamicValue";
-import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import type { FC } from "react";
 import type { UserAttributeWithJoins } from "./api";
 
 export const ProfileAttributesView: FC<{
   userAttributes: UserAttributeWithJoins[];
-  onEdit: VoidFunction;
-}> = ({ userAttributes, onEdit }) => {
+}> = ({ userAttributes }) => {
   const categories = useCategoryStore((store) => store.categories);
 
   const readCategoryAttributes = (categoryId: string) => {
@@ -23,12 +20,6 @@ export const ProfileAttributesView: FC<{
           <div key={category.id} className="rounded-2xl border bg-card p-6">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{category.name}</h3>
-              <div className="flex items-center gap-1">
-                <Button variant="link" onClick={onEdit}>
-                  <PencilSimpleLineIcon />
-                  Edit
-                </Button>
-              </div>
             </div>
             <div className="mt-4">
               {attrs.length > 0 ? (

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateAttributePayload } from '@rh/shared/schemas';
 
@@ -121,12 +125,133 @@ export class AttributeService {
       where: {
         id,
       },
+      include: {
+        choices: {
+          include: {
+            _count: {
+              select: { values: true },
+            },
+          },
+        },
+        category: true,
+        _count: {
+          select: {
+            values: true,
+            positionAttributes: true,
+          },
+        },
+      },
     });
   }
 
   async delete(id: string) {
     return await this.prisma.attribute.delete({
       where: { id },
+    });
+  }
+
+  async bulkDelete(attrIds: string[]): Promise<{ deleted: number }> {
+    const unused = await this.prisma.attribute.findMany({
+      where: {
+        values: {
+          none: {},
+        },
+        positionAttributes: {
+          none: {},
+        },
+        id: {
+          in: attrIds,
+        },
+      },
+    });
+
+    const idsToDelete = unused.map(({ id }) => id);
+
+    if (idsToDelete.length === 0) {
+      return { deleted: 0 };
+    }
+
+    const result = await this.prisma.attribute.deleteMany({
+      where: {
+        id: {
+          in: idsToDelete,
+        },
+      },
+    });
+
+    return {
+      deleted: result.count,
+    };
+  }
+
+  async addChoice(attributeId: string, value: string) {
+    const attribute = await this.prisma.attribute.findUnique({
+      where: { id: attributeId },
+      select: { id: true },
+    });
+
+    if (!attribute) {
+      throw new NotFoundException('Attribute not found');
+    }
+
+    return this.prisma.attributeChoice.create({
+      data: {
+        value,
+        attributeId,
+      },
+    });
+  }
+
+  async renameChoice(attributeId: string, choiceId: string, value: string) {
+    const choice = await this.prisma.attributeChoice.findFirst({
+      where: {
+        id: choiceId,
+        attributeId,
+      },
+      include: {
+        _count: {
+          select: { values: true },
+        },
+      },
+    });
+
+    if (!choice) {
+      throw new NotFoundException('Choice not found');
+    }
+
+    if (choice._count.values > 0) {
+      throw new BadRequestException('Cannot rename a choice that is in use');
+    }
+
+    return this.prisma.attributeChoice.update({
+      where: { id: choiceId },
+      data: { value },
+    });
+  }
+
+  async removeChoice(attributeId: string, choiceId: string) {
+    const choice = await this.prisma.attributeChoice.findFirst({
+      where: {
+        id: choiceId,
+        attributeId,
+      },
+      include: {
+        _count: {
+          select: { values: true },
+        },
+      },
+    });
+
+    if (!choice) {
+      throw new NotFoundException('Choice not found');
+    }
+
+    if (choice._count.values > 0) {
+      throw new BadRequestException('Cannot delete a choice that is in use');
+    }
+
+    return this.prisma.attributeChoice.delete({
+      where: { id: choiceId },
     });
   }
 }

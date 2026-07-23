@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { useCategoryStore } from "@/store/useCategoryStore";
-import { PlusIcon, WarningCircleIcon, XIcon } from "@phosphor-icons/react";
+import { PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import type { UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
@@ -32,8 +32,7 @@ interface ProfileFormData {
 const ProfileAttibutesForm: FC<{
   user: User;
   userAttributes: UserAttributeWithJoins[];
-  onStopEditing: VoidFunction;
-}> = ({ user, userAttributes, onStopEditing }) => {
+}> = ({ user, userAttributes }) => {
   const queryClient = useQueryClient();
 
   const [conflicts, setConflicts] = useState<Record<string, boolean>>({});
@@ -141,13 +140,9 @@ const ProfileAttibutesForm: FC<{
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{category.name}</h3>
                 <div className="flex items-center gap-1">
-                  <Button variant="secondary" size="sm" onClick={createDialog.openDialog}>
+                  <Button variant="secondary" size="sm" onClick={createDialog.openDialog} className="-my-2">
                     <PlusIcon />
                     Add
-                  </Button>
-                  <Button variant="link" onClick={onStopEditing}>
-                    <XIcon />
-                    Close
                   </Button>
                 </div>
               </div>

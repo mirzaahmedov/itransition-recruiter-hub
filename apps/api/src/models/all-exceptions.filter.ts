@@ -54,6 +54,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     } else if (isPrismaKnownError(exception)) {
       status = this.mapPrismaCode(exception.code);
       message = this.getPrismaMessage(exception);
+
+      logger.error(`Prisma error: ${exception}`);
     } else if (exception instanceof Error) {
       message = exception.message;
       logger.error(`Unhandled error: ${exception.message}`, exception.stack);

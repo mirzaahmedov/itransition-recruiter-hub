@@ -5,7 +5,17 @@ import { fetchPositionResumes } from "@/app/resumes/api";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PencilSimpleLineIcon, TrashIcon, ArrowLeftIcon, XIcon, FloppyDiskIcon, PlusIcon, XCircleIcon, ReadCvLogoIcon, ArrowRightIcon } from "@phosphor-icons/react";
+import {
+  PencilSimpleLineIcon,
+  TrashIcon,
+  ArrowLeftIcon,
+  XIcon,
+  FloppyDiskIcon,
+  PlusIcon,
+  XCircleIcon,
+  ReadCvLogoIcon,
+  ArrowRightIcon,
+} from "@phosphor-icons/react";
 import toast from "react-hot-toast";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { useMemo, useState, type FC } from "react";
@@ -21,7 +31,8 @@ import type { Attribute } from "@rh/database/browser";
 import { addPositionAttribute } from "./api";
 import { Link } from "react-router-dom";
 import type { ResumeListItem } from "@/app/resumes/api";
-import { useAuthStore } from "@/store/useAuthStore";
+import { Can } from "@casl/react";
+import { parseApiErrorMessage } from "@/lib/api/error";
 
 const PositionView: FC<{
   position: PositionWithAttributes;
@@ -29,10 +40,9 @@ const PositionView: FC<{
   onEdit: VoidFunction;
   onDelete: VoidFunction;
   onApply: VoidFunction;
-  userRole: string;
-}> = ({ position, resumes, onEdit, onDelete, onApply, userRole }) => {
-  const isCandidate = userRole === "CANDIDATE";
-
+  isDeleting: boolean;
+  isApplying: boolean;
+}> = ({ position, resumes, onEdit, onDelete, onApply, isDeleting, isApplying }) => {
   return (
     <>
       <div className="flex items-start justify-between gap-4">
@@ -41,19 +51,25 @@ const PositionView: FC<{
           <p className="mt-3 text-muted-foreground leading-relaxed">{position.description}</p>
         </div>
         <div className="flex items-center gap-1">
-          <Button onClick={onEdit} variant="outline">
-            <PencilSimpleLineIcon />
-            Edit
-          </Button>
-          <Button variant="destructive-outline" onClick={onDelete}>
-            <TrashIcon /> Delete
-          </Button>
-          {isCandidate && (
-            <Button onClick={onApply}>
-              <ReadCvLogoIcon />
-              Apply
+          <Can I="update" a="Position">
+            <Button onClick={onEdit} variant="outline">
+              <PencilSimpleLineIcon />
+              Edit
             </Button>
-          )}
+          </Can>
+          <Can I="delete" a="Position">
+            <Button variant="destructive-outline" onClick={onDelete} loading={isDeleting}>
+              <TrashIcon /> Delete
+            </Button>
+          </Can>
+          <Can I="apply" a="Position">
+            {position.resumes.length === 0 ? (
+              <Button onClick={onApply} loading={isApplying}>
+                <ReadCvLogoIcon />
+                Apply
+              </Button>
+            ) : null}
+          </Can>
         </div>
       </div>
 
@@ -80,9 +96,7 @@ const PositionView: FC<{
 
       {resumes.length > 0 && (
         <div className="mt-8 border-t pt-6">
-          <h2 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">
-            Applications ({resumes.length})
-          </h2>
+          <h2 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">Applications ({resumes.length})</h2>
           <div className="mt-4 space-y-2">
             {resumes.map((resume) => (
               <Link
@@ -249,7 +263,6 @@ const PositionPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
-  const user = useAuthStore((store) => store.user);
 
   const { data: position, isFetching } = useQuery({
     queryKey: ["positions", id],
@@ -273,14 +286,16 @@ const PositionPage = () => {
 
   const handleApply = () => {
     applyMutation.mutate(undefined, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        console.log({ res });
         toast.success("Application sent");
         queryClient.invalidateQueries({ queryKey: ["positions"] });
         queryClient.invalidateQueries({ queryKey: ["positions", id, "resumes"] });
         queryClient.invalidateQueries({ queryKey: ["resumes"] });
       },
-      onError: () => {
-        toast.error("Application failed");
+      onError: (res) => {
+        const message = parseApiErrorMessage(res);
+        toast.error(message ?? "Application failed");
       },
     });
   };
@@ -333,7 +348,15 @@ const PositionPage = () => {
                 }}
               />
             ) : (
-              <PositionView position={positionData} resumes={resumes} onEdit={() => setEditing(true)} onDelete={handleDelete} onApply={handleApply} userRole={user?.role ?? "CANDIDATE"} />
+              <PositionView
+                isApplying={applyMutation.isPending}
+                isDeleting={deleteMutation.isPending}
+                position={positionData}
+                resumes={resumes}
+                onEdit={() => setEditing(true)}
+                onDelete={handleDelete}
+                onApply={handleApply}
+              />
             )}
           </div>
         </div>

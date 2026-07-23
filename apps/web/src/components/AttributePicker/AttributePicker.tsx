@@ -1,5 +1,5 @@
 import { fetchSearchAttributes } from "@/components/AttributePicker/api";
-import { GenericTable } from "@/components/GenericTable/GenericTable";
+import { GenericTable } from "@/components/generic-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

@@ -1,3 +1,4 @@
+import type { ResumeListItem } from "@/app/resumes/api";
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { User, UserAttribute, Project } from "@rh/database/browser";
@@ -107,5 +108,10 @@ export async function uploadProjectImage(userId: string, projectId: string, file
   const formData = new FormData();
   formData.set("image", file);
   const res = await privateApi.post<ApiResponse<Project>>(`/users/${userId}/projects/${projectId}/image`, formData);
+  return res.data;
+}
+
+export async function fetchUserResumes(userId: string) {
+  const res = await privateApi.get<ApiResponse<ResumeListItem[]>>(`/users/${userId}/resumes`);
   return res.data;
 }

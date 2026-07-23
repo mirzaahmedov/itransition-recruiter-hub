@@ -5,6 +5,7 @@ import type { CreatePositionPayload, UpdatePositionPayload } from "@rh/shared";
 
 export type PositionWithAttributes = PositionGetPayload<{
   include: {
+    resumes: true;
     attributes: {
       include: {
         attribute: true;

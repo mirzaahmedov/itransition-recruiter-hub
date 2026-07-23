@@ -7,11 +7,17 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreatePositionDto, UpdatePositionDto } from './position.dto';
 import { PositionService } from './position.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '@/auth/guards/roles.guard';
+import { AuthUser } from '@/auth/decorators/auth-user.decorator';
+import { User, UserRole } from '@rh/database/client';
 
 @Controller('positions')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 
@@ -26,7 +32,10 @@ export class PositionController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string, @AuthUser() user: User) {
+    if (user.role === UserRole.CANDIDATE) {
+      return makeResponse(await this.positionService.findOne(id, user.id));
+    }
     return makeResponse(await this.positionService.findOne(id));
   }
 

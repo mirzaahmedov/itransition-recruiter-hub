@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { FileWithPreview } from "@/hooks/use-file-upload";
 import { fallbackName } from "@/utils/fallbackName";
-import { CheckIcon, PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type FC } from "react";
@@ -48,8 +48,8 @@ export const ProfileHeader: FC<{
   };
 
   return !editing ? (
-    <div className="rounded-2xl border bg-card overflow-hidden">
-      <div className="h-32 bg-linear-to-br from-brand/20 via-brand/10 to-transparent" />
+    <div className="overflow-hidden relative">
+      <div className="h-32 bg-linear-to-br from-brand/20 via-brand/10 to-transparent rounded-2xl" />
       <div className="px-8 pb-8">
         <div className="flex items-end gap-5 -mt-12">
           <Avatar className="size-24 ring-4 ring-card">
@@ -60,7 +60,7 @@ export const ProfileHeader: FC<{
             <h1 className="text-3xl font-bold">{user.name}</h1>
             <p className="mt-2 text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <Button variant="link" onClick={() => setEditing(true)}>
+          <Button variant="link" onClick={() => setEditing(true)} className="absolute top-4 right-4">
             <PencilSimpleLineIcon />
             Edit
           </Button>
@@ -68,8 +68,8 @@ export const ProfileHeader: FC<{
       </div>
     </div>
   ) : (
-    <div className="rounded-2xl border bg-card overflow-hidden">
-      <div className="h-32 bg-linear-to-br from-brand/20 via-brand/10 to-transparent" />
+    <div className="overflow-hidden relative">
+      <div className="h-32 bg-linear-to-br from-brand/20 via-brand/10 to-transparent rounded-2xl" />
       <div className="px-8 pb-8">
         <div className="flex items-end gap-5 -mt-12">
           <FileUploadAvatar onSelect={handleUploadProfilePicture} isPending={uploadProfilePictureMutation.isPending}>
@@ -82,14 +82,14 @@ export const ProfileHeader: FC<{
             <Input value={name} onChange={(e) => setName(e.target.value)} className="text-2xl! py-2 font-bold" placeholder="Your name" />
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <div className="flex items-center gap-2 pb-1">
+          <div className="flex items-center gap-2 pb-1 absolute top-4 right-4">
             <Button loading={updateProfileMutation.isPending} onClick={handleSaveProfile}>
-              <CheckIcon />
+              <FloppyDiskIcon />
               Save
             </Button>
             <Button variant="link" onClick={() => setEditing(false)}>
               <XIcon />
-              Close
+              Cancel
             </Button>
           </div>
         </div>

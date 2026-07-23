@@ -15,6 +15,7 @@ function defineAbilitiesFor(user: User) {
     can("read", "Resume");
     can("read", "Profile");
   } else if (user.role === UserRole.CANDIDATE) {
+    can("apply", "Position");
     can("read", "Position");
     can("manage", "Profile", {
       userId: user.id,

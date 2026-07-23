@@ -133,6 +133,17 @@ export class ResumeService {
     });
   }
 
+  async findOneByUserAndPosition(userId: string, positionId: string) {
+    return await this.prisma.resume.findUnique({
+      where: {
+        userId_positionId: {
+          userId,
+          positionId,
+        },
+      },
+    });
+  }
+
   async findOne(id: string) {
     const resume = await this.prisma.resume.findUnique({
       where: { id },

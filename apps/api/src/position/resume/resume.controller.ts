@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  ConflictException,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
-import { CreateResumeDto } from './dto/create-resume.dto';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import { User, ResumeStatus } from '@rh/database/client';
 import { AuthGuard } from '@nestjs/passport';
@@ -25,6 +25,14 @@ export class ResumeController {
     @AuthUser() user: User,
     @Param('positionId') positionId: string,
   ) {
+    const existing = await this.resumeService.findOneByUserAndPosition(
+      user.id,
+      positionId,
+    );
+    if (existing) {
+      throw new ConflictException('You have already applied to this position');
+    }
+
     return makeResponse(
       await this.resumeService.create({ userId: user.id, positionId }),
     );

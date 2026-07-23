@@ -39,10 +39,19 @@ export class PositionService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, userId?: string) {
     const position = await this.prisma.position.findUnique({
       where: { id },
-      include: positionInclude,
+      include: {
+        ...positionInclude,
+        resumes: userId
+          ? {
+              where: {
+                userId,
+              },
+            }
+          : undefined,
+      },
     });
 
     if (!position) {

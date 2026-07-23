@@ -1,4 +1,4 @@
-import { GenericTable } from "@/components/GenericTable/GenericTable";
+import { GenericTable } from "@/components/generic-table";
 import { Button } from "@/components/ui/button";
 import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -16,7 +16,7 @@ import { TrashIcon, ShieldCheckIcon, MagnifyingGlassIcon } from "@phosphor-icons
 import { UserRole, type User } from "@rh/database/browser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { bulkDeleteUsers, bulkUpdateRoles, fetchUsers } from "./api";
@@ -37,7 +37,7 @@ const UsersPage = () => {
   const [newRole, setNewRole] = useState<string>(UserRole.ADMINISTRATOR);
 
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
@@ -107,6 +107,10 @@ const UsersPage = () => {
     onRowSelectionChange: setRowSelection,
     columns: userColumns,
   });
+
+  useEffect(() => {
+    setPageIndex(1);
+  }, [search]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">

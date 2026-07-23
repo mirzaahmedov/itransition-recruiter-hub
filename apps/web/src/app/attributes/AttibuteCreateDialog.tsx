@@ -9,17 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CreateAttributeSchema, type CreateAttributePayload } from "@rh/shared/schemas";
 
-import { useEffect, useMemo, useState, type FC, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FC } from "react";
 import { AttributeType } from "@rh/database/enums";
 import { useCategories } from "../categories/useCategories";
 import { z } from "zod";
+import type { DialogTriggerProps } from "@base-ui/react";
 
 export const AttibuteCreateDialog: FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: CreateAttributePayload) => void;
   isSubmitting: boolean;
-  trigger?: ReactNode;
+  trigger?: DialogTriggerProps["render"];
 }> = ({ open, onOpenChange, onSubmit, isSubmitting = false, trigger }) => {
   const categories = useCategories();
 
@@ -62,11 +63,9 @@ export const AttibuteCreateDialog: FC<{
     }));
   }, [categories]);
 
-  console.log({ formErrors });
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger>{trigger}</DialogTrigger>
+      <DialogTrigger render={trigger}></DialogTrigger>
       <DialogPopup>
         <DialogHeader>
           <DialogTitle>Create new attribute</DialogTitle>

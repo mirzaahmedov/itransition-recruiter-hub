@@ -35,6 +35,7 @@ import { StorageService } from '@/storage/storage.service';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
 import { makePaginatedResponse } from '@rh/shared/models';
+import { ResumeService } from '@/position/resume/resume.service';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -42,6 +43,7 @@ export class UserController {
   constructor(
     private userService: UserService,
     private s3Service: StorageService,
+    private resumeService: ResumeService,
   ) {}
 
   @Get()
@@ -125,15 +127,22 @@ export class UserController {
   }
 
   @Patch(':id')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.CANDIDATE)
   async update(
     @AuthUser() user: User,
     @Param('id') id: string,
     @Body() data: UpdateUserProfileDto,
   ) {
-    if (user.id !== id) {
+    if (user.id !== id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException('You can only update your own profile');
     }
     const updated = await this.userService.update(id, data);
     return makeResponse(updated);
+  }
+
+  @Get(':id/resumes')
+  async findResumes(@Param('id') id: string) {
+    const resumes = await this.resumeService.findAllByUser(id);
+    return makeResponse(resumes);
   }
 }

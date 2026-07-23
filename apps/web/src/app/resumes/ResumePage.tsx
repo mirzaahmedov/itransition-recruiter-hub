@@ -125,9 +125,10 @@ const ResumePage = () => {
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteResumeMutation = useMutation({
     mutationFn: () => deleteResume(resume?.data?.positionId!, resume?.data?.id!),
     onSuccess: () => {
+      navigate("/resumes");
       queryClient.invalidateQueries({ queryKey: ["resumes"] });
     },
   });
@@ -177,8 +178,8 @@ const ResumePage = () => {
               <DeleteConfirmDialog
                 render={
                   <Button
-                    loading={deleteMutation.isPending}
-                    variant="destructive"
+                    loading={deleteResumeMutation.isPending}
+                    variant="destructive-outline"
                     onClick={(e) => {
                       e.preventDefault();
                     }}
@@ -186,7 +187,7 @@ const ResumePage = () => {
                     <TrashIcon /> Delete
                   </Button>
                 }
-                onConfirm={deleteMutation.mutate}
+                onConfirm={deleteResumeMutation.mutate}
               />
             </>
           )}

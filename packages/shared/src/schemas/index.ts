@@ -15,3 +15,4 @@ export * from "./user/update-user-profile-attribute.schema.js";
 export * from "./create-resume.schema.js";
 export * from "./create-project.schema.js";
 export * from "./update-project.schema.js";
+export * from "./attribute-choice.schema.js";

@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { LinkIcon, PencilSimpleLineIcon, PlusIcon, TrashIcon, UploadSimpleIcon, XIcon } from "@phosphor-icons/react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useDialogState } from "@/hooks/use-dialog-state";
+import { LinkIcon, PlusIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import type { Project, User } from "@rh/database/browser";
 import type { CreateProjectPayload } from "@rh/shared/schemas";
 import { useMutation } from "@tanstack/react-query";
 import { useRef, useState, type FC } from "react";
 import { createProject, deleteProject, uploadProjectImage } from "./api";
-import { useDialogState } from "@/hooks/use-dialog-state";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 export const ProfileProjects: FC<{
+  editing: boolean;
   user: User;
   projects: Project[];
-}> = ({ user, projects: initialProjects }) => {
-  const [editing, setEditing] = useState(false);
+}> = ({ user, projects: initialProjects, editing }) => {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
 
   const [newProject, setNewProject] = useState<CreateProjectPayload>({ name: "", description: "", url: "" });
@@ -72,10 +72,6 @@ export const ProfileProjects: FC<{
         <div className="rounded-2xl border bg-card p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
-            <Button variant="link" onClick={() => setEditing(true)}>
-              <PencilSimpleLineIcon />
-              Edit
-            </Button>
           </div>
           <div className="mt-4">
             {projects.length > 0 ? (
@@ -113,13 +109,9 @@ export const ProfileProjects: FC<{
             <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
 
             <div className="flex items-center gap-1">
-              <Button variant="secondary" size="sm" onClick={projectDialog.openDialog}>
+              <Button variant="secondary" size="sm" onClick={projectDialog.openDialog} className="-my-2">
                 <PlusIcon />
                 Add
-              </Button>
-              <Button variant="link" onClick={() => setEditing(false)}>
-                <XIcon />
-                Close
               </Button>
             </div>
           </div>

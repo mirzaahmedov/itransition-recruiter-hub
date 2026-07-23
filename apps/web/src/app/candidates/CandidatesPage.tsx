@@ -1,4 +1,4 @@
-import { GenericTable } from "@/components/GenericTable/GenericTable";
+import { GenericTable } from "@/components/generic-table";
 import { Spinner } from "@/components/ui/spinner";
 import { rowDataWithFallback } from "@/lib/table/utils";
 import { useQuery } from "@tanstack/react-query";

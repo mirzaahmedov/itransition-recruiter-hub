@@ -10,13 +10,22 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UpdateAttributePayload } from '@rh/shared';
-import { CreateAttributeDto } from './attribute.dto';
+import {
+  AddAttributeChoiceDto,
+  BulkDeleteAttributesDto,
+  CreateAttributeDto,
+  RenameAttributeChoiceDto,
+} from './attribute.dto';
 import { AttributeService } from './attribute.service';
 import { makePaginatedResponse } from '@rh/shared/models';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 
 @Controller('attributes')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
@@ -35,12 +44,44 @@ export class AttributeController {
   }
 
   @Patch(':id/rename')
-  async update(@Body() data: UpdateAttributePayload, @Param() id: string) {
+  async update(@Body() data: UpdateAttributePayload, @Param('id') id: string) {
     const { name } = data;
 
     const attr = await this.attributeService.update(id, name);
 
     return makeResponse(attr);
+  }
+
+  @Post(':id/choices')
+  async addChoice(
+    @Param('id') id: string,
+    @Body() data: AddAttributeChoiceDto,
+  ) {
+    const choice = await this.attributeService.addChoice(id, data.value);
+    return makeResponse(choice);
+  }
+
+  @Patch(':id/choices/:choiceId')
+  async renameChoice(
+    @Param('id') id: string,
+    @Param('choiceId') choiceId: string,
+    @Body() data: RenameAttributeChoiceDto,
+  ) {
+    const choice = await this.attributeService.renameChoice(
+      id,
+      choiceId,
+      data.value,
+    );
+    return makeResponse(choice);
+  }
+
+  @Delete(':id/choices/:choiceId')
+  async removeChoice(
+    @Param('id') id: string,
+    @Param('choiceId') choiceId: string,
+  ) {
+    await this.attributeService.removeChoice(id, choiceId);
+    return makeResponse({ success: true });
   }
 
   @Get('search')
@@ -70,6 +111,13 @@ export class AttributeController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return makeResponse(await this.attributeService.findOne(id));
+  }
+
+  @Delete('bulk')
+  async bulkDelete(@Body() data: BulkDeleteAttributesDto) {
+    const { ids } = data;
+    const { deleted: count } = await this.attributeService.bulkDelete(ids);
+    return makeResponse({ deleted: count });
   }
 
   @Delete(':id')

@@ -1,28 +1,40 @@
-import { GenericTable } from "@/components/GenericTable/GenericTable";
-import { rowDataWithFallback } from "@/lib/table/utils";
+import { GenericTable } from "@/components/generic-table";
+import { countSelectRows, rowDataWithFallback, rowSelectionToArray } from "@/lib/table/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { getCoreRowModel, useReactTable, type RowSelectionState } from "@tanstack/react-table";
 import toast from "react-hot-toast";
-import { createAttribute, deleteAttribute, fetchAttributes, renameAttribute } from "./api";
+import { bulkDeleteAttributes, createAttribute, fetchAttributes, renameAttribute } from "./api";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useDialogState } from "@/hooks/use-dialog-state";
-import { MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import type { CreateAttributePayload, UpdateAttributePayload } from "@rh/shared";
 import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
 import { AttributeDetailDialog } from "./AttributeDetailDialog";
 import { attributeColumns } from "./columns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AttributeWithUsage } from "./api";
 import { usePaginationState } from "@/hooks/use-pagination-state";
 import { useDebounce } from "@uidotdev/usehooks";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogPopup,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const AttributesPage = () => {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [selectedAttribute, setSelectedAttribute] = useState<AttributeWithUsage | null>(null);
+
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
   const createDialog = useDialogState();
@@ -30,12 +42,10 @@ export const AttributesPage = () => {
   const queryClient = useQueryClient();
 
   const debouncedSearch = useDebounce(search, 500);
+  const selectedCount = countSelectRows(rowSelection);
+  const selectedIds = rowSelectionToArray(rowSelection);
 
-  const {
-    data: attributes,
-    isLoading,
-    isFetching,
-  } = useQuery({
+  const { data: attributes, isLoading } = useQuery({
     queryKey: [
       "attributes",
       {
@@ -79,14 +89,13 @@ export const AttributesPage = () => {
     },
   });
 
-  const deleteAttributeMutation = useMutation({
-    mutationKey: ["deleteAttribute"],
-    mutationFn: deleteAttribute,
-    onSuccess() {
+  const bulkDeleteAttributesMutation = useMutation({
+    mutationFn: () => bulkDeleteAttributes(selectedIds),
+    onSuccess(res) {
+      const deletedCount = res?.data?.deleted ?? 0;
+      toast.success(`Deleted ${deletedCount} attributes`);
+      setRowSelection({});
       refetchQueries();
-      toast.success("Deleted successfully");
-      detailDialog.closeDialog();
-      setSelectedAttribute(null);
     },
     onError(error: any) {
       const message = error?.response?.data?.message || "Delete failed";
@@ -98,7 +107,11 @@ export const AttributesPage = () => {
     getCoreRowModel: getCoreRowModel(),
     data: rowDataWithFallback(attributes?.data),
     columns: attributeColumns,
-    onRowSelectionChange: () => {},
+    state: {
+      rowSelection,
+    },
+    getRowId: (row) => row.id,
+    onRowSelectionChange: setRowSelection,
   });
 
   const refetchQueries = () => {
@@ -134,14 +147,18 @@ export const AttributesPage = () => {
     renameAttributeMutation.mutate({ id, payload });
   };
 
-  const handleDelete = (id: string) => {
-    deleteAttributeMutation.mutate(id);
+  const handleDelete = () => {
+    bulkDeleteAttributesMutation.mutate();
   };
 
   const handleRowClick = (row: any) => {
     setSelectedAttribute(row.original);
     detailDialog.openDialog();
   };
+
+  useEffect(() => {
+    setPageIndex(1);
+  }, [search]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -173,6 +190,43 @@ export const AttributesPage = () => {
         </div>
       </div>
 
+      {selectedCount > 0 && (
+        <div className="flex items-center gap-3 mb-4 rounded-xl border bg-card p-3">
+          <span className="text-sm text-muted-foreground mr-1">
+            <b>{selectedCount}</b> user{selectedCount !== 1 ? "s" : ""} selected
+          </span>
+
+          <div className="h-5 w-px bg-border" />
+
+          <AlertDialog>
+            <AlertDialogTrigger
+              render={
+                <Button size="sm" variant="destructive-outline">
+                  <TrashIcon className="size-4" />
+                  Delete unused
+                </Button>
+              }
+            />
+            <AlertDialogPopup>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Delete {selectedCount} attribute{selectedCount !== 1 ? "s" : ""}?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. The selected users and all their data will be permanently deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogClose render={<Button variant="ghost" />}>Cancel</AlertDialogClose>
+                <AlertDialogClose render={<Button variant="destructive" loading={bulkDeleteAttributesMutation.isPending} />} onClick={handleDelete}>
+                  Delete
+                </AlertDialogClose>
+              </AlertDialogFooter>
+            </AlertDialogPopup>
+          </AlertDialog>
+        </div>
+      )}
+
       <div className="overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
@@ -188,9 +242,7 @@ export const AttributesPage = () => {
         onOpenChange={detailDialog.setOpen}
         attribute={selectedAttribute}
         onRename={handleRename}
-        onDelete={handleDelete}
         isRenaming={renameAttributeMutation.isPending}
-        isDeleting={deleteAttributeMutation.isPending}
       />
     </div>
   );
