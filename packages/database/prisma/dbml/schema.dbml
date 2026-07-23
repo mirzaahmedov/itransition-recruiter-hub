@@ -98,6 +98,7 @@ Table positions {
   id String [pk]
   title String [not null]
   description String [not null]
+  status PositionStatus [not null, default: 'ACTIVE']
   resumes resumes [not null]
   attributes PositionAttribute [not null]
 }
@@ -108,7 +109,7 @@ Table resumes {
   position positions [not null]
   userId String [not null]
   user users [not null]
-  status ResumeStatus [not null, default: 'PENDING']
+  status ResumeStatus [not null, default: 'DRAFT']
   resumeAttributes resume_attributes [not null]
   likes resume_likes [not null]
 
@@ -156,9 +157,15 @@ Enum AttributeType {
   CHOICE
 }
 
+Enum PositionStatus {
+  ACTIVE
+  ARCHIVED
+}
+
 Enum ResumeStatus {
-  PENDING
+  DRAFT
   PUBLISHED
+  PRIVATE
 }
 
 Ref: projects.userId > users.id [delete: Cascade]

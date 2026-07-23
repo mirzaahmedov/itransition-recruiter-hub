@@ -169,7 +169,8 @@ export type PositionAttributeScalarFieldEnum = (typeof PositionAttributeScalarFi
 export const PositionScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  description: 'description'
+  description: 'description',
+  status: 'status'
 } as const
 
 export type PositionScalarFieldEnum = (typeof PositionScalarFieldEnum)[keyof typeof PositionScalarFieldEnum]

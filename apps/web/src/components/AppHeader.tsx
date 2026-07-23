@@ -1,15 +1,14 @@
-import { useAuthStore } from "@/store/useAuthStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetHeader, SheetPopup, SheetTitle, SheetDescription, SheetPanel } from "@/components/ui/sheet";
+import { Sheet, SheetDescription, SheetHeader, SheetPanel, SheetPopup, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useAuthStore } from "@/store/useAuthStore";
 import { fallbackName } from "@/utils/fallbackName";
 import { ListIcon, ReadCvLogoIcon, SignOutIcon } from "@phosphor-icons/react";
+import { UserRole } from "@rh/database/browser";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { UserRole } from "@rh/database/browser";
-import { Badge } from "./ui/badge";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface NavLinkItem {
   to: string;
@@ -80,13 +79,9 @@ export const AppHeader = () => {
               <AvatarImage src={user?.avatar ?? undefined} alt={user?.name ?? "Avatar"} />
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col gap-1 items-start">
+            <div className="flex flex-col items-start">
               {!isMobile && <span className="text-sm font-medium max-w-30 truncate">{user?.name ?? "User"}</span>}
-              {user ? (
-                <Badge variant="info" size="sm">
-                  {user.role}
-                </Badge>
-              ) : null}
+              {user ? <span className="text-info text-xs font-bold capitalize">{user.role?.toLowerCase()}</span> : null}
             </div>
           </div>
 

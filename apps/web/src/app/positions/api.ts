@@ -1,6 +1,6 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
-import type { Resume } from "@rh/database/browser";
+import type { PositionStatus, Resume } from "@rh/database/browser";
 import type { PositionGetPayload } from "@rh/database/models";
 import type { CreatePositionPayload, UpdatePositionPayload } from "@rh/shared";
 
@@ -17,8 +17,12 @@ export type PositionWithAttributes = PositionGetPayload<{
 
 export type PositionAttributeItem = PositionWithAttributes["attributes"][number];
 
-export async function fetchPositions() {
-  const res = await privateApi.get<ApiResponse<PositionWithAttributes[]>>("/positions");
+export async function fetchPositions(search: string) {
+  const res = await privateApi.get<ApiResponse<PositionWithAttributes[]>>("/positions", {
+    params: {
+      search,
+    },
+  });
   return res.data;
 }
 
@@ -34,6 +38,13 @@ export async function createPosition(payload: CreatePositionPayload) {
 
 export async function updatePosition(id: string, payload: UpdatePositionPayload) {
   const res = await privateApi.patch<ApiResponse<PositionWithAttributes>>(`/positions/${id}`, payload);
+  return res.data;
+}
+
+export async function updatePositionStatus(id: string, status: PositionStatus) {
+  const res = await privateApi.patch<ApiResponse<PositionWithAttributes>>(`/positions/${id}/status`, {
+    status,
+  });
   return res.data;
 }
 

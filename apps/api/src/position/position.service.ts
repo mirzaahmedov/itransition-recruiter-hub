@@ -8,6 +8,7 @@ import {
 import { CreatePositionPayload, UpdatePositionPayload } from '@rh/shared';
 import { ResumeService } from './resume/resume.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
+import { PositionStatus } from '@rh/database/client';
 
 const positionInclude = {
   attributes: {
@@ -16,6 +17,14 @@ const positionInclude = {
     },
   },
 } as const;
+
+interface PositionFindOneArgs {
+  id: string;
+  userId?: string;
+}
+interface PositionFindAllArgs {
+  search: string;
+}
 
 @Injectable()
 export class PositionService {
@@ -41,15 +50,31 @@ export class PositionService {
     });
   }
 
-  async findAll() {
+  async findAll({ search }: PositionFindAllArgs) {
     return await this.prisma.position.findMany({
       include: positionInclude,
+      where: {
+        OR: [
+          {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+            description: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
     });
   }
 
-  async findOne(id: string, userId?: string) {
+  async findOne({ id, userId }: PositionFindOneArgs) {
     const position = await this.prisma.position.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
       include: {
         ...positionInclude,
         resumes: userId
@@ -69,31 +94,33 @@ export class PositionService {
     return position;
   }
 
-  async update(id: string, payload: UpdatePositionPayload) {
-    await this.findOne(id);
+  async update(id: string, data: UpdatePositionPayload) {
+    await this.findOne({ id });
 
     return await this.prisma.position.update({
       where: { id },
       data: {
-        ...(payload.title !== undefined && { title: payload.title }),
-        ...(payload.description !== undefined && {
-          description: payload.description,
-        }),
-        ...(payload.attributes !== undefined && {
-          attributes: {
-            deleteMany: {},
-            create: payload.attributes.map((attr) => ({
-              attributeId: attr.id,
-            })),
-          },
-        }),
+        title: data.title,
+        description: data.description,
+      },
+      include: positionInclude,
+    });
+  }
+
+  async updateStatus(id: string, status: PositionStatus) {
+    await this.findOne({ id });
+
+    return await this.prisma.position.update({
+      where: { id },
+      data: {
+        status,
       },
       include: positionInclude,
     });
   }
 
   async bulkAddAttributes(positionId: string, ids: string[]) {
-    await this.findOne(positionId);
+    await this.findOne({ id: positionId });
 
     const positionAttributes =
       await this.prisma.positionAttribute.createManyAndReturn({
@@ -139,7 +166,7 @@ export class PositionService {
   }
 
   async removeAttribute(positionId: string, attributeId: string) {
-    await this.findOne(positionId);
+    await this.findOne({ id: positionId });
 
     const positionAttribute = await this.prisma.positionAttribute.findFirst({
       where: {
@@ -158,11 +185,11 @@ export class PositionService {
       where: { id: positionAttribute.id },
     });
 
-    return this.findOne(positionId);
+    return this.findOne({ id: positionId });
   }
 
   async delete(id: string) {
-    await this.findOne(id);
+    await this.findOne({ id });
 
     return await this.prisma.position.delete({
       where: { id },

@@ -135,10 +135,16 @@ model PositionAttribute {
   resumeAttribute ResumeAttribute[]
 }
 
+enum PositionStatus {
+  ACTIVE
+  ARCHIVED
+}
+
 model Position {
   id          String              @id @default(cuid())
   title       String
   description String
+  status      PositionStatus      @default(ACTIVE)
   resumes     Resume[]
   attributes  PositionAttribute[]
 
@@ -146,8 +152,9 @@ model Position {
 }
 
 enum ResumeStatus {
-  PENDING
+  DRAFT
   PUBLISHED
+  PRIVATE
 }
 
 model Resume {
@@ -156,7 +163,7 @@ model Resume {
   position         Position          @relation(references: [id], fields: [positionId], onDelete: Cascade)
   userId           String
   user             User              @relation(references: [id], fields: [userId], onDelete: Cascade)
-  status           ResumeStatus      @default(PENDING)
+  status           ResumeStatus      @default(DRAFT)
 
   resumeAttributes ResumeAttribute[]
   likes            ResumeLike[]

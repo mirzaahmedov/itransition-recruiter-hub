@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { createPosition } from "./api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { createPosition, type PositionWithAttributes } from "./api";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, FloppyDiskIcon, PlusIcon, XCircleIcon } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreatePositionSchema, type CreatePositionPayload } from "@rh/shared";
@@ -18,10 +18,14 @@ import type { Attribute } from "@rh/database/browser";
 import { Badge } from "@/components/ui/badge";
 
 const PositionCreatePage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const createDialog = useDialogState();
+
   const [selectedAttributes, setSelectedAttributes] = useState<Attribute[]>([]);
+
+  const original = location.state?.original as PositionWithAttributes;
 
   const form = useForm<CreatePositionPayload>({
     resolver: zodResolver(CreatePositionSchema),
@@ -65,15 +69,32 @@ const PositionCreatePage = () => {
     {} as Record<string, boolean>,
   );
 
+  useEffect(() => {
+    if (original) {
+      form.reset({
+        title: original.title,
+        description: original.description,
+        attributes: original.attributes.map((a) => ({ id: a.id })),
+      });
+      setSelectedAttributes(original.attributes.map((a) => a.attribute));
+    } else {
+      form.reset({
+        title: "",
+        description: "",
+        attributes: [],
+      });
+      setSelectedAttributes([]);
+    }
+  }, [form, original]);
+
+  console.log({ original });
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <button
-        onClick={() => navigate("/positions")}
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
-      >
+      <Button variant="ghost" onClick={() => navigate("/positions")} className="mb-6">
         <ArrowLeftIcon className="size-4" />
         Back to positions
-      </button>
+      </Button>
 
       <div className="rounded-2xl border bg-card p-8">
         <Form className="contents" onSubmit={handleSave}>

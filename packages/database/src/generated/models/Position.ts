@@ -28,18 +28,21 @@ export type PositionMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  status: $Enums.PositionStatus | null
 }
 
 export type PositionMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  status: $Enums.PositionStatus | null
 }
 
 export type PositionCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  status: number
   _all: number
 }
 
@@ -48,18 +51,21 @@ export type PositionMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  status?: true
 }
 
 export type PositionMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  status?: true
 }
 
 export type PositionCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  status?: true
   _all?: true
 }
 
@@ -139,6 +145,7 @@ export type PositionGroupByOutputType = {
   id: string
   title: string
   description: string
+  status: $Enums.PositionStatus
   _count: PositionCountAggregateOutputType | null
   _min: PositionMinAggregateOutputType | null
   _max: PositionMaxAggregateOutputType | null
@@ -166,6 +173,7 @@ export type PositionWhereInput = {
   id?: Prisma.StringFilter<"Position"> | string
   title?: Prisma.StringFilter<"Position"> | string
   description?: Prisma.StringFilter<"Position"> | string
+  status?: Prisma.EnumPositionStatusFilter<"Position"> | $Enums.PositionStatus
   resumes?: Prisma.ResumeListRelationFilter
   attributes?: Prisma.PositionAttributeListRelationFilter
 }
@@ -174,6 +182,7 @@ export type PositionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   resumes?: Prisma.ResumeOrderByRelationAggregateInput
   attributes?: Prisma.PositionAttributeOrderByRelationAggregateInput
 }
@@ -185,6 +194,7 @@ export type PositionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PositionWhereInput | Prisma.PositionWhereInput[]
   title?: Prisma.StringFilter<"Position"> | string
   description?: Prisma.StringFilter<"Position"> | string
+  status?: Prisma.EnumPositionStatusFilter<"Position"> | $Enums.PositionStatus
   resumes?: Prisma.ResumeListRelationFilter
   attributes?: Prisma.PositionAttributeListRelationFilter
 }, "id">
@@ -193,6 +203,7 @@ export type PositionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   _count?: Prisma.PositionCountOrderByAggregateInput
   _max?: Prisma.PositionMaxOrderByAggregateInput
   _min?: Prisma.PositionMinOrderByAggregateInput
@@ -205,12 +216,14 @@ export type PositionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Position"> | string
   title?: Prisma.StringWithAggregatesFilter<"Position"> | string
   description?: Prisma.StringWithAggregatesFilter<"Position"> | string
+  status?: Prisma.EnumPositionStatusWithAggregatesFilter<"Position"> | $Enums.PositionStatus
 }
 
 export type PositionCreateInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
   resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
 }
@@ -219,6 +232,7 @@ export type PositionUncheckedCreateInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
 }
@@ -227,6 +241,7 @@ export type PositionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
 }
@@ -235,6 +250,7 @@ export type PositionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
 }
@@ -243,18 +259,21 @@ export type PositionCreateManyInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
 }
 
 export type PositionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
 }
 
 export type PositionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
 }
 
 export type PositionScalarRelationFilter = {
@@ -266,18 +285,21 @@ export type PositionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type PositionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type PositionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type PositionCreateNestedOneWithoutAttributesInput = {
@@ -292,6 +314,10 @@ export type PositionUpdateOneRequiredWithoutAttributesNestedInput = {
   upsert?: Prisma.PositionUpsertWithoutAttributesInput
   connect?: Prisma.PositionWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PositionUpdateToOneWithWhereWithoutAttributesInput, Prisma.PositionUpdateWithoutAttributesInput>, Prisma.PositionUncheckedUpdateWithoutAttributesInput>
+}
+
+export type EnumPositionStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PositionStatus
 }
 
 export type PositionCreateNestedOneWithoutResumesInput = {
@@ -312,6 +338,7 @@ export type PositionCreateWithoutAttributesInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
   resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
 }
 
@@ -319,6 +346,7 @@ export type PositionUncheckedCreateWithoutAttributesInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
 }
 
@@ -342,6 +370,7 @@ export type PositionUpdateWithoutAttributesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
 }
 
@@ -349,6 +378,7 @@ export type PositionUncheckedUpdateWithoutAttributesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
 }
 
@@ -356,6 +386,7 @@ export type PositionCreateWithoutResumesInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
   attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
 }
 
@@ -363,6 +394,7 @@ export type PositionUncheckedCreateWithoutResumesInput = {
   id?: string
   title: string
   description: string
+  status?: $Enums.PositionStatus
   attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
 }
 
@@ -386,6 +418,7 @@ export type PositionUpdateWithoutResumesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
 }
 
@@ -393,6 +426,7 @@ export type PositionUncheckedUpdateWithoutResumesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
 }
 
@@ -440,6 +474,7 @@ export type PositionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   title?: boolean
   description?: boolean
+  status?: boolean
   resumes?: boolean | Prisma.Position$resumesArgs<ExtArgs>
   attributes?: boolean | Prisma.Position$attributesArgs<ExtArgs>
   _count?: boolean | Prisma.PositionCountOutputTypeDefaultArgs<ExtArgs>
@@ -449,21 +484,24 @@ export type PositionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   title?: boolean
   description?: boolean
+  status?: boolean
 }, ExtArgs["result"]["position"]>
 
 export type PositionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   description?: boolean
+  status?: boolean
 }, ExtArgs["result"]["position"]>
 
 export type PositionSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  status?: boolean
 }
 
-export type PositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description", ExtArgs["result"]["position"]>
+export type PositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "status", ExtArgs["result"]["position"]>
 export type PositionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resumes?: boolean | Prisma.Position$resumesArgs<ExtArgs>
   attributes?: boolean | Prisma.Position$attributesArgs<ExtArgs>
@@ -482,6 +520,7 @@ export type $PositionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     title: string
     description: string
+    status: $Enums.PositionStatus
   }, ExtArgs["result"]["position"]>
   composites: {}
 }
@@ -910,6 +949,7 @@ export interface PositionFieldRefs {
   readonly id: Prisma.FieldRef<"Position", 'String'>
   readonly title: Prisma.FieldRef<"Position", 'String'>
   readonly description: Prisma.FieldRef<"Position", 'String'>
+  readonly status: Prisma.FieldRef<"Position", 'PositionStatus'>
 }
     
 

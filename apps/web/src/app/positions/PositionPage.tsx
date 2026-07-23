@@ -2,16 +2,17 @@ import { fetchPositionResumes } from "@/app/resumes/api";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { parseApiErrorMessage } from "@/lib/api/error";
-import { ArrowLeftIcon, ArrowRightIcon, ReadCvLogoIcon, TrashIcon } from "@phosphor-icons/react";
+import { ArchiveIcon, ArrowLeftIcon, ArrowRightIcon, ReadCvLogoIcon, TrashIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { applyToPosition, deletePosition, fetchPosition } from "./api";
+import { applyToPosition, deletePosition, fetchPosition, updatePositionStatus } from "./api";
 import { PositionHeader } from "./PositionHeader";
 import { PositionAttributes } from "./PositionAttributes";
 import { Badge } from "@/components/ui/badge";
 import { Can } from "@casl/react";
 import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
+import { PositionStatus } from "@rh/database/browser";
 
 const PositionPage = () => {
   const { id } = useParams();
@@ -33,6 +34,10 @@ const PositionPage = () => {
 
   const deleteMutation = useMutation({
     mutationFn: () => deletePosition(id!),
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: (status: PositionStatus) => updatePositionStatus(id!, status),
   });
 
   const applyMutation = useMutation({
@@ -70,6 +75,35 @@ const PositionPage = () => {
     });
   };
 
+  const handleArchive = () => {
+    updateStatusMutation.mutate(PositionStatus.ARCHIVED, {
+      onSuccess: () => {
+        toast.success("Position archived");
+        queryClient.invalidateQueries({ queryKey: ["positions"] });
+        queryClient.invalidateQueries({ queryKey: ["positions", id, "resumes"] });
+        queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      },
+      onError: (res) => {
+        const message = parseApiErrorMessage(res);
+        toast.error(message ?? "Could not archive position");
+      },
+    });
+  };
+  const handleUnarchive = () => {
+    updateStatusMutation.mutate(PositionStatus.ACTIVE, {
+      onSuccess: () => {
+        toast.success("Position unarchived");
+        queryClient.invalidateQueries({ queryKey: ["positions"] });
+        queryClient.invalidateQueries({ queryKey: ["positions", id, "resumes"] });
+        queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      },
+      onError: (res) => {
+        const message = parseApiErrorMessage(res);
+        toast.error(message ?? "Could not unarchive position");
+      },
+    });
+  };
+
   const positionData = position?.data;
   const resumes = resumesData?.data ?? [];
 
@@ -89,6 +123,17 @@ const PositionPage = () => {
               Back to positions
             </Button>
             <div className="flex items-center gap-2">
+              <Can I="update" a="Position">
+                {positionData.status === PositionStatus.ACTIVE ? (
+                  <Button variant="outline" onClick={handleArchive} loading={updateStatusMutation.isPending}>
+                    <ArchiveIcon /> Archive
+                  </Button>
+                ) : (
+                  <Button variant="outline" onClick={handleUnarchive} loading={updateStatusMutation.isPending}>
+                    <ArchiveIcon /> Unarchive
+                  </Button>
+                )}
+              </Can>
               <Can I="delete" a="Position">
                 <DeleteConfirmDialog
                   onConfirm={handleDelete}

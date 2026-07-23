@@ -32,9 +32,18 @@ export const AttributeType = {
 export type AttributeType = (typeof AttributeType)[keyof typeof AttributeType]
 
 
+export const PositionStatus = {
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type PositionStatus = (typeof PositionStatus)[keyof typeof PositionStatus]
+
+
 export const ResumeStatus = {
-  PENDING: 'PENDING',
-  PUBLISHED: 'PUBLISHED'
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  PRIVATE: 'PRIVATE'
 } as const
 
 export type ResumeStatus = (typeof ResumeStatus)[keyof typeof ResumeStatus]

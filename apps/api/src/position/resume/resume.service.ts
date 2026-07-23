@@ -43,9 +43,9 @@ export class ResumeService {
     const userAttributes = await this.userAttributeService.findByUserId(
       data.userId,
     );
-    const positionAttributes = await this.positionService.findOne(
-      data.positionId,
-    );
+    const positionAttributes = await this.positionService.findOne({
+      id: data.positionId,
+    });
 
     const resume = await this.prisma.resume.create({
       data: {
