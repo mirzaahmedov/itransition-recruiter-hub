@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import type { CandidateUser } from "./api";
 import { Badge } from "@/components/ui/badge";
 import { ReadCvLogoIcon } from "@phosphor-icons/react";
+import type { Resume } from "@rh/database/browser";
 
 export const candidateColumns: ColumnDef<CandidateUser>[] = [
   {
@@ -28,9 +29,9 @@ export const candidateColumns: ColumnDef<CandidateUser>[] = [
     accessorKey: "resumes",
     header: "Resumes",
     cell: ({ getValue }) => (
-      <Badge variant="info">
-        <ReadCvLogoIcon />
-        {getValue<number>()}
+      <Badge variant="info" size="lg">
+        <ReadCvLogoIcon className="size-4" weight="bold" />
+        {getValue<Resume[]>()?.length}
       </Badge>
     ),
   },

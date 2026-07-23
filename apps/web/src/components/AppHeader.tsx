@@ -81,8 +81,8 @@ export const AppHeader = () => {
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-1 items-start">
-              {!isMobile && <span className="text-sm font-medium max-w-[120px] truncate">{user?.name ?? "User"}</span>}
-              {user && user.role !== UserRole.CANDIDATE ? (
+              {!isMobile && <span className="text-sm font-medium max-w-30 truncate">{user?.name ?? "User"}</span>}
+              {user ? (
                 <Badge variant="info" size="sm">
                   {user.role}
                 </Badge>

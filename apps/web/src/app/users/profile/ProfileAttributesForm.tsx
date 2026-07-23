@@ -8,9 +8,9 @@ import type { User } from "@rh/database/browser";
 import type { UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useState, type FC } from "react";
+import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { AttributePicker } from "../../../components/AttributePicker/AttributePicker";
+import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
 import { bulkUpdateProfileAttributes, createBulkUserAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "./api";
 import { useAutoSave } from "./useAutoSave";
 
@@ -36,6 +36,7 @@ const ProfileAttibutesForm: FC<{
   const queryClient = useQueryClient();
 
   const [conflicts, setConflicts] = useState<Record<string, boolean>>({});
+  const [categoryId, setCategoryId] = useState<string>();
 
   const form = useForm<ProfileFormData>({
     defaultValues: {
@@ -119,18 +120,26 @@ const ProfileAttibutesForm: FC<{
   };
 
   const handleCreateAttributes = async (attrIds: string[]) => {
-    createUserAttributeMutation
-      .mutateAsync({
-        ids: attrIds,
-        userId: user.id,
-      })
-      .then(() => {
-        queryClient.invalidateQueries({
-          queryKey: ["users", user.id, "attributes"],
-        });
-        createDialog.closeDialog();
-      });
+    await createUserAttributeMutation.mutateAsync({
+      ids: attrIds,
+      userId: user.id,
+    });
+
+    queryClient.invalidateQueries({
+      queryKey: ["users", user.id, "attributes"],
+    });
+    createDialog.closeDialog();
   };
+
+  const disabledRows = useMemo(() => {
+    return userAttributes.reduce(
+      (result, item) => {
+        result[item.attributeId] = true;
+        return result;
+      },
+      {} as Record<string, boolean>,
+    );
+  }, [userAttributes]);
 
   return (
     <>
@@ -142,7 +151,15 @@ const ProfileAttibutesForm: FC<{
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{category.name}</h3>
                 <div className="flex items-center gap-1">
-                  <Button variant="secondary" size="sm" onClick={createDialog.openDialog} className="-my-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      createDialog.openDialog();
+                      setCategoryId(category.id);
+                    }}
+                    className="-my-2"
+                  >
                     <PlusIcon />
                     Add
                   </Button>
@@ -203,7 +220,13 @@ const ProfileAttibutesForm: FC<{
         })}
       </div>
 
-      <AttributePicker open={createDialog.open} onOpenChange={createDialog.setOpen} onSelect={handleCreateAttributes} />
+      <AttributePicker
+        open={createDialog.open}
+        onOpenChange={createDialog.setOpen}
+        onSelect={handleCreateAttributes}
+        disabledRows={disabledRows}
+        initialCategoryId={categoryId}
+      />
     </>
   );
 };

@@ -39,7 +39,7 @@ const CandidatesPage = () => {
             <Spinner />
           </div>
         ) : (
-          <GenericTable table={table} onRowClick={(row) => navigate(`${row.original.id}/profile`)} />
+          <GenericTable table={table} onRowClick={(row) => navigate(`/users/${row.original.id}/profile`)} />
         )}
       </div>
     </div>

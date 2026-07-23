@@ -53,7 +53,7 @@ export const PositionAttributes: FC<{
   const disabledRows = useMemo(() => {
     return position.attributes.reduce(
       (result, item) => {
-        result[item.id] = true;
+        result[item.attributeId] = true;
         return result;
       },
       {} as Record<string, boolean>,

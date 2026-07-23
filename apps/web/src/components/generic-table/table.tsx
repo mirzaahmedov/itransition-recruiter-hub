@@ -3,6 +3,7 @@ import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@
 import type { PaginationState } from "@/hooks/use-pagination-state";
 import { CardFrame, CardFrameFooter } from "../ui/card";
 import { TablePagination } from "./table-pagination";
+import { twMerge } from "tailwind-merge";
 
 type GenericTableProps<T> = {
   pagination?: PaginationState;
@@ -35,7 +36,7 @@ export const GenericTable = <T,>({ pagination, table, onRowClick }: GenericTable
                   if (target.closest("button, input, [role='checkbox'], label")) return;
                   onRowClick?.(row);
                 }}
-                className={typeof onRowClick === "function" ? "cursor-pointer" : ""}
+                className={twMerge(!row.getCanSelect() && "opacity-50 pointer-events-none", typeof onRowClick === "function" ? "cursor-pointer" : "")}
               >
                 {row.getVisibleCells().map((column) => (
                   <TableCell key={column.id}>{flexRender(column.column.columnDef.cell, column.getContext())}</TableCell>

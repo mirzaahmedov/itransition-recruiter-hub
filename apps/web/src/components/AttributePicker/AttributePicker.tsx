@@ -56,11 +56,11 @@ export const AttributePicker: FC<{
   onOpenChange: (open: boolean) => void;
   onSelect: (values: string[], data: Attribute[]) => Promise<void>;
   disabledRows?: Record<string, boolean>;
-}> = ({ open, onOpenChange, onSelect, disabledRows = {} }) => {
+  initialCategoryId?: string;
+}> = ({ open, onOpenChange, onSelect, disabledRows = {}, initialCategoryId }) => {
   const timerRef = useRef<NodeJS.Timeout>(null);
 
-  console.log({ disabledRows });
-
+  const [loading, setLoading] = useState(false);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [rowSelectionData, setRowSelectionData] = useState<Record<string, Attribute>>({});
   const [inputValue, setInputValue] = useState("");
@@ -135,11 +135,34 @@ export const AttributePicker: FC<{
     };
   }, [inputValue]);
 
+  useEffect(() => {
+    const categoryId = initialCategoryId ?? "all";
+    searchAttributeMutation
+      .mutateAsync({
+        q: inputValue,
+        categoryId: valueOrAll(categoryId),
+      })
+      .then((res) => setRowData(res.data ?? []));
+    setCategoryId([categoryId]);
+  }, [initialCategoryId]);
+
   const handleSelected = () => {
-    onSelect(Object.keys(rowSelection), Object.values(rowSelectionData)).then(() => {
-      setCategoryId(["all"]);
-      setRowSelection({});
-    });
+    setLoading(true);
+    onSelect(Object.keys(rowSelection), Object.values(rowSelectionData))
+      .then(() => {
+        setCategoryId(["all"]);
+        setRowSelection({});
+      })
+      .finally(() => setLoading(false));
+  };
+  const handleChangeCategory = (values: string[]) => {
+    searchAttributeMutation
+      .mutateAsync({
+        q: inputValue,
+        categoryId: valueOrAll(values[0]),
+      })
+      .then((res) => setRowData(res.data ?? []));
+    setCategoryId(values);
   };
 
   return (
@@ -155,19 +178,7 @@ export const AttributePicker: FC<{
             </InputGroupAddon>
             <InputGroupInput value={inputValue} onValueChange={setInputValue} />
           </InputGroup>
-          <ToggleGroup
-            value={categoryId}
-            onValueChange={(values) => {
-              searchAttributeMutation
-                .mutateAsync({
-                  q: inputValue,
-                  categoryId: valueOrAll(values[0]),
-                })
-                .then((res) => setRowData(res.data ?? []));
-              setCategoryId(values);
-            }}
-            className="flex flex-wrap"
-          >
+          <ToggleGroup value={categoryId} onValueChange={handleChangeCategory} className="flex flex-wrap">
             <ToggleGroupItem value="all">All</ToggleGroupItem>
             {categories.map((category) => (
               <ToggleGroupItem key={category.id} size="sm" value={category.id}>
@@ -187,7 +198,9 @@ export const AttributePicker: FC<{
         </DialogPanel>
         <DialogFooter>
           <DialogClose render={<Button variant="ghost" />}>Close</DialogClose>
-          <Button onClick={handleSelected}>Select</Button>
+          <Button onClick={handleSelected} loading={loading}>
+            Select
+          </Button>
         </DialogFooter>
       </DialogPopup>
     </Dialog>
