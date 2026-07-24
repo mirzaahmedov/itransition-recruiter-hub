@@ -47,7 +47,7 @@ const ProfileAttibutesForm: FC<{
   const queryClient = useQueryClient();
 
   const [conflicts, setConflicts] = useState<Record<string, BulkUpdateUserProfileAttributePayload[number]>>({});
-  const [diffs, setDiffs] = useState<Record<string, { remoteValue: any; localValue: any }>>({});
+  const [_, setDiffs] = useState<Record<string, { remoteValue: any; localValue: any }>>({});
   const [categoryId, setCategoryId] = useState<string>();
 
   const form = useForm<ProfileFormData>({
