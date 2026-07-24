@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { FileWithPreview } from "@/hooks/use-file-upload";
 import { fallbackName } from "@/utils/fallbackName";
-import { FloppyDiskIcon, PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, FloppyDiskIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type FC } from "react";
@@ -88,8 +88,8 @@ export const ProfileHeader: FC<{
               Save
             </Button>
             <Button variant="link" onClick={() => setEditing(false)}>
-              <XIcon />
-              Cancel
+              <CheckIcon />
+              Done
             </Button>
           </div>
         </div>

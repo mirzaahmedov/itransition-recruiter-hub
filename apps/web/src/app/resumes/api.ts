@@ -1,38 +1,27 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { User } from "@rh/database/browser";
+import type { ResumeAttributeGetPayload } from "@rh/database/models";
 
-export type ResumeAttributeItem = {
-  id: string;
-  positionAttribute: {
-    id: string;
-    attribute: {
-      id: string;
-      name: string;
-      type: string;
-      categoryId: string;
+export type ResumeAttributeItem = ResumeAttributeGetPayload<{
+  include: {
+    positionAttribute: {
+      include: {
+        attribute: {
+          include: {
+            choices: true;
+          };
+        };
+      };
+    };
+    userAttribute: {
+      include: {
+        attribute: true;
+        choice: true;
+      };
     };
   };
-  userAttribute: {
-    id: string;
-    textValue: string | null;
-    numberValue: number | null;
-    booleanValue: boolean | null;
-    dateValue: string | null;
-    startDateValue: string | null;
-    endDateValue: string | null;
-    attribute: {
-      id: string;
-      name: string;
-      type: string;
-      categoryId: string;
-    };
-    choice: {
-      id: string;
-      value: string;
-    } | null;
-  };
-};
+}>;
 
 export type ResumeListItem = {
   id: string;
@@ -63,34 +52,21 @@ export async function fetchResume(id: string) {
 }
 
 export async function fetchPositionResumes(positionId: string) {
-  const res = await privateApi.get<ApiResponse<ResumeListItem[]>>(
-    `/positions/${positionId}/resumes`,
-  );
+  const res = await privateApi.get<ApiResponse<ResumeListItem[]>>(`/positions/${positionId}/resumes`);
   return res.data;
 }
 
 export async function publishResume(positionId: string, id: string) {
-  const res = await privateApi.post<ApiResponse<ResumeDetail>>(
-    `/positions/${positionId}/resumes/${id}/publish`,
-  );
+  const res = await privateApi.post<ApiResponse<ResumeDetail>>(`/positions/${positionId}/resumes/${id}/publish`);
   return res.data;
 }
 
-export async function updateResumeStatus(
-  positionId: string,
-  id: string,
-  status: "PENDING" | "PUBLISHED",
-) {
-  const res = await privateApi.patch<ApiResponse<ResumeDetail>>(
-    `/positions/${positionId}/resumes/${id}`,
-    { status },
-  );
+export async function updateResumeStatus(positionId: string, id: string, status: "PENDING" | "PUBLISHED") {
+  const res = await privateApi.patch<ApiResponse<ResumeDetail>>(`/positions/${positionId}/resumes/${id}`, { status });
   return res.data;
 }
 
 export async function deleteResume(positionId: string, id: string) {
-  const res = await privateApi.delete<ApiResponse<void>>(
-    `/positions/${positionId}/resumes/${id}`,
-  );
+  const res = await privateApi.delete<ApiResponse<void>>(`/positions/${positionId}/resumes/${id}`);
   return res.data;
 }

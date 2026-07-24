@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
 import { bulkUpdateProfileAttributes, createBulkUserAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "./api";
-import { useAutoSave } from "./useAutoSave";
+import { useAutoSave } from "../../../hooks/use-auto-save";
 
 interface UserAttributeUpdateArgs {
   id: string;

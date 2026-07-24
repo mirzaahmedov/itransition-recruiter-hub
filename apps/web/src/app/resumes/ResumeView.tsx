@@ -1,0 +1,109 @@
+import { useCategoryStore } from "@/store/useCategoryStore";
+import type { ResumeAttributeItem, ResumeDetail } from "./api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { styles } from "./data";
+import type { ReactNode } from "react";
+import Markdown from "react-markdown";
+import { format } from "date-fns";
+
+function ResumeSection({ title, items }: { title: string; items: ResumeAttributeItem[] }) {
+  return (
+    <section className="resume-section">
+      <h2 className="resume-section-title">{title}</h2>
+      <dl className="resume-attribute-list">
+        {items.map((ra) => (
+          <div key={ra.id} className="resume-attribute-row">
+            <dt className="resume-attribute-name">{ra.positionAttribute.attribute.name}</dt>
+            <dd className="resume-attribute-value">{formatValue(ra)}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
+export const ResumeView = ({ resume, onEdit }: { resume: ResumeDetail; onEdit: VoidFunction }) => {
+  const categories = useCategoryStore((store) => store.categories);
+
+  const groupedByCategory = resume.resumeAttributes.reduce(
+    (acc, ra) => {
+      const categoryId = ra.positionAttribute.attribute.categoryId;
+      if (!acc[categoryId]) acc[categoryId] = [];
+      acc[categoryId].push(ra);
+      return acc;
+    },
+    {} as Record<string, ResumeAttributeItem[]>,
+  );
+
+  const sortedCategories = categories.filter((cat) => groupedByCategory[cat.id]).sort((a, b) => a.sortOrder - b.sortOrder);
+
+  return (
+    <>
+      <div className="resume-page">
+        <header className="resume-header">
+          <div className="resume-header-info">
+            <Avatar className="resume-avatar">
+              <AvatarImage src={resume.user.avatar ?? undefined} alt={resume.user.name ?? "Avatar"} />
+              <AvatarFallback>{(resume.user.name ?? "U").charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="resume-name">{resume.user.name ?? "Unnamed"}</h1>
+              <p className="resume-email">{resume.user.email}</p>
+            </div>
+          </div>
+          <div className="resume-position">
+            <p className="resume-position-label">Applying for</p>
+            <Link to={`/positions/${resume.position.id}`} className="resume-position-title">
+              {resume.position.title}
+            </Link>
+            <div className="no-print mt-5">
+              <Button variant="link" onClick={onEdit}>
+                <PencilSimpleLineIcon />
+                Edit
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        <div className="resume-body">
+          {sortedCategories.map((category) => {
+            const items = groupedByCategory[category.id];
+            if (!items || items.length === 0) return null;
+            return <ResumeSection key={category.id} title={category.name} items={items} />;
+          })}
+        </div>
+      </div>
+      <style>{styles}</style>
+    </>
+  );
+};
+
+function formatValue(ra: ResumeAttributeItem): ReactNode {
+  const { userAttribute } = ra;
+  switch (userAttribute.attribute.type) {
+    case "TEXT":
+      return userAttribute.textValue ?? "—";
+    case "MARKDOWN":
+      return <Markdown>{userAttribute.textValue}</Markdown>;
+    case "NUMERIC":
+      return userAttribute.numberValue != null ? String(userAttribute.numberValue) : "—";
+    case "BOOLEAN":
+      return userAttribute.booleanValue != null ? (userAttribute.booleanValue ? "Yes" : "No") : "—";
+    case "DATE":
+      return userAttribute.dateValue ? format(new Date(userAttribute.dateValue), "PPP") : "—";
+    case "DATEPERIOD":
+      if (userAttribute.startDateValue && userAttribute.endDateValue) {
+        return `${format(new Date(userAttribute.startDateValue), "PPP")} — ${format(new Date(userAttribute.endDateValue), "PPP")}`;
+      }
+      return "—";
+    case "CHOICE":
+      return userAttribute.choice?.value ?? "—";
+    case "IMAGE":
+      return userAttribute.textValue ?? "—";
+    default:
+      return "—";
+  }
+}

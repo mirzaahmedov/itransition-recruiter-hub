@@ -8,7 +8,8 @@ import {
 import { CreatePositionPayload, UpdatePositionPayload } from '@rh/shared';
 import { ResumeService } from './resume/resume.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
-import { PositionStatus } from '@rh/database/client';
+import { PositionStatus, User, UserRole } from '@rh/database/client';
+import { PositionFindManyArgs } from '@rh/database/models';
 
 const positionInclude = {
   attributes: {
@@ -24,6 +25,7 @@ interface PositionFindOneArgs {
 }
 interface PositionFindAllArgs {
   search: string;
+  user: User;
 }
 
 @Injectable()
@@ -50,23 +52,32 @@ export class PositionService {
     });
   }
 
-  async findAll({ search }: PositionFindAllArgs) {
+  async findAll({ search, user }: PositionFindAllArgs) {
+    const where: PositionFindManyArgs['where'] = {};
+    const searchTerm = search.trim();
+
+    if (searchTerm) {
+      where['OR'] = [
+        {
+          title: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+          description: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    if (user.role === UserRole.CANDIDATE) {
+      where['status'] = PositionStatus.ACTIVE;
+    }
+
     return await this.prisma.position.findMany({
       include: positionInclude,
-      where: {
-        OR: [
-          {
-            title: {
-              contains: search,
-              mode: 'insensitive',
-            },
-            description: {
-              contains: search,
-              mode: 'insensitive',
-            },
-          },
-        ],
-      },
+      where,
     });
   }
 

@@ -36,10 +36,11 @@ export class PositionController {
   }
 
   @Get()
-  async findAll(@Query('search') search: string) {
+  async findAll(@Query('search') search: string, @AuthUser() user: User) {
     return makeResponse(
       await this.positionService.findAll({
         search,
+        user,
       }),
     );
   }

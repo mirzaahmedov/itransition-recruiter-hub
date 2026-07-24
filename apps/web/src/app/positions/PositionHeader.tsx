@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Can } from "@casl/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FloppyDiskIcon, PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, FloppyDiskIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { UpdatePositionSchema, type UpdatePositionPayload } from "@rh/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type FC } from "react";
@@ -76,8 +76,8 @@ export const PositionHeader: FC<{
             Save
           </Button>
           <Button variant="link" onClick={() => setEditing(false)} className="-my-2">
-            <XIcon />
-            Cancel
+            <CheckIcon />
+            Done
           </Button>
         </div>
       </div>

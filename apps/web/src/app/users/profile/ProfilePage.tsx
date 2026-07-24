@@ -1,16 +1,15 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { Tabs, TabsList, TabsPanel, TabsTrigger } from "@/components/ui/tabs";
+import { CheckIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchUser, fetchUserAttributes, fetchUserProjects, fetchUserResumes } from "./api";
 import { ProfileAttributes } from "./ProfileAttributes";
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileProjects } from "./ProfileProjects";
-import { Tabs, TabsList, TabsPanel, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { PencilSimpleLineIcon } from "@phosphor-icons/react";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
-import { XIcon } from "lucide-react";
 import { ProfileResumes } from "./ProfileResumes";
 
 enum TabOption {
@@ -96,8 +95,8 @@ const UserProfilePage = () => {
               </TabsList>
               {editing ? (
                 <Button variant="link" onClick={handleStopEditing}>
-                  <XIcon />
-                  Cancel
+                  <CheckIcon />
+                  Done
                 </Button>
               ) : (
                 <Button variant="link" onClick={handleEdit}>

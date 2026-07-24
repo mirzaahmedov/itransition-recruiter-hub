@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { Can } from "@casl/react";
-import { PencilSimpleLineIcon, PlusIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, PencilSimpleLineIcon, PlusIcon, XCircleIcon } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState, type FC } from "react";
 import toast from "react-hot-toast";
@@ -107,8 +107,8 @@ export const PositionAttributes: FC<{
               Add
             </Button>
             <Button variant="link" onClick={() => setEditing(false)} className="-my-2">
-              <XIcon />
-              Cancel
+              <CheckIcon />
+              Done
             </Button>
           </div>
         </div>

@@ -10,6 +10,7 @@ import type { ResumeStatus, User } from '@rh/database/client';
 import { UserRole } from '@rh/database/enums';
 import { PositionService } from '../position.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
+import { ResumeFindUniqueArgs } from '@rh/database/models';
 
 const resumeInclude = {
   position: true,
@@ -23,13 +24,17 @@ const resumeInclude = {
       },
       userAttribute: {
         include: {
-          attribute: true,
+          attribute: {
+            include: {
+              choices: true,
+            },
+          },
           choice: true,
         },
       },
     },
   },
-} as const;
+} as const satisfies ResumeFindUniqueArgs['include'];
 
 @Injectable()
 export class ResumeService {
