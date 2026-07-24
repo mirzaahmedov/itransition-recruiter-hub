@@ -115,3 +115,8 @@ export async function fetchUserResumes(userId: string) {
   const res = await privateApi.get<ApiResponse<ResumeListItem[]>>(`/users/${userId}/resumes`);
   return res.data;
 }
+
+export async function fetchUserAttributeById(userId: string, id: string) {
+  const res = await privateApi.get<ApiResponse<UserAttributeWithJoins>>(`/users/${userId}/attributes/${id}`);
+  return res.data;
+}

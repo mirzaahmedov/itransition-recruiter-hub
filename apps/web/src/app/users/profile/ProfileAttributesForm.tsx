@@ -6,13 +6,19 @@ import { useDialogState } from "@/hooks/use-dialog-state";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { ArrowsClockwiseIcon, CheckIcon, GitDiffIcon, PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
-import type { UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
+import type { BulkUpdateUserProfileAttributePayload, UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useAutoSave } from "@/hooks/use-auto-save";
-import { bulkUpdateProfileAttributes, createBulkUserAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "./api";
+import {
+  bulkUpdateProfileAttributes,
+  createBulkUserAttributes,
+  fetchUserAttributeById,
+  type BulkUpdateUserAttributeArgs,
+  type UserAttributeWithJoins,
+} from "./api";
 
 enum ResolveAction {
   KeepMine = "KeepMine",
@@ -40,7 +46,8 @@ const ProfileAttibutesForm: FC<{
 }> = ({ user, userAttributes }) => {
   const queryClient = useQueryClient();
 
-  const [conflicts, setConflicts] = useState<Record<string, boolean>>({});
+  const [conflicts, setConflicts] = useState<Record<string, BulkUpdateUserProfileAttributePayload[number]>>({});
+  const [diffs, setDiffs] = useState<Record<string, { remoteValue: any; localValue: any }>>({});
   const [categoryId, setCategoryId] = useState<string>();
 
   const form = useForm<ProfileFormData>({
@@ -51,6 +58,10 @@ const ProfileAttibutesForm: FC<{
 
   const categories = useCategoryStore((store) => store.categories);
   const createDialog = useDialogState();
+
+  const fetchUserAttributeByIdMutation = useMutation({
+    mutationFn: (id: string) => fetchUserAttributeById(user.id, id),
+  });
 
   const createUserAttributeMutation = useMutation({
     mutationFn: createBulkUserAttributes,
@@ -80,7 +91,7 @@ const ProfileAttibutesForm: FC<{
           setConflicts(
             concurrent_modification.reduce(
               (result, item) => {
-                result[item.id] = true;
+                result[item.id] = item;
                 return result;
               },
               {} as typeof conflicts,
@@ -149,7 +160,41 @@ const ProfileAttibutesForm: FC<{
   const handleResolveConflict = (attrId: string, action: ResolveAction) => {
     switch (action) {
       case ResolveAction.KeepMine: {
-        conflicts[attrId];
+        fetchUserAttributeByIdMutation.mutateAsync(attrId).then(async (res) => {
+          const remoteValues = res.data;
+          const localValues = conflicts[attrId];
+          await handleSave([
+            {
+              id: localValues.id,
+              version: remoteValues.version,
+              payload: localValues.data,
+            },
+          ]);
+        });
+        break;
+      }
+      case ResolveAction.AcceptRemote: {
+        fetchUserAttributeByIdMutation.mutateAsync(attrId).then(async (res) => {
+          const remoteValues = res.data;
+          form.setValue(`attrs.${attrId}`, {
+            attr: res.data,
+            value: readDynamicValue(remoteValues.attribute.type, remoteValues),
+          });
+        });
+        break;
+      }
+      case ResolveAction.Compare: {
+        fetchUserAttributeByIdMutation.mutateAsync(attrId).then(async (res) => {
+          const remoteValue = readDynamicValue(res.data.attribute.type, res.data);
+          const localValue = readDynamicValue(res.data.attribute.type, conflicts[attrId].data);
+          setDiffs((prev) => ({
+            ...prev,
+            [attrId]: {
+              localValue,
+              remoteValue,
+            },
+          }));
+        });
         break;
       }
     }

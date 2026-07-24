@@ -22,7 +22,7 @@ export function getDynamicDefaultValue(type: AttributeType) {
   }
 }
 
-export function readDynamicValue(type: AttributeType, record: UserAttribute): any {
+export function readDynamicValue(type: AttributeType, record: Partial<UserAttribute>): any {
   switch (type) {
     case AttributeType.NUMERIC:
       return record.numberValue;

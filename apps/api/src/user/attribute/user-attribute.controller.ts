@@ -5,6 +5,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -22,11 +23,11 @@ import {
 import { UserAttributeService } from './user-attribute.service';
 
 @Controller('users/:userId/attributes')
+@UseGuards(AuthGuard('jwt'))
 export class UserAttributeController {
   constructor(private readonly userAttributeService: UserAttributeService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
   async bulkCreate(
     @AuthUser() user: User,
     @Param('userId') userId: string,
@@ -47,15 +48,22 @@ export class UserAttributeController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   async findAll(@Param('userId') userId: string) {
     return makeResponse(
       await this.userAttributeService.findByUserId(userId, true),
     );
   }
 
+  @Get(':id')
+  async findById(@Param('userId') userId: string, @Param('id') id: string) {
+    const attr = await this.userAttributeService.findById(userId, id);
+    if (!attr) {
+      throw new NotFoundException('Attribute not found');
+    }
+    return makeResponse(attr);
+  }
+
   @Patch('bulk')
-  @UseGuards(AuthGuard('jwt'))
   async bulkUpdate(
     @AuthUser() user: User,
     @Param('userId') userId: string,
@@ -76,7 +84,6 @@ export class UserAttributeController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt'))
   async update(
     @AuthUser() user: User,
     @Param('userId') userId: string,
