@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { deleteResume, fetchResume, publishResume } from "./api";
 import { ResumeView } from "./ResumeView";
 import { ResumeForm } from "./ResumeForm";
+import { ResumeStatus } from "@rh/database/browser";
 
 const ResumePage = () => {
   const { id } = useParams();
@@ -70,18 +71,37 @@ const ResumePage = () => {
     );
   }
 
+  const filledCount = resumeData.resumeAttributes.filter(
+    (ra) =>
+      ra.userAttribute.textValue ||
+      ra.userAttribute.numberValue != null ||
+      ra.userAttribute.booleanValue != null ||
+      ra.userAttribute.dateValue ||
+      (ra.userAttribute.startDateValue && ra.userAttribute.endDateValue) ||
+      ra.userAttribute.choice,
+  ).length;
+
+  const isFilledProperly = filledCount === resumeData.resumeAttributes.length;
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="no-print flex items-center justify-between mb-6">
-        <Button variant="ghost" onClick={() => navigate("/resumes")}>
-          <ArrowLeftIcon className="size-4" />
-          Back to resumes
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" onClick={() => navigate("/resumes")}>
+            <ArrowLeftIcon className="size-4" />
+            Back to resumes
+          </Button>
+
+          <Badge variant="info">
+            {filledCount}/{resumeData.resumeAttributes.length} fields filled
+          </Badge>
+        </div>
+
         <div className="flex items-center gap-2">
           <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>{resumeData.status}</Badge>
-          {isOwner && resumeData.status === "PENDING" && (
+          {isOwner && resumeData.status === ResumeStatus.DRAFT && (
             <>
-              <Button onClick={() => publishMutation.mutate()} loading={publishMutation.isPending}>
+              <Button disabled={!isFilledProperly} onClick={() => publishMutation.mutate()} loading={publishMutation.isPending}>
                 <PaperPlaneTiltIcon />
                 Publish
               </Button>

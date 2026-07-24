@@ -1,19 +1,24 @@
 import { AttributeEditor } from "@/components/AttributeEditor";
-import { Badge } from "@/components/ui/badge";
+import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverPopup, PopoverTrigger } from "@/components/ui/popover";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { useCategoryStore } from "@/store/useCategoryStore";
-import { PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import { ArrowsClockwiseIcon, CheckIcon, GitDiffIcon, PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import type { UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
+import { useAutoSave } from "@/hooks/use-auto-save";
 import { bulkUpdateProfileAttributes, createBulkUserAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "./api";
-import { useAutoSave } from "../../../hooks/use-auto-save";
 
+enum ResolveAction {
+  KeepMine = "KeepMine",
+  AcceptRemote = "AcceptRemote",
+  Compare = "Compare",
+}
 interface UserAttributeUpdateArgs {
   id: string;
   version: number;
@@ -141,6 +146,15 @@ const ProfileAttibutesForm: FC<{
     );
   }, [userAttributes]);
 
+  const handleResolveConflict = (attrId: string, action: ResolveAction) => {
+    switch (action) {
+      case ResolveAction.KeepMine: {
+        conflicts[attrId];
+        break;
+      }
+    }
+  };
+
   return (
     <>
       <div className="mt-8 space-y-6">
@@ -168,10 +182,10 @@ const ProfileAttibutesForm: FC<{
               <div className="mt-4">
                 {attrs.length > 0 ? (
                   <ul className="space-y-3">
-                    {attrs.map(([attrId, attr]) => (
+                    {attrs.map(([attrId, { attr }]) => (
                       <li key={attrId} className="flex items-start justify-between gap-10">
                         <div className="flex items-end w-full max-w-40 shrink-0 gap-4">
-                          <span className="text-sm text-muted-foreground">{attr.attr.attribute.name}</span>
+                          <span className="text-sm text-muted-foreground">{attr.attribute.name}</span>
                           <span className="flex-1 border-b border-dotted border-border" />
                         </div>
                         <span className="flex-1 w-full ">
@@ -181,13 +195,13 @@ const ProfileAttibutesForm: FC<{
                               name={`attrs.${attrId}.value`}
                               render={({ field }) => (
                                 <AttributeEditor
-                                  type={attr.attr.attribute.type}
+                                  type={attr.attribute.type}
                                   value={field.value}
                                   onValueChange={(value) => {
                                     queueUpdate({
-                                      id: attr.attr.id,
-                                      version: attr.attr.version,
-                                      payload: getDynamicValueObject(value, attr.attr.attribute.type),
+                                      id: attr.id,
+                                      version: attr.version,
+                                      payload: getDynamicValueObject(value, attr.attribute.type),
                                     });
                                     field.onChange(value);
                                   }}
@@ -195,17 +209,32 @@ const ProfileAttibutesForm: FC<{
                                     flush();
                                     field.onBlur();
                                   }}
-                                  choices={(attr.attr.attribute as any).choices ?? []}
+                                  choices={(attr.attribute as any).choices ?? []}
                                 />
                               )}
                             />
                           </span>
                         </span>
-                        <span className="w-20">
-                          {conflicts[attr.attr.id] ? (
-                            <Badge variant="destructive">
-                              <WarningCircleIcon weight="bold" /> Conflict
-                            </Badge>
+                        <span className="w-20 self-center">
+                          {conflicts[attr.id] ? (
+                            <Popover>
+                              <PopoverTrigger render={<Button size="xs" variant="destructive-outline" />}>
+                                <WarningCircleIcon weight="bold" /> Conflict
+                              </PopoverTrigger>
+                              <PopoverPopup side="right">
+                                <div className="flex flex-col gap-1">
+                                  <Button size="sm" variant="secondary" onClick={() => handleResolveConflict(attr.id, ResolveAction.KeepMine)}>
+                                    <CheckIcon size={14} /> Keep Mine
+                                  </Button>
+                                  <Button size="sm" variant="secondary">
+                                    <ArrowsClockwiseIcon size={14} /> Accept Remote
+                                  </Button>
+                                  <Button size="sm" variant="secondary">
+                                    <GitDiffIcon size={14} /> Compare
+                                  </Button>
+                                </div>
+                              </PopoverPopup>
+                            </Popover>
                           ) : null}
                         </span>
                       </li>

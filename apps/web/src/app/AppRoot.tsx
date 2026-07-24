@@ -56,7 +56,7 @@ const AppRoot = () => {
       <Outlet />
     </CaslProvider>
   ) : (
-    <div className="h-full grid place-content-center">
+    <div className="h-screen grid place-content-center">
       <Spinner size={40} />
     </div>
   );

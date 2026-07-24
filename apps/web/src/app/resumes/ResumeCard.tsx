@@ -10,7 +10,7 @@ export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
       ra.userAttribute.numberValue != null ||
       ra.userAttribute.booleanValue != null ||
       ra.userAttribute.dateValue ||
-      ra.userAttribute.startDateValue ||
+      (ra.userAttribute.startDateValue && ra.userAttribute.endDateValue) ||
       ra.userAttribute.choice,
   ).length;
 

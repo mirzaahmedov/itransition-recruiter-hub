@@ -1,41 +1,38 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@/models/api";
 import type { User } from "@rh/database/browser";
-import type { ResumeAttributeGetPayload } from "@rh/database/models";
+import type { ResumeAttributeGetPayload, ResumeGetPayload } from "@rh/database/models";
 
-export type ResumeAttributeItem = ResumeAttributeGetPayload<{
-  include: {
-    positionAttribute: {
-      include: {
-        attribute: {
-          include: {
-            choices: true;
-          };
+type ResumeAttributeInclude = {
+  positionAttribute: {
+    include: {
+      attribute: {
+        include: {
+          choices: true;
         };
       };
     };
-    userAttribute: {
-      include: {
-        attribute: true;
-        choice: true;
-      };
+  };
+  userAttribute: {
+    include: {
+      attribute: true;
+      choice: true;
+    };
+  };
+};
+export type ResumeAttributeItem = ResumeAttributeGetPayload<{
+  include: ResumeAttributeInclude;
+}>;
+
+export type ResumeListItem = ResumeGetPayload<{
+  include: {
+    position: true;
+    user: true;
+    resumeAttributes: {
+      include: ResumeAttributeInclude;
     };
   };
 }>;
-
-export type ResumeListItem = {
-  id: string;
-  positionId: string;
-  userId: string;
-  status: "PENDING" | "PUBLISHED";
-  position: {
-    id: string;
-    title: string;
-    description: string;
-  };
-  user?: User;
-  resumeAttributes: ResumeAttributeItem[];
-};
 
 export type ResumeDetail = ResumeListItem & {
   user: User;
