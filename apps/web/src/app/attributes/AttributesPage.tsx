@@ -162,7 +162,7 @@ export const AttributesPage = () => {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center flex-wrap gap-5 justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold">Attributes</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage attribute definitions</p>
@@ -183,7 +183,7 @@ export const AttributesPage = () => {
             trigger={
               <Button>
                 <PlusIcon />
-                Create attribute
+                Create
               </Button>
             }
           />

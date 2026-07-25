@@ -35,7 +35,7 @@ export const MDXEditor: FC<{
           toolbarContents: () => (
             <>
               <BoldItalicUnderlineToggles />
-              <ListsToggle />
+              <ListsToggle options={["bullet", "number"]} />
               <UndoRedo />
             </>
           ),

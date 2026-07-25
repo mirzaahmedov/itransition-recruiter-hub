@@ -40,19 +40,19 @@ export const PositionHeader: FC<{
   });
 
   return !editing ? (
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex-1">
-        <h1 className="text-3xl font-bold">{position.title}</h1>
-        <p className="mt-2 text-muted-foreground leading-relaxed">{position.description}</p>
+    <div>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <h1 className="text-xl md:text-3xl font-bold">{position.title}</h1>
+        <div className="flex items-center gap-1">
+          <Can I="update" a="Position">
+            <Button variant="link" onClick={() => setEditing(true)}>
+              <PencilSimpleLineIcon />
+              Edit
+            </Button>
+          </Can>
+        </div>
       </div>
-      <div className="flex items-center gap-1">
-        <Can I="update" a="Position">
-          <Button variant="link" onClick={() => setEditing(true)}>
-            <PencilSimpleLineIcon />
-            Edit
-          </Button>
-        </Can>
-      </div>
+      <p className="text-xs md:text-sm mt-1 text-muted-foreground leading-relaxed">{position.description}</p>
     </div>
   ) : (
     <Form className="contents" onSubmit={handleSave}>

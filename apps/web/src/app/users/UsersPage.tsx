@@ -114,7 +114,7 @@ const UsersPage = () => {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center flex-wrap gap-5 justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold">Users</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage user accounts and roles</p>
@@ -129,7 +129,7 @@ const UsersPage = () => {
       </div>
 
       {selectedCount > 0 && (
-        <div className="flex items-center gap-3 mb-4 rounded-xl border bg-card p-3">
+        <div className="flex items-center flex-wrap gap-3 mb-4 rounded-xl border bg-card p-3">
           <span className="text-sm text-muted-foreground mr-1">
             <b>{selectedCount}</b> user{selectedCount !== 1 ? "s" : ""} selected
           </span>

@@ -17,7 +17,7 @@ export const ProfileAttributesView: FC<{
       {categories?.map((category) => {
         const attrs = readCategoryAttributes(category.id);
         return (
-          <div key={category.id} className="rounded-2xl border bg-card p-6">
+          <div key={category.id} className="rounded-2xl border bg-card p-3 md:p-6">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{category.name}</h3>
             </div>
@@ -25,15 +25,15 @@ export const ProfileAttributesView: FC<{
               {attrs.length > 0 ? (
                 <dl className="space-y-5">
                   {attrs.map((attr) => (
-                    <div key={attr.id} className="flex items-start justify-between gap-10">
-                      <div className="flex items-end gap-4 shrink-0 w-full max-w-40">
-                        <dt className="text-sm text-muted-foreground">{attr.attribute.name}</dt>
-                        <span className="flex-1 border-b border-dotted border-border" />
+                    <div key={attr.id} className="flex flex-col gap-2 rounded-lg py-2 md:flex-row md:items-start md:gap-4">
+                      <div className="flex items-center gap-2 md:w-48 md:shrink-0">
+                        <dt className="text-sm font-medium text-muted-foreground">{attr.attribute.name}</dt>
+                        <span className="hidden flex-1 border-b border-dotted border-border md:block mt-2" />
                       </div>
-                      <dd className="w-full">
-                        <div className="max-w-100 text-sm font-medium">{renderDynamicValue(attr.attribute.type, attr)}</div>
-                      </dd>
-                      <span className="w-20"></span>
+                      <div className="min-w-0 flex-1">
+                        <dd className="text-sm font-medium">{renderDynamicValue(attr.attribute.type, attr)}</dd>
+                      </div>
+                      <div className="md:w-28 md:shrink-0"></div>
                     </div>
                   ))}
                 </dl>

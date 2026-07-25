@@ -117,7 +117,7 @@ const PositionPage = () => {
 
       {positionData ? (
         <div className="mx-auto max-w-4xl px-4 py-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center flex-wrap gap-5 justify-between mb-6">
             <Button variant="ghost" onClick={() => navigate("/positions")}>
               <ArrowLeftIcon className="size-4" />
               Back to positions
@@ -155,7 +155,7 @@ const PositionPage = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-card p-8">
+          <div className="rounded-2xl border bg-card p-4 md:p-8">
             <PositionHeader position={positionData} />
             <PositionAttributes position={positionData} />
 

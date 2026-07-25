@@ -81,7 +81,7 @@ export const AppHeader = () => {
             </Avatar>
             <div className="flex flex-col items-start">
               {!isMobile && <span className="text-sm font-medium max-w-30 truncate">{user?.name ?? "User"}</span>}
-              {user ? <span className="text-info text-xs font-bold capitalize">{user.role?.toLowerCase()}</span> : null}
+              {user && !isMobile ? <span className="text-info text-xs font-bold capitalize">{user.role?.toLowerCase()}</span> : null}
             </div>
           </div>
 

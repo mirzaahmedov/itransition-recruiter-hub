@@ -12,7 +12,13 @@ export const styles = `
     }
 
     .resume-page {
-        padding: 2rem;
+        padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .resume-page {
+            padding: 2rem;
+        }
     }
 
     .resume-header {
@@ -93,35 +99,65 @@ export const styles = `
     }
 
     .resume-attribute-row {
-        display: grid;
-        grid-template-columns: 10rem 1fr;
-        gap: 1rem;
-        align-items: baseline;
+        display: flex; 
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem; 
+        flex-direction: column; 
+        gap: 0.5rem; 
+        border-radius: 0.5rem; 
+    }
+
+    @media (min-width: 768px) {
+        .resume-attribute-row {
+            flex-direction: row; 
+            gap: 1rem; 
+            align-items: flex-start; 
+        }
     }
 
     .resume-attribute-name {
         font-size: 0.8125rem;
         font-weight: 500;
         color: hsl(240 3.8% 46.1%);
+        display: flex; 
+        gap: 0.5rem; 
+        align-items: center; 
+    }
+
+    
+    @media (min-width: 768px) {
+        .resume-attribute-name {
+            shrink: 0; 
+            width: 12rem; 
+        }
     }
 
     .resume-attribute-value {
+        min-width: 0px;
+        flex: 1;
         font-size: 0.875rem;
         line-height: 1.5;
         white-space: pre-wrap;
         word-break: break-word;
     }
 
+    @media (min-width: 768px) {
+        .resume-attribute-meta {
+            shrink: 0; 
+            width: 7rem; 
+        }
+    }
+
     @media (max-width: 640px) {
         .resume-header {
-        flex-direction: column;
+            flex-direction: column;
         }
         .resume-position {
-        text-align: left;
+            text-align: left;
         }
         .resume-attribute-row {
-        grid-template-columns: 1fr;
-        gap: 0.125rem;
+            grid-template-columns: 1fr;
+            gap: 0.125rem;
         }
     }
 `;

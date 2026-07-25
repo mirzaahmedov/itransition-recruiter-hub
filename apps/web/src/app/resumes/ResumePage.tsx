@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/useAuthStore";
-import { ArrowLeftIcon, PaperPlaneTiltIcon, PrinterIcon, TrashIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -85,7 +85,7 @@ const ResumePage = () => {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <div className="no-print flex items-center justify-between mb-6">
+      <div className="no-print flex flex-wrap items-center mb-6 gap-y-5">
         <div className="flex items-center gap-2">
           <Button variant="ghost" onClick={() => navigate("/resumes")}>
             <ArrowLeftIcon className="size-4" />
@@ -97,12 +97,11 @@ const ResumePage = () => {
           </Badge>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Badge variant={resumeData.status === "PUBLISHED" ? "success" : "warning"}>{resumeData.status}</Badge>
+        <div className="flex items-center flex-wrap gap-2 ml-auto">
           {isOwner && resumeData.status === ResumeStatus.DRAFT && (
             <>
               <Button disabled={!isFilledProperly} onClick={() => publishMutation.mutate()} loading={publishMutation.isPending}>
-                <PaperPlaneTiltIcon />
+                <UploadSimpleIcon />
                 Publish
               </Button>
               <DeleteConfirmDialog
@@ -121,10 +120,10 @@ const ResumePage = () => {
               />
             </>
           )}
-          <Button variant="outline" onClick={() => window.print()}>
+          {/* <Button variant="outline" onClick={() => window.print()}>
             <PrinterIcon />
             Print
-          </Button>
+          </Button> */}
         </div>
       </div>
       {editing ? (

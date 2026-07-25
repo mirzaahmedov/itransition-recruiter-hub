@@ -54,8 +54,8 @@ export const AuthFormLayout = () => {
             </TabsPanel>
           </CardPanel>
           <CardFooter className="border-t">
-            <div className="w-full flex items-center justify-center gap-5">
-              <Button size="lg" onClick={handleLoginGithub} variant="secondary" className="bg-black text-white border-black hover:bg-black/80">
+            <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-x-5 gap-y-4">
+              <Button size="lg" onClick={handleLoginGithub} variant="secondary" className="w-full bg-black text-white border-black hover:bg-black/80">
                 <svg aria-label="GitHub logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     fill="white"
@@ -64,7 +64,7 @@ export const AuthFormLayout = () => {
                 </svg>
                 Login with GitHub
               </Button>
-              <Button size="lg" onClick={handleLoginGoogle} className="bg-white text-black border-[#e5e5e5] hover:bg-white/80">
+              <Button size="lg" onClick={handleLoginGoogle} className="w-full bg-white text-black border-[#e5e5e5] hover:bg-white/80">
                 <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                   <g>
                     <path d="m0 0H512V512H0" fill="transparent"></path>

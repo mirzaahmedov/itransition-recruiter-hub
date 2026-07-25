@@ -3,11 +3,13 @@ import type { ResumeAttributeItem, ResumeDetail } from "./api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { NotePencilIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { styles } from "./data";
 import type { ReactNode } from "react";
 import Markdown from "react-markdown";
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { ResumeStatus } from "@rh/database/browser";
 
 function ResumeSection({ title, items }: { title: string; items: ResumeAttributeItem[] }) {
   return (
@@ -18,6 +20,7 @@ function ResumeSection({ title, items }: { title: string; items: ResumeAttribute
           <div key={ra.id} className="resume-attribute-row">
             <dt className="resume-attribute-name">{ra.positionAttribute.attribute.name}</dt>
             <dd className="resume-attribute-value">{formatValue(ra)}</dd>
+            <div className="resume-attribute-meta"></div>
           </div>
         ))}
       </dl>
@@ -50,7 +53,14 @@ export const ResumeView = ({ resume, onEdit }: { resume: ResumeDetail; onEdit: V
               <AvatarFallback>{(resume.user.name ?? "U").charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="resume-name">{resume.user.name ?? "Unnamed"}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="resume-name">{resume.user.name ?? "Unnamed"}</h1>
+                {resume.status === ResumeStatus.DRAFT ? (
+                  <Badge variant="warning">
+                    <NotePencilIcon /> Draft
+                  </Badge>
+                ) : null}
+              </div>
               <p className="resume-email">{resume.user.email}</p>
             </div>
           </div>

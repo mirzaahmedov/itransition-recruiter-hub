@@ -206,7 +206,7 @@ const ProfileAttibutesForm: FC<{
         {categories?.map((category) => {
           const attrs = readCategoryAttributes(category.id);
           return (
-            <div key={category.id} className="rounded-2xl border bg-card p-6">
+            <div key={category.id} className="rounded-2xl border bg-card p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{category.name}</h3>
                 <div className="flex items-center gap-1">
@@ -228,39 +228,39 @@ const ProfileAttibutesForm: FC<{
                 {attrs.length > 0 ? (
                   <ul className="space-y-3">
                     {attrs.map(([attrId, { attr }]) => (
-                      <li key={attrId} className="flex items-start justify-between gap-10">
-                        <div className="flex items-end w-full max-w-40 shrink-0 gap-4">
-                          <span className="text-sm text-muted-foreground">{attr.attribute.name}</span>
-                          <span className="flex-1 border-b border-dotted border-border" />
+                      <li key={attrId} className="flex flex-col gap-2 rounded-lg py-2 md:flex-row md:items-start md:gap-4">
+                        <div className="flex items-center gap-2 md:w-48 md:shrink-0">
+                          <span className="text-sm font-medium text-muted-foreground">{attr.attribute.name}</span>
+                          <span className="hidden flex-1 border-b border-dotted border-border md:block mt-2" />
                         </div>
-                        <span className="flex-1 w-full ">
-                          <span className="max-w-100">
-                            <Controller
-                              control={form.control}
-                              name={`attrs.${attrId}.value`}
-                              render={({ field }) => (
-                                <AttributeEditor
-                                  type={attr.attribute.type}
-                                  value={field.value}
-                                  onValueChange={(value) => {
-                                    queueUpdate({
-                                      id: attr.id,
-                                      version: attr.version,
-                                      payload: getDynamicValueObject(value, attr.attribute.type),
-                                    });
-                                    field.onChange(value);
-                                  }}
-                                  onBlur={() => {
-                                    flush();
-                                    field.onBlur();
-                                  }}
-                                  choices={(attr.attribute as any).choices ?? []}
-                                />
-                              )}
-                            />
-                          </span>
-                        </span>
-                        <span className="w-20 self-center">
+
+                        <div className="min-w-0 flex-1">
+                          <Controller
+                            control={form.control}
+                            name={`attrs.${attrId}.value`}
+                            render={({ field }) => (
+                              <AttributeEditor
+                                type={attr.attribute.type}
+                                value={field.value}
+                                onValueChange={(value) => {
+                                  queueUpdate({
+                                    id: attr.id,
+                                    version: attr.version,
+                                    payload: getDynamicValueObject(value, attr.attribute.type),
+                                  });
+                                  field.onChange(value);
+                                }}
+                                onBlur={() => {
+                                  flush();
+                                  field.onBlur();
+                                }}
+                                choices={(attr.attribute as any).choices ?? []}
+                              />
+                            )}
+                          />
+                        </div>
+
+                        <div className="flex items-center md:w-28 md:shrink-0 md:justify-end md:self-center">
                           {conflicts[attr.id] ? (
                             <Popover>
                               <PopoverTrigger render={<Button size="xs" variant="destructive-outline" />}>
@@ -281,7 +281,7 @@ const ProfileAttibutesForm: FC<{
                               </PopoverPopup>
                             </Popover>
                           ) : null}
-                        </span>
+                        </div>
                       </li>
                     ))}
                   </ul>

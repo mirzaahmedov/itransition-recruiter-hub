@@ -2,7 +2,7 @@ import { AttributeEditor } from "@/components/AttributeEditor";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useCategoryStore } from "@/store/useCategoryStore";
-import { CheckIcon } from "@phosphor-icons/react";
+import { CheckIcon, NotePencilIcon } from "@phosphor-icons/react";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared";
 import type { UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +13,8 @@ import { useAutoSave } from "../../hooks/use-auto-save";
 import { bulkUpdateProfileAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "../users/profile/api";
 import type { ResumeAttributeItem, ResumeDetail } from "./api";
 import { styles } from "./data";
+import { Badge } from "@/components/ui/badge";
+import { ResumeStatus } from "@rh/database/browser";
 
 interface UserAttributeUpdateArgs {
   id: string;
@@ -191,7 +193,14 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
               <AvatarFallback>{(resume.user.name ?? "U").charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="resume-name">{resume.user.name ?? "Unnamed"}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="resume-name">{resume.user.name ?? "Unnamed"}</h1>
+                {resume.status === ResumeStatus.DRAFT ? (
+                  <Badge variant="warning">
+                    <NotePencilIcon /> Draft
+                  </Badge>
+                ) : null}
+              </div>
               <p className="resume-email">{resume.user.email}</p>
             </div>
           </div>
