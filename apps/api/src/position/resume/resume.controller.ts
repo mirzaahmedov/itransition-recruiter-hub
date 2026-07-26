@@ -13,7 +13,7 @@ import { ResumeService } from './resume.service';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import { User, ResumeStatus, UserRole } from '@rh/database/client';
 import { AuthGuard } from '@nestjs/passport';
-import { makeResponse } from '@/models/api';
+import { makeResponse } from '@rh/shared/models';
 import { RolesGuard } from '@/auth/guards/roles.guard';
 import { Roles } from '@/auth/decorators/roles.decorator';
 

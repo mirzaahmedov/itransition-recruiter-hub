@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { createMongoAbility, AbilityBuilder } from "@casl/ability";
 import { AbilityProvider } from "@casl/react";
 import { UserRole, type User } from "@rh/database/browser";
@@ -10,6 +10,7 @@ function defineAbilitiesFor(user: User) {
   if (user.role === UserRole.ADMINISTRATOR) {
     can("manage", "all");
   } else if (user.role === UserRole.RECRUITER) {
+    can("manage", "Like");
     can("manage", "Position");
     can("manage", "Attribute");
     can("read", "Resume");

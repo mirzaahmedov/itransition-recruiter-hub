@@ -93,17 +93,19 @@ const UserProfilePage = () => {
                   <Badge>{userResumesData.length}</Badge>
                 </TabsTrigger>
               </TabsList>
-              {editing ? (
-                <Button variant="link" onClick={handleStopEditing}>
-                  <CheckIcon />
-                  Done
-                </Button>
-              ) : (
-                <Button variant="link" onClick={handleEdit}>
-                  <PencilSimpleLineIcon />
-                  Edit
-                </Button>
-              )}
+              {tabValue === TabOption.DETAILS ? (
+                editing ? (
+                  <Button variant="link" onClick={handleStopEditing}>
+                    <CheckIcon />
+                    Done
+                  </Button>
+                ) : (
+                  <Button variant="link" onClick={handleEdit}>
+                    <PencilSimpleLineIcon />
+                    Edit
+                  </Button>
+                )
+              ) : null}
             </div>
             <TabsPanel value={TabOption.DETAILS}>
               <ProfileAttributes user={userData} attributes={userAttributesData} editing={editing} />

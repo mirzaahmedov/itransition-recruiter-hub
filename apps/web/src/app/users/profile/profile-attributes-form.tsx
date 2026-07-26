@@ -4,7 +4,7 @@ import { AttributeConflictResolve } from "@/components/attribute/attribute-confl
 import { Button } from "@/components/ui/button";
 import { useAutoSave } from "@/hooks/use-auto-save";
 import { useDialogState } from "@/hooks/use-dialog-state";
-import { useCategoryStore } from "@/store/useCategoryStore";
+import { useCategoryStore } from "@/store/use-category-store";
 import { PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import type { BulkUpdateUserProfileAttributePayload, UpdateUserProfileAttributePayload } from "@rh/shared/schemas";

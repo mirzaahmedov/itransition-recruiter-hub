@@ -1,4 +1,4 @@
-import { useCategoryStore } from "@/store/useCategoryStore";
+import { useCategoryStore } from "@/store/use-category-store";
 import { renderDynamicValue } from "@/utils/renderDynamicValue";
 import type { FC } from "react";
 import type { UserAttributeWithJoins } from "./api";

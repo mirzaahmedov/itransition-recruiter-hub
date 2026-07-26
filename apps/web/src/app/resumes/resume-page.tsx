@@ -2,15 +2,15 @@ import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialo
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { ArrowLeftIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteResume, fetchResume, publishResume } from "./api";
-import { ResumeView } from "./ResumeView";
-import { ResumeForm } from "./ResumeForm";
+import { ResumeView } from "./resume-view";
+import { ResumeForm } from "./resume-form";
 import { ResumeStatus } from "@rh/database/browser";
 
 const ResumePage = () => {

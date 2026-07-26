@@ -8,6 +8,7 @@ import type { PositionWithAttributes } from "./api";
 import type { FC, MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { PositionStatus } from "@rh/database/browser";
+import { Can } from "@casl/react";
 
 const PositionCard = ({ position }: { position: PositionWithAttributes }) => {
   const navigate = useNavigate();
@@ -43,9 +44,11 @@ const PositionCard = ({ position }: { position: PositionWithAttributes }) => {
             </Badge>
           ) : null}
         </div>
-        <Button variant="outline" size="icon" onClick={handleDuplicate}>
-          <CopySimpleIcon />
-        </Button>
+        <Can I="duplicate" a="Position">
+          <Button variant="outline" size="icon" onClick={handleDuplicate}>
+            <CopySimpleIcon />
+          </Button>
+        </Can>
       </div>
     </Link>
   );

@@ -1,5 +1,5 @@
 import type { ResumeListItem } from "@/app/resumes/api";
-import { ResumeCard } from "@/app/resumes/ResumeCard";
+import { ResumeCard } from "@/app/resumes/resume-card";
 import { Spinner } from "@/components/ui/spinner";
 import type { FC } from "react";
 

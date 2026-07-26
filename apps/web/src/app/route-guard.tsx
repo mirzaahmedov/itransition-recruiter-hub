@@ -1,7 +1,7 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import type { User, UserRole } from "@rh/database/browser";
 import type { FC, ReactNode } from "react";
-import { ForbiddenPage } from "./forbidden/ForbiddenPage";
+import { ForbiddenPage } from "./forbidden/forbidden-page";
 import { useParams } from "react-router-dom";
 
 export const RouteGuard: FC<{

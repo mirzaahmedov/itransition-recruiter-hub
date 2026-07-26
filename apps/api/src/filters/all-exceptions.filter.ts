@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ZodValidationException } from 'nestjs-zod';
 import type { Response } from 'express';
-import { makeErrorResponse } from '@/models/api';
+import { makeErrorResponse } from '@rh/shared/models';
 
 const logger = new Logger('ExceptionFilter');
 

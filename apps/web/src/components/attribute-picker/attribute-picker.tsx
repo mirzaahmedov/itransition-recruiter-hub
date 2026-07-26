@@ -7,7 +7,7 @@ import { Dialog, DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPop
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useCategoryStore } from "@/store/useCategoryStore";
+import { useCategoryStore } from "@/store/use-category-store";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import type { Attribute } from "@rh/database/browser";
 import { useMutation } from "@tanstack/react-query";

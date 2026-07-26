@@ -4,10 +4,11 @@ import { UserController } from './user.controller';
 import { StorageService } from '@/storage/storage.service';
 import { ResumeService } from '@/position/resume/resume.service';
 import { ResumeModule } from '@/position/resume/resume.module';
+import { ResumeLikeService } from '@/resume-like/resume-like.service';
 
 @Module({
   imports: [ResumeModule],
-  providers: [UserService, StorageService],
+  providers: [UserService, StorageService, ResumeLikeService],
   controllers: [UserController],
 })
 export class UserModule {}

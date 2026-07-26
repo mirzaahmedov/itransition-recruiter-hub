@@ -16,7 +16,8 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { StorageModule } from './storage/storage.module';
 import { ResumeModule } from './position/resume/resume.module';
 import { UserResumeModule } from './resume/resume.module';
-import { AllExceptionsFilter } from './models/all-exceptions.filter';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+import { ResumeLikeModule } from './resume-like/resume-like.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AllExceptionsFilter } from './models/all-exceptions.filter';
     StorageModule,
     ResumeModule,
     UserResumeModule,
+    ResumeLikeModule,
   ],
   controllers: [AppController],
   providers: [

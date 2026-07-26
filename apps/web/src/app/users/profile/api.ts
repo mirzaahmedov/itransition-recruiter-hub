@@ -1,6 +1,6 @@
 import type { ResumeListItem } from "@/app/resumes/api";
 import { privateApi } from "@/lib/api/client";
-import type { ApiResponse } from "@/models/api";
+import type { ApiResponse } from "@rh/shared/models";
 import type { User, UserAttribute, Project } from "@rh/database/browser";
 import type { UserAttributeGetPayload } from "@rh/database/models";
 import type {

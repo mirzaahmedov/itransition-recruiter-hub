@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { PositionCardGrid } from "./PositionCardGrid";
+import { PositionCardGrid } from "./position-card-grid";
 import { Button } from "@/components/ui/button";
 import { MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
 import { Can } from "@casl/react";

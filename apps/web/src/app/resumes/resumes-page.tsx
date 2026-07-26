@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyResumes } from "./api";
 import { Spinner } from "@/components/ui/spinner";
-import { ResumeCard } from "./ResumeCard";
+import { ResumeCard } from "./resume-card";
 
 const ResumesPage = () => {
   const { data: resumes, isLoading } = useQuery({

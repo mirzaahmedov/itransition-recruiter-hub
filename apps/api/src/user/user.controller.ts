@@ -1,4 +1,4 @@
-import { makeResponse } from '@/models/api';
+import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import {
   Body,
   Controller,
@@ -16,34 +16,36 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthUser } from '@/auth/decorators/auth-user.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { User, UserRole } from '@rh/database/client';
+import { makeResponse } from '@rh/shared/models';
+import { nanoid } from 'nanoid';
 import {
   BulkDeleteUsersDto,
   BulkUpdateUserRolesDto,
   UpdateUserProfileDto,
 } from './user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { nanoid } from 'nanoid';
+import { UserService } from './user.service';
 
-import { PutObjectCommand } from '@aws-sdk/client-s3';
-import type { Express, Request } from 'express';
-import { extname } from 'path';
-import { StorageService } from '@/storage/storage.service';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
-import { makePaginatedResponse } from '@rh/shared/models';
 import { ResumeService } from '@/position/resume/resume.service';
+import { ResumeLikeService } from '@/resume-like/resume-like.service';
+import { StorageService } from '@/storage/storage.service';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { makePaginatedResponse } from '@rh/shared/models';
+import type { Request } from 'express';
+import { extname } from 'path';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class UserController {
   constructor(
     private userService: UserService,
-    private s3Service: StorageService,
+    private storageService: StorageService,
     private resumeService: ResumeService,
+    private resumeLikeService: ResumeLikeService,
   ) {}
 
   @Get()
@@ -93,7 +95,7 @@ export class UserController {
 
     const key = nanoid() + extname(image.originalname);
 
-    await this.s3Service.client.send(
+    await this.storageService.client.send(
       new PutObjectCommand({
         Bucket: process.env.S3_BUCKET,
         Key: `images/${key}`,
@@ -144,5 +146,11 @@ export class UserController {
   async findResumes(@Param('id') id: string) {
     const resumes = await this.resumeService.findAllByUser(id);
     return makeResponse(resumes);
+  }
+
+  @Get('resume-likes')
+  async findResumeLikes(@AuthUser() user: User) {
+    const resumeLikes = await this.resumeLikeService.findAll(user.id);
+    return makeResponse(resumeLikes);
   }
 }

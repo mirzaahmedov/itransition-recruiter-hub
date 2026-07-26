@@ -16,7 +16,7 @@ import type { Request, Response } from 'express';
 import { IGoogleUser } from './strategies/google.strategy';
 import { AuthUser } from './decorators/auth-user.decorator';
 import type { User } from '@rh/database/client';
-import { makeResponse } from '@/models/api';
+import { makeResponse } from '@rh/shared/models';
 import { LoginUserDto, RegisterUserDto } from './auth.dto';
 import bcrypt from 'bcryptjs';
 import { IGithubUser } from './strategies/github.strategy';

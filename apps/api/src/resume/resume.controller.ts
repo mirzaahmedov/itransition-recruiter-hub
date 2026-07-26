@@ -2,7 +2,7 @@ import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import { User } from '@rh/database/client';
-import { makeResponse } from '@/models/api';
+import { makeResponse } from '@rh/shared/models';
 import { ResumeService } from '@/position/resume/resume.service';
 
 @Controller('resumes')

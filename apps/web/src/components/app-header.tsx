@@ -2,9 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetDescription, SheetHeader, SheetPanel, SheetPopup, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useAuthStore } from "@/store/useAuthStore";
+import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/use-auth-store";
 import { fallbackName } from "@/utils/fallbackName";
-import { ListIcon, ReadCvLogoIcon, SignOutIcon } from "@phosphor-icons/react";
+import { Can } from "@casl/react";
+import { HeartIcon, ListIcon, ReadCvLogoIcon, SignOutIcon } from "@phosphor-icons/react";
 import { UserRole } from "@rh/database/browser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -17,7 +19,7 @@ interface NavLinkItem {
 }
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `text-sm transition-colors ${isActive ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`;
+  cn("text-sm transition-colors", isActive ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground");
 
 export const AppHeader = () => {
   const user = useAuthStore((store) => store.user);
@@ -84,6 +86,12 @@ export const AppHeader = () => {
               {user && !isMobile ? <span className="text-info text-xs font-bold capitalize">{user.role?.toLowerCase()}</span> : null}
             </div>
           </div>
+
+          <Can I="read" a="Like">
+            <Button size="icon" variant="ghost" onClick={handleLogOut} title="Likes">
+              <HeartIcon className="icon" />
+            </Button>
+          </Can>
 
           <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">
             <SignOutIcon className="icon" />

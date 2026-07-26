@@ -1,5 +1,5 @@
 import { privateApi } from "@/lib/api/client";
-import type { ApiResponse } from "@/models/api";
+import type { ApiResponse } from "@rh/shared/models";
 import type { Attribute } from "@rh/database/browser";
 
 interface SearchAttributeArgs {

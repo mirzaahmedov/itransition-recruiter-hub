@@ -1,4 +1,4 @@
-import { makeResponse } from '@/models/api';
+import { makeResponse } from '@rh/shared/models';
 import { Controller, Get } from '@nestjs/common';
 import { CategoryService } from './category.service';
 

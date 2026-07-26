@@ -1,12 +1,12 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { fetchMe } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { fetchCategories } from "./categories/api";
-import { useCategoryStore } from "@/store/useCategoryStore";
-import { CaslProvider } from "./auth/CaslProvider";
+import { useCategoryStore } from "@/store/use-category-store";
+import { CaslProvider } from "./auth/casl-provider";
 
 const AppRoot = () => {
   const isAuthenticated = useAuthStore((store) => store.isAuthenticated);

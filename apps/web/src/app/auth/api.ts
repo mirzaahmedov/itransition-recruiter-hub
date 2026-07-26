@@ -1,5 +1,5 @@
 import { publicApi } from "@/lib/api/client";
-import type { ApiResponse } from "@/models/api";
+import type { ApiResponse } from "@rh/shared/models";
 import type { User } from "@rh/database/browser";
 import type { LoginUserPayload, RegisterUserPayload } from "@rh/shared/schemas";
 

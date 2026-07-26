@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { UserRole } from "@rh/database/browser";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";

@@ -1,4 +1,4 @@
-import { useCategoryStore } from "@/store/useCategoryStore";
+import { useCategoryStore } from "@/store/use-category-store";
 import type { ResumeAttributeItem, ResumeDetail } from "./api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";

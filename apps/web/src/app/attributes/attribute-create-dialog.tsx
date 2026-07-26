@@ -11,9 +11,9 @@ import { CreateAttributeSchema, type CreateAttributePayload } from "@rh/shared/s
 
 import { useEffect, useMemo, useState, type FC } from "react";
 import { AttributeType } from "@rh/database/enums";
-import { useCategories } from "../categories/useCategories";
 import { z } from "zod";
 import type { DialogTriggerProps } from "@base-ui/react";
+import { useCategoryStore } from "@/store/use-category-store";
 
 export const AttibuteCreateDialog: FC<{
   open: boolean;
@@ -22,7 +22,7 @@ export const AttibuteCreateDialog: FC<{
   isSubmitting: boolean;
   trigger?: DialogTriggerProps["render"];
 }> = ({ open, onOpenChange, onSubmit, isSubmitting = false, trigger }) => {
-  const categories = useCategories();
+  const categories = useCategoryStore((store) => store.categories);
 
   const [formErrors, setFormErrors] = useState<Record<string, string | string[]>>({});
 

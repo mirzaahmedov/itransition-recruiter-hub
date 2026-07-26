@@ -10,8 +10,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { MagnifyingGlassIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import type { CreateAttributePayload, UpdateAttributePayload } from "@rh/shared";
-import { AttibuteCreateDialog } from "./AttibuteCreateDialog";
-import { AttributeDetailDialog } from "./AttributeDetailDialog";
+import { AttibuteCreateDialog } from "./attribute-create-dialog";
+import { AttributeDetailDialog } from "./attribute-detail-dialog";
 import { attributeColumns } from "./columns";
 import { useEffect, useState } from "react";
 import type { AttributeWithUsage } from "./api";
@@ -29,7 +29,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const AttributesPage = () => {
+const AttributesPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [selectedAttribute, setSelectedAttribute] = useState<AttributeWithUsage | null>(null);
 
@@ -247,3 +247,5 @@ export const AttributesPage = () => {
     </div>
   );
 };
+
+export default AttributesPage;

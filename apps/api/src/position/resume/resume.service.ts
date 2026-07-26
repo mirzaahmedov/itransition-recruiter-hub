@@ -111,6 +111,13 @@ export class ResumeService {
             },
           },
         },
+        likes: user
+          ? {
+              where: {
+                userId: user.id,
+              },
+            }
+          : false,
       },
     });
   }

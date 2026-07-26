@@ -1,5 +1,5 @@
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { makeResponse } from '@/models/api';
+import { makeResponse } from '@rh/shared/models';
 import {
   Body,
   Controller,

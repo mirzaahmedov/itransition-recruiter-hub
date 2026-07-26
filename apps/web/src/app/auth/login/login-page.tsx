@@ -3,7 +3,7 @@ import { Field, FieldError } from "@/components/ui/field";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { ArrowRightIcon, AtIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@phosphor-icons/react";
 import { LoginUserSchema, type LoginUserPayload } from "@rh/shared/schemas";
 import { useMutation } from "@tanstack/react-query";

@@ -1,5 +1,5 @@
 import { privateApi } from "@/lib/api/client";
-import type { ApiResponse } from "@/models/api";
+import type { ApiResponse } from "@rh/shared/models";
 import type { PositionStatus, Resume } from "@rh/database/browser";
 import type { PositionGetPayload } from "@rh/database/models";
 import type { CreatePositionPayload, UpdatePositionPayload } from "@rh/shared";
