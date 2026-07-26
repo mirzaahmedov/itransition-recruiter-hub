@@ -37,6 +37,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { makePaginatedResponse } from '@rh/shared/models';
 import type { Request } from 'express';
 import path, { extname } from 'path';
+import { parseObjectKeyFromImageURL } from '@/lib/storage';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -65,13 +66,17 @@ export class UserController {
   }
 
   @Get('candidates')
+  @Roles(UserRole.RECRUITER, UserRole.ADMINISTRATOR)
   async findCandidates() {
     const users = await this.userService.findCandidates();
     return makeResponse(users);
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string) {
+  async findById(@Param('id') id: string, @AuthUser() authUser: User) {
+    if (authUser.role === UserRole.CANDIDATE && id !== authUser.id) {
+      throw new ForbiddenException();
+    }
     const user = await this.userService.findById(id);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -97,12 +102,10 @@ export class UserController {
 
     await this.storageService.upload(key, image);
     if (user.avatar) {
-      const filename = path.basename(user.avatar);
-      const ext = path.extname(filename);
-      const key = filename.replace(ext, '');
       try {
-        await this.storageService.delete(key);
-        console.log(`deleted ${key}`);
+        const key = parseObjectKeyFromImageURL(user.avatar);
+        const result = await this.storageService.delete(key);
+        console.log(`deleted ${key}`, result);
       } catch (error) {
         console.log(error);
       }
@@ -119,6 +122,7 @@ export class UserController {
   }
 
   @Patch('bulk-change-roles')
+  @Roles(UserRole.ADMINISTRATOR)
   async bulkUpdateRoles(@Body() data: BulkUpdateUserRolesDto) {
     const { ids, role } = data;
     await this.userService.bulkUpdateRoles(ids, role);
@@ -126,6 +130,7 @@ export class UserController {
   }
 
   @Delete('bulk')
+  @Roles(UserRole.ADMINISTRATOR)
   async bulkDelete(@Body() data: BulkDeleteUsersDto) {
     const { ids } = data;
     await this.userService.bulkDelete(ids);
@@ -147,12 +152,16 @@ export class UserController {
   }
 
   @Get(':id/resumes')
-  async findResumes(@Param('id') id: string) {
+  async findResumes(@Param('id') id: string, @AuthUser() user: User) {
+    if (user.role === UserRole.CANDIDATE && user.id !== id) {
+      throw new ForbiddenException();
+    }
     const resumes = await this.resumeService.findAllByUser(id);
     return makeResponse(resumes);
   }
 
   @Get('resume-likes')
+  @Roles(UserRole.RECRUITER)
   async findResumeLikes(@AuthUser() user: User) {
     const resumeLikes = await this.resumeLikeService.findAll(user.id);
     return makeResponse(resumeLikes);

@@ -14,7 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '@rh/database/client';
+import { User, UserRole } from '@rh/database/client';
 import {
   BulkUpdateUserProfileAttributeDto,
   BulkCreateUserProfileAttributeDto,
@@ -22,6 +22,7 @@ import {
 } from './user-attribute.dto';
 import { UserAttributeService } from './user-attribute.service';
 import { RolesGuard } from '@/auth/guards/roles.guard';
+import { Roles } from '@/auth/decorators/roles.decorator';
 
 @Controller('users/:userId/attributes')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -29,12 +30,13 @@ export class UserAttributeController {
   constructor(private readonly userAttributeService: UserAttributeService) {}
 
   @Post()
+  @Roles(UserRole.ADMINISTRATOR, UserRole.CANDIDATE)
   async bulkCreate(
     @AuthUser() user: User,
     @Param('userId') userId: string,
     @Body() data: BulkCreateUserProfileAttributeDto,
   ) {
-    if (userId !== user.id) {
+    if (userId !== user.id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException(
         'You can only add attributes to your own profile',
       );
@@ -65,12 +67,13 @@ export class UserAttributeController {
   }
 
   @Patch('bulk')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.CANDIDATE)
   async bulkUpdate(
     @AuthUser() user: User,
     @Param('userId') userId: string,
     @Body() data: BulkUpdateUserProfileAttributeDto,
   ) {
-    if (userId !== user.id) {
+    if (userId !== user.id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException('You can only update your own attributes');
     }
 
@@ -85,6 +88,7 @@ export class UserAttributeController {
   }
 
   @Patch(':id')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.CANDIDATE)
   async update(
     @AuthUser() user: User,
     @Param('userId') userId: string,
@@ -92,7 +96,7 @@ export class UserAttributeController {
     @Query('version', ParseIntPipe) version: number,
     @Body() payload: UpdateUserProfileAttributeDto,
   ) {
-    if (userId !== user.id) {
+    if (userId !== user.id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException('You can only update your own attributes');
     }
 

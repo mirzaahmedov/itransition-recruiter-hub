@@ -2,15 +2,17 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { ResumeAttribute } from '@rh/database/browser';
-import type { ResumeStatus, User } from '@rh/database/client';
+import { ResumeStatus, User } from '@rh/database/client';
 import { UserRole } from '@rh/database/enums';
 import { PositionService } from '../position.service';
-import { CreateResumeDto } from './dto/create-resume.dto';
-import { ResumeFindUniqueArgs } from '@rh/database/models';
+import { CreateResumeDto } from './resume.dto';
+import { ResumeFindManyArgs, ResumeFindUniqueArgs } from '@rh/database/models';
+import { isDynamicValueFilled } from '@rh/shared';
 
 const resumeInclude = {
   position: true,
@@ -94,7 +96,7 @@ export class ResumeService {
     if (user && user.role === UserRole.CANDIDATE) {
       where.userId = user.id;
     } else if (user) {
-      where.status = 'PUBLISHED';
+      where.status = ResumeStatus.PUBLISHED;
     }
 
     return await this.prisma.resume.findMany({
@@ -184,25 +186,20 @@ export class ResumeService {
     const resume = await this.findOne(id);
 
     if (resume.userId !== userId) {
-      throw new NotFoundException(`Resume #${id} not found`);
+      throw new ForbiddenException();
     }
 
-    if (resume.status === 'PUBLISHED') {
+    if (resume.status === ResumeStatus.PUBLISHED) {
       return resume;
     }
 
-    const emptyAttrs = resume.resumeAttributes.filter((ra) => {
-      const ua = ra.userAttribute;
-      return (
-        ua.textValue == null &&
-        ua.numberValue == null &&
-        ua.booleanValue == null &&
-        ua.dateValue == null &&
-        ua.startDateValue == null &&
-        ua.endDateValue == null &&
-        ua.choiceId == null
-      );
-    });
+    const emptyAttrs = resume.resumeAttributes.filter(
+      (attribute) =>
+        !isDynamicValueFilled(
+          attribute.userAttribute,
+          attribute.positionAttribute.attribute.type,
+        ),
+    );
 
     if (emptyAttrs.length > 0) {
       const names = emptyAttrs.map((ra) => ra.positionAttribute.attribute.name);
@@ -213,7 +210,7 @@ export class ResumeService {
 
     return await this.prisma.resume.update({
       where: { id },
-      data: { status: 'PUBLISHED' },
+      data: { status: ResumeStatus.PUBLISHED },
       include: resumeInclude,
     });
   }

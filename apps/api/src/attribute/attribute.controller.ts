@@ -23,6 +23,8 @@ import { AttributeService } from './attribute.service';
 import { makePaginatedResponse } from '@rh/shared/models';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@/auth/guards/roles.guard';
+import { UserRole } from '@rh/database/client';
+import { Roles } from '@/auth/decorators/roles.decorator';
 
 @Controller('attributes')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -30,6 +32,7 @@ export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
   @Post()
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async create(@Body() data: CreateAttributeDto) {
     const { name, type, categoryId, choices = [] } = data;
 
@@ -44,6 +47,7 @@ export class AttributeController {
   }
 
   @Patch(':id/rename')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async update(@Body() data: UpdateAttributePayload, @Param('id') id: string) {
     const { name } = data;
 
@@ -53,6 +57,7 @@ export class AttributeController {
   }
 
   @Post(':id/choices')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async addChoice(
     @Param('id') id: string,
     @Body() data: AddAttributeChoiceDto,
@@ -62,6 +67,7 @@ export class AttributeController {
   }
 
   @Patch(':id/choices/:choiceId')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async renameChoice(
     @Param('id') id: string,
     @Param('choiceId') choiceId: string,
@@ -76,6 +82,7 @@ export class AttributeController {
   }
 
   @Delete(':id/choices/:choiceId')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async removeChoice(
     @Param('id') id: string,
     @Param('choiceId') choiceId: string,
@@ -114,6 +121,7 @@ export class AttributeController {
   }
 
   @Delete('bulk')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async bulkDelete(@Body() data: BulkDeleteAttributesDto) {
     const { ids } = data;
     const { deleted: count } = await this.attributeService.bulkDelete(ids);
@@ -121,6 +129,7 @@ export class AttributeController {
   }
 
   @Delete(':id')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.RECRUITER)
   async delete(@Param('id') id: string) {
     const used = await this.attributeService.isUsed(id);
     if (used) {

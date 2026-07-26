@@ -1,16 +1,20 @@
-import { makeResponse } from '@rh/shared/models';
+import { AuthUser } from '@/auth/decorators/auth-user.decorator';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 import {
   Body,
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { User, UserRole } from '@rh/database/client';
+import { makeResponse } from '@rh/shared/models';
 import {
   BulkCreatePositionAttributesDto,
   CreatePositionDto,
@@ -18,11 +22,6 @@ import {
   UpdatePositionStatusDto,
 } from './position.dto';
 import { PositionService } from './position.service';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '@/auth/guards/roles.guard';
-import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { User, UserRole } from '@rh/database/client';
-import { Roles } from '@/auth/decorators/roles.decorator';
 
 @Controller('positions')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -67,7 +66,6 @@ export class PositionController {
     @Param('id') id: string,
     @Body() data: UpdatePositionStatusDto,
   ) {
-    console.log({ data });
     return makeResponse(
       await this.positionService.updateStatus(id, data.status),
     );

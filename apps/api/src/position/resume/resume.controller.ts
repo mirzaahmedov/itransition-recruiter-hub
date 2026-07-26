@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
@@ -52,18 +53,24 @@ export class ResumeController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return makeResponse(await this.resumeService.findOne(id));
+  async findOne(@Param('id') id: string, @AuthUser() user: User) {
+    const resume = await this.resumeService.findOne(id);
+
+    if (user.role === UserRole.CANDIDATE && resume.userId !== user.id) {
+      throw new ForbiddenException();
+    }
+
+    return makeResponse(resume);
   }
 
   @Post(':id/publish')
-  @Roles(UserRole.CANDIDATE, UserRole.ADMINISTRATOR)
+  @Roles(UserRole.CANDIDATE)
   async publish(@AuthUser() user: User, @Param('id') id: string) {
     return makeResponse(await this.resumeService.publish(id, user.id));
   }
 
   @Patch(':id')
-  @Roles(UserRole.CANDIDATE, UserRole.ADMINISTRATOR)
+  @Roles(UserRole.CANDIDATE)
   async update(@Param('id') id: string, @Body('status') status: ResumeStatus) {
     return makeResponse(await this.resumeService.updateStatus(id, status));
   }

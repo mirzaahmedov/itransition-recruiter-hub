@@ -9,7 +9,7 @@ export class StorageController {
   constructor(private storageService: StorageService) {}
 
   @Get(':key')
-  async getImage(@Param('key') key: string, @Res() res: Response) {
+  async getByKey(@Param('key') key: string, @Res() res: Response) {
     const file = await this.storageService.client.send(
       new GetObjectCommand({
         Key: 'images/' + key,

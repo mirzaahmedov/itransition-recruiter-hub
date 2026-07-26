@@ -55,3 +55,7 @@ export function getDynamicValueObject(value: any, type: AttributeType): Partial<
       return { textValue: String(value) };
   }
 }
+
+export function isDynamicValueFilled(value: any, type: AttributeType): boolean {
+  return Boolean(readDynamicValue(type, value));
+}

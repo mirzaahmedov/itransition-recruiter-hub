@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CreateResumeLikeDto } from './dto/create-resume-like.dto';
-import { UpdateResumeLikeDto } from './dto/update-resume-like.dto';
 import { PrismaService } from '@/prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ResumeLikeService {

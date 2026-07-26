@@ -38,16 +38,6 @@ export type ResumeDetail = ResumeListItem & {
   user: User;
 };
 
-export async function fetchMyResumes() {
-  const res = await privateApi.get<ApiResponse<ResumeListItem[]>>("/resumes");
-  return res.data;
-}
-
-export async function fetchResume(id: string) {
-  const res = await privateApi.get<ApiResponse<ResumeDetail>>(`/resumes/${id}`);
-  return res.data;
-}
-
 export async function fetchPositionResumes(positionId: string) {
   const res = await privateApi.get<ApiResponse<ResumeListItem[]>>(`/positions/${positionId}/resumes`);
   return res.data;

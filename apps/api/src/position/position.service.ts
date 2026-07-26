@@ -17,7 +17,7 @@ const positionInclude = {
       attribute: true,
     },
   },
-} as const;
+} as const satisfies PositionFindManyArgs['include'];
 
 interface PositionFindOneArgs {
   id: string;

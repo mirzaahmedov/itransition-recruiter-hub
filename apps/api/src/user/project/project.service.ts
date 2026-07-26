@@ -15,6 +15,12 @@ export class ProjectService {
     });
   }
 
+  async findById(userId: string, id: string) {
+    return this.prisma.project.findUnique({
+      where: { userId, id },
+    });
+  }
+
   async findByUserId(userId: string) {
     return this.prisma.project.findMany({
       where: { userId },

@@ -38,15 +38,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if (exception instanceof ZodValidationException) {
       status = HttpStatus.BAD_REQUEST;
+
       const zodError = exception.getZodError() as any;
       const issues = zodError?.issues ?? [];
+
       message = issues.map((issue: any) => ({
         path: issue.path?.join('.'),
         message: issue.message,
       }));
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
+
       const exResponse = exception.getResponse();
+
       message =
         typeof exResponse === 'string'
           ? exResponse
