@@ -1,4 +1,4 @@
-import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
+import { AttributePicker } from "@/components/attribute-picker/attribute-picker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDialogState } from "@/hooks/use-dialog-state";

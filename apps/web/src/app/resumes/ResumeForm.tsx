@@ -1,4 +1,4 @@
-import { AttributeEditor } from "@/components/AttributeEditor";
+import { AttributeEditor } from "@/components/attribute-editor";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useCategoryStore } from "@/store/useCategoryStore";

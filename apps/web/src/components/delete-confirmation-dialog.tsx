@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import type { AlertDialogTriggerProps } from "@base-ui/react";
 import type { FC } from "react";
 
-export const DeleteConfirmDialog: FC<{
+export const DeleteConfirmationDialog: FC<{
   render: AlertDialogTriggerProps["render"];
   onConfirm: VoidFunction;
 }> = ({ render, onConfirm }) => {

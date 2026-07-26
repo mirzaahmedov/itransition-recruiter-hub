@@ -149,7 +149,12 @@ export class UserAttributeService {
         id,
       },
       include: {
-        attribute: true,
+        attribute: {
+          include: {
+            choices: true,
+          },
+        },
+        choice: true,
       },
     });
   }

@@ -18,6 +18,16 @@ export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
     choice: true;
   };
 }> {}
+export interface UserAttributeDetailed extends UserAttributeGetPayload<{
+  include: {
+    attribute: {
+      include: {
+        choices: true;
+      };
+    };
+    choice: true;
+  };
+}> {}
 
 interface IdParams {
   userId: string;
@@ -117,6 +127,6 @@ export async function fetchUserResumes(userId: string) {
 }
 
 export async function fetchUserAttributeById(userId: string, id: string) {
-  const res = await privateApi.get<ApiResponse<UserAttributeWithJoins>>(`/users/${userId}/attributes/${id}`);
+  const res = await privateApi.get<ApiResponse<UserAttributeDetailed>>(`/users/${userId}/attributes/${id}`);
   return res.data;
 }

@@ -21,9 +21,10 @@ import {
   UpdateUserProfileAttributeDto,
 } from './user-attribute.dto';
 import { UserAttributeService } from './user-attribute.service';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 
 @Controller('users/:userId/attributes')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class UserAttributeController {
   constructor(private readonly userAttributeService: UserAttributeService) {}
 

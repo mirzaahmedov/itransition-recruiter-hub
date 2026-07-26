@@ -1,8 +1,10 @@
 import { WarningCircleIcon, ArrowLeftIcon } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 export const NotFoundPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center px-4">
       <div className="text-center">
@@ -24,7 +26,7 @@ export const NotFoundPage = () => {
           <Link to="/positions">
             <Button>Go Home</Button>
           </Link>
-          <Button variant="ghost" onClick={() => window.history.back()}>
+          <Button variant="ghost" onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="size-4" />
             Go Back
           </Button>

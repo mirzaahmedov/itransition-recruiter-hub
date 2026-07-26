@@ -12,7 +12,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
+import { AttributePicker } from "@/components/attribute-picker/attribute-picker";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import type { Attribute } from "@rh/database/browser";
 import { Badge } from "@/components/ui/badge";

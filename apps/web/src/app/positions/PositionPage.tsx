@@ -11,7 +11,7 @@ import { PositionHeader } from "./PositionHeader";
 import { PositionAttributes } from "./PositionAttributes";
 import { Badge } from "@/components/ui/badge";
 import { Can } from "@casl/react";
-import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { PositionStatus } from "@rh/database/browser";
 
 const PositionPage = () => {
@@ -135,7 +135,7 @@ const PositionPage = () => {
                 )}
               </Can>
               <Can I="delete" a="Position">
-                <DeleteConfirmDialog
+                <DeleteConfirmationDialog
                   onConfirm={handleDelete}
                   render={
                     <Button variant="destructive-outline" loading={deleteMutation.isPending}>

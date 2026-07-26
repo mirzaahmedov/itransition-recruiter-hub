@@ -1,30 +1,20 @@
-import { AttributeEditor } from "@/components/AttributeEditor";
-import { AttributePicker } from "@/components/AttributePicker/AttributePicker";
+import { AttributeEditor } from "@/components/attribute-editor";
+import { AttributePicker } from "@/components/attribute-picker/attribute-picker";
+import { AttributeConflictResolve } from "@/components/attribute/attribute-conflict-resolve";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverPopup, PopoverTrigger } from "@/components/ui/popover";
+import { useAutoSave } from "@/hooks/use-auto-save";
 import { useDialogState } from "@/hooks/use-dialog-state";
 import { useCategoryStore } from "@/store/useCategoryStore";
-import { ArrowsClockwiseIcon, CheckIcon, GitDiffIcon, PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import { PlusIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import type { BulkUpdateUserProfileAttributePayload, UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useAutoSave } from "@/hooks/use-auto-save";
-import {
-  bulkUpdateProfileAttributes,
-  createBulkUserAttributes,
-  fetchUserAttributeById,
-  type BulkUpdateUserAttributeArgs,
-  type UserAttributeWithJoins,
-} from "./api";
+import { bulkUpdateProfileAttributes, createBulkUserAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "./api";
+import { Badge } from "@/components/ui/badge";
 
-enum ResolveAction {
-  KeepMine = "KeepMine",
-  AcceptRemote = "AcceptRemote",
-  Compare = "Compare",
-}
 interface UserAttributeUpdateArgs {
   id: string;
   version: number;
@@ -47,7 +37,7 @@ const ProfileAttibutesForm: FC<{
   const queryClient = useQueryClient();
 
   const [conflicts, setConflicts] = useState<Record<string, BulkUpdateUserProfileAttributePayload[number]>>({});
-  const [_, setDiffs] = useState<Record<string, { remoteValue: any; localValue: any }>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [categoryId, setCategoryId] = useState<string>();
 
   const form = useForm<ProfileFormData>({
@@ -58,10 +48,6 @@ const ProfileAttibutesForm: FC<{
 
   const categories = useCategoryStore((store) => store.categories);
   const createDialog = useDialogState();
-
-  const fetchUserAttributeByIdMutation = useMutation({
-    mutationFn: (id: string) => fetchUserAttributeById(user.id, id),
-  });
 
   const createUserAttributeMutation = useMutation({
     mutationFn: createBulkUserAttributes,
@@ -85,18 +71,42 @@ const ProfileAttibutesForm: FC<{
         })),
       })
       .then((res) => {
-        const { concurrent_modification = [], modified } = res?.data ?? {};
+        const { concurrent_modification = [], modified, failed_unknown } = res?.data ?? {};
 
         if (concurrent_modification.length) {
-          setConflicts(
-            concurrent_modification.reduce(
-              (result, item) => {
-                result[item.id] = item;
-                return result;
-              },
-              {} as typeof conflicts,
-            ),
-          );
+          setConflicts((prevValues) => {
+            const newValues = { ...prevValues };
+
+            modified.forEach((modified) => {
+              if (newValues[modified.id]) {
+                delete newValues[modified.id];
+              }
+            });
+
+            failed_unknown.forEach((fail) => {
+              if (newValues[fail.id]) {
+                delete newValues[fail.id];
+              }
+            });
+
+            concurrent_modification.forEach((failModif) => {
+              newValues[failModif.id] = failModif;
+            });
+
+            return newValues;
+          });
+        }
+
+        if (failed_unknown.length) {
+          setErrors((prevValues) => {
+            const newValues = { ...prevValues };
+
+            failed_unknown.forEach((fail) => {
+              newValues[fail.id] = "Unknown error";
+            });
+
+            return newValues;
+          });
         }
 
         modified.forEach((item) => {
@@ -156,49 +166,6 @@ const ProfileAttibutesForm: FC<{
       {} as Record<string, boolean>,
     );
   }, [userAttributes]);
-
-  const handleResolveConflict = (attrId: string, action: ResolveAction) => {
-    switch (action) {
-      case ResolveAction.KeepMine: {
-        fetchUserAttributeByIdMutation.mutateAsync(attrId).then(async (res) => {
-          const remoteValues = res.data;
-          const localValues = conflicts[attrId];
-          await handleSave([
-            {
-              id: localValues.id,
-              version: remoteValues.version,
-              payload: localValues.data,
-            },
-          ]);
-        });
-        break;
-      }
-      case ResolveAction.AcceptRemote: {
-        fetchUserAttributeByIdMutation.mutateAsync(attrId).then(async (res) => {
-          const remoteValues = res.data;
-          form.setValue(`attrs.${attrId}`, {
-            attr: res.data,
-            value: readDynamicValue(remoteValues.attribute.type, remoteValues),
-          });
-        });
-        break;
-      }
-      case ResolveAction.Compare: {
-        fetchUserAttributeByIdMutation.mutateAsync(attrId).then(async (res) => {
-          const remoteValue = readDynamicValue(res.data.attribute.type, res.data);
-          const localValue = readDynamicValue(res.data.attribute.type, conflicts[attrId].data);
-          setDiffs((prev) => ({
-            ...prev,
-            [attrId]: {
-              localValue,
-              remoteValue,
-            },
-          }));
-        });
-        break;
-      }
-    }
-  };
 
   return (
     <>
@@ -261,25 +228,27 @@ const ProfileAttibutesForm: FC<{
                         </div>
 
                         <div className="flex items-center md:w-28 md:shrink-0 md:justify-end md:self-center">
+                          {errors[attr.id] ? (
+                            <Badge variant="destructive">
+                              <WarningCircleIcon />
+                              {errors[attr.id]}
+                            </Badge>
+                          ) : null}
                           {conflicts[attr.id] ? (
-                            <Popover>
-                              <PopoverTrigger render={<Button size="xs" variant="destructive-outline" />}>
-                                <WarningCircleIcon weight="bold" /> Conflict
-                              </PopoverTrigger>
-                              <PopoverPopup side="right">
-                                <div className="flex flex-col gap-1">
-                                  <Button size="sm" variant="secondary" onClick={() => handleResolveConflict(attr.id, ResolveAction.KeepMine)}>
-                                    <CheckIcon size={14} /> Keep Mine
-                                  </Button>
-                                  <Button size="sm" variant="secondary">
-                                    <ArrowsClockwiseIcon size={14} /> Accept Remote
-                                  </Button>
-                                  <Button size="sm" variant="secondary">
-                                    <GitDiffIcon size={14} /> Compare
-                                  </Button>
-                                </div>
-                              </PopoverPopup>
-                            </Popover>
+                            <AttributeConflictResolve
+                              userId={user.id}
+                              userAttributeId={attr.id}
+                              conflict={conflicts[attr.id]}
+                              form={form}
+                              onSave={handleSave}
+                              onResolve={() =>
+                                setConflicts((prev) => {
+                                  const newValues = { ...prev };
+                                  delete newValues[attr.id];
+                                  return newValues;
+                                })
+                              }
+                            />
                           ) : null}
                         </div>
                       </li>

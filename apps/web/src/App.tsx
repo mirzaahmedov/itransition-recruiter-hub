@@ -6,12 +6,12 @@ import AppRoot from "./app/AppRoot";
 import { AttributesPage } from "./app/attributes/AttributesPage";
 import AuthRedirect from "./app/auth/AuthRedirect";
 import { NotFoundPage } from "./app/not-found/NotFoundPage";
-import UsersPage from "./app/users/UsersPage";
-import { AppLayout } from "./components/AppLayout";
+import UsersPage from "./app/users/users-page";
+import { AppLayout } from "./components/app-layout";
 import PositionsPage from "./app/positions/PositionsPage";
 import PositionPage from "./app/positions/PositionPage";
 import PositionCreatePage from "./app/positions/PositionCreatePage";
-import UserProfilePage from "./app/users/profile/ProfilePage";
+import UserProfilePage from "./app/users/profile/profile-page";
 import ResumesPage from "./app/resumes/ResumesPage";
 import ResumePage from "./app/resumes/ResumePage";
 import { AuthFormLayout } from "./app/auth/AuthFormLayout";
@@ -21,11 +21,14 @@ import AuthOauthCallbackPage from "./app/auth/AuthProviderSuccess";
 import { RouteGuard } from "./app/RouteGuard";
 import { UserRole } from "@rh/database/browser";
 import axios from "axios";
-import CandidatesPage from "./app/candidates/CandidatesPage";
+import CandidatesPage from "./app/users/candidates/CandidatesPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchOnReconnect: false,
+      refetchInterval: Infinity,
+      refetchOnWindowFocus: false,
       retry: (failureCount, error) => {
         if (axios.isAxiosError(error)) {
           const status = error.response?.status;

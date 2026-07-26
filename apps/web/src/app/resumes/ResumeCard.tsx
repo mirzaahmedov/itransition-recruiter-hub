@@ -14,6 +14,8 @@ export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
       ra.userAttribute.choice,
   ).length;
 
+  const isValid = filledCount === resume.resumeAttributes.length;
+
   return (
     <div className="group relative rounded-2xl border bg-card p-5 transition-all hover:shadow-md hover:border-foreground/15">
       <Link to={`/resumes/${resume.id}`} className="block">
@@ -24,7 +26,7 @@ export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
         <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{resume.position.description}</p>
         <div className="mt-4 flex items-center gap-2">
           <Badge variant={resume.status === "PUBLISHED" ? "success" : "warning"}>{resume.status}</Badge>
-          <Badge variant="info">
+          <Badge variant={isValid ? "info" : "destructive"}>
             {filledCount}/{resume.resumeAttributes.length} fields filled
           </Badge>
         </div>

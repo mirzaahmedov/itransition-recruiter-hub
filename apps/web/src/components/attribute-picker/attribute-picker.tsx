@@ -1,4 +1,4 @@
-import { fetchSearchAttributes } from "@/components/AttributePicker/api";
+import { fetchSearchAttributes } from "@/components/attribute-picker/api";
 import { GenericTable } from "@/components/generic-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

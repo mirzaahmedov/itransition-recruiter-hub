@@ -7,10 +7,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchUser, fetchUserAttributes, fetchUserProjects, fetchUserResumes } from "./api";
-import { ProfileAttributes } from "./ProfileAttributes";
-import { ProfileHeader } from "./ProfileHeader";
-import { ProfileProjects } from "./ProfileProjects";
-import { ProfileResumes } from "./ProfileResumes";
+import { ProfileAttributes } from "./profile-attributes";
+import { ProfileHeader } from "./profile-header";
+import { ProfileProjects } from "./profile-projects";
+import { ProfileResumes } from "./profile-resumes";
 
 enum TabOption {
   DETAILS = "DETAILS",

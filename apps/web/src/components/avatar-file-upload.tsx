@@ -5,12 +5,12 @@ import { useFileUpload, type FileWithPreview } from "@/hooks/use-file-upload";
 import type { FC, PropsWithChildren } from "react";
 import { Spinner } from "./ui/spinner";
 
-export type FileUploadAvatarProps = PropsWithChildren<{
+export type AvatarFileUploadProps = PropsWithChildren<{
   onSelect: (file: FileWithPreview) => void;
   isPending: boolean;
 }>;
 
-const FileUploadAvatar: FC<FileUploadAvatarProps> = ({ onSelect, isPending, children }) => {
+const AvatarFileUpload: FC<AvatarFileUploadProps> = ({ onSelect, isPending, children }) => {
   const [, { openFileDialog, getInputProps }] = useFileUpload({
     accept: "image/*",
     maxFiles: 1,
@@ -47,4 +47,4 @@ const FileUploadAvatar: FC<FileUploadAvatarProps> = ({ onSelect, isPending, chil
   );
 };
 
-export default FileUploadAvatar;
+export default AvatarFileUpload;

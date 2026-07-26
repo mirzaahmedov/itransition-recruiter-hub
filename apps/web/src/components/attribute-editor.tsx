@@ -30,8 +30,6 @@ export const AttributeEditor: FC<{
     [choices],
   );
 
-  console.log({ value, type, onValueChange });
-
   switch (type) {
     case AttributeType.NUMERIC:
       return (

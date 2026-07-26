@@ -1,4 +1,4 @@
-import FileUploadAvatar from "@/components/FileUploadAvatar";
+import AvatarFileUpload from "@/components/avatar-file-upload";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,12 +72,12 @@ export const ProfileHeader: FC<{
       <div className="h-32 bg-linear-to-br from-brand/20 via-brand/10 to-transparent rounded-2xl" />
       <div className="px-8 pb-8">
         <div className="flex items-end gap-5 -mt-12">
-          <FileUploadAvatar onSelect={handleUploadProfilePicture} isPending={uploadProfilePictureMutation.isPending}>
+          <AvatarFileUpload onSelect={handleUploadProfilePicture} isPending={uploadProfilePictureMutation.isPending}>
             <Avatar className="size-24 ring-4 ring-card">
               <AvatarImage src={user.avatar ?? undefined} alt={name ?? "Avatar"} />
               <AvatarFallback className="text-3xl">{fallbackName(name || "User")}</AvatarFallback>
             </Avatar>
-          </FileUploadAvatar>
+          </AvatarFileUpload>
           <div className="flex-1 pb-1 space-y-1">
             <Input value={name} onChange={(e) => setName(e.target.value)} className="text-2xl! py-2 font-bold" placeholder="Your name" />
             <p className="text-sm text-muted-foreground">{user.email}</p>

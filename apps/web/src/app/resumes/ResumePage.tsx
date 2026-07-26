@@ -1,4 +1,4 @@
-import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -104,7 +104,7 @@ const ResumePage = () => {
                 <UploadSimpleIcon />
                 Publish
               </Button>
-              <DeleteConfirmDialog
+              <DeleteConfirmationDialog
                 render={
                   <Button
                     loading={deleteResumeMutation.isPending}
