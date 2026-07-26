@@ -1,10 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Sheet, SheetDescription, SheetHeader, SheetPanel, SheetPopup, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
 import { fallbackName } from "@/utils/fallbackName";
+import { LikedResumesContent } from "@/app/users/likes/liked-resumes-popover";
 import { Can } from "@casl/react";
 import { HeartIcon, ListIcon, ReadCvLogoIcon, SignOutIcon } from "@phosphor-icons/react";
 import { UserRole } from "@rh/database/browser";
@@ -88,9 +90,14 @@ export const AppHeader = () => {
           </div>
 
           <Can I="read" a="Like">
-            <Button size="icon" variant="ghost" onClick={handleLogOut} title="Likes">
-              <HeartIcon className="icon" />
-            </Button>
+            <Popover>
+              <PopoverTrigger render={<Button size="icon" variant="ghost" title="Likes" />}>
+                <HeartIcon className="icon" />
+              </PopoverTrigger>
+              <PopoverContent side="bottom" align="end" sideOffset={8}>
+                <LikedResumesContent compact />
+              </PopoverContent>
+            </Popover>
           </Can>
 
           <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">

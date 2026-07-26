@@ -18,6 +18,8 @@ import axios from "axios";
 import CandidatesPage from "./app/users/candidates/candidates-page";
 import NotFoundPage from "./app/not-found/not-found-page";
 import AttributesPage from "./app/attributes/attributes-page";
+import HomePage from "./app/home/home-page";
+import LikedResumesPage from "./app/users/likes/liked-resumes-page";
 
 import { AppLayout } from "./components/app-layout";
 import { AuthFormLayout } from "./app/auth/auth-form-layout";
@@ -46,6 +48,10 @@ const queryClient = new QueryClient({
 });
 
 const router = createBrowserRouter([
+  {
+    path: "home",
+    element: <HomePage />,
+  },
   {
     path: "auth",
     children: [
@@ -140,6 +146,10 @@ const router = createBrowserRouter([
           {
             path: "/resumes/:id",
             element: <ResumePage />,
+          },
+          {
+            path: "/liked-resumes",
+            element: <LikedResumesPage />,
           },
           {
             path: "*",
