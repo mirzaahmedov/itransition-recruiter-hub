@@ -36,7 +36,7 @@ import { StorageService } from '@/storage/storage.service';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { makePaginatedResponse } from '@rh/shared/models';
 import type { Request } from 'express';
-import { extname } from 'path';
+import path, { extname } from 'path';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -95,23 +95,27 @@ export class UserController {
 
     const key = nanoid() + extname(image.originalname);
 
-    await this.storageService.client.send(
-      new PutObjectCommand({
-        Bucket: process.env.S3_BUCKET,
-        Key: `images/${key}`,
-        Body: image.buffer,
-        ContentType: image.mimetype,
-      }),
-    );
+    await this.storageService.upload(key, image);
+    if (user.avatar) {
+      const filename = path.basename(user.avatar);
+      const ext = path.extname(filename);
+      const key = filename.replace(ext, '');
+      try {
+        await this.storageService.delete(key);
+        console.log(`deleted ${key}`);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     const baseUrl = `${req.protocol}://${req.headers.host}`;
     const avatarUrl = `${baseUrl}/storage/${key}`;
 
-    const updated = await this.userService.update(user.id, {
-      avatar: avatarUrl,
-    });
-
-    return makeResponse(updated);
+    return makeResponse(
+      await this.userService.update(user.id, {
+        avatar: avatarUrl,
+      }),
+    );
   }
 
   @Patch('bulk-change-roles')
