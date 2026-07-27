@@ -1,11 +1,9 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { HeartIcon, ArrowRightIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon, HeartIcon } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import type { LikedResume } from "./liked-resumes-popover";
 
-const mockLikedResumes: LikedResume[] = [
+const mockLikedResumes: any[] = [
   {
     id: "like-1",
     userId: "u1",
@@ -20,11 +18,10 @@ const mockLikedResumes: LikedResume[] = [
       position: {
         id: "p1",
         title: "Senior Frontend Engineer",
-        description: "Build modern web applications with React and TypeScript. You will lead the frontend team and establish best practices across the codebase.",
+        description:
+          "Build modern web applications with React and TypeScript. You will lead the frontend team and establish best practices across the codebase.",
         status: "ACTIVE",
-        resumes: [],
-        attributes: [],
-      },
+      } as any,
     },
   },
   {
@@ -98,19 +95,13 @@ const LikedResumeCard = ({ like }: { like: LikedResume }) => (
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <HeartIcon className="size-4 shrink-0 text-pink-500" weight="fill" />
-          <h3 className="font-semibold text-foreground group-hover:text-brand transition-colors">
-            {like.resume.position.title}
-          </h3>
+          <h3 className="font-semibold text-foreground group-hover:text-brand transition-colors">{like.resume.position.title}</h3>
         </div>
         <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-brand transition-colors mt-0.5" />
       </div>
-      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-        {like.resume.position.description}
-      </p>
+      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{like.resume.position.description}</p>
       <div className="mt-4 flex items-center gap-2">
-        <Badge variant={like.resume.status === "PUBLISHED" ? "success" : "warning"}>
-          {like.resume.status}
-        </Badge>
+        <Badge variant={like.resume.status === "PUBLISHED" ? "success" : "warning"}>{like.resume.status}</Badge>
         <Badge variant={like.resume.position.status === "ACTIVE" ? "info" : "secondary"}>
           {like.resume.position.status === "ACTIVE" ? "Open" : "Archived"}
         </Badge>
@@ -126,18 +117,14 @@ const LikedResumesPage = () => {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Liked Resumes</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Resumes you've bookmarked for review
-        </p>
+        <p className="text-sm text-muted-foreground mt-1">Resumes you've bookmarked for review</p>
       </div>
 
       {items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <HeartIcon className="size-12 text-muted-foreground mb-4" />
           <p className="text-muted-foreground">No liked resumes yet.</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Browse resumes and like the ones you're interested in.
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">Browse resumes and like the ones you're interested in.</p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
