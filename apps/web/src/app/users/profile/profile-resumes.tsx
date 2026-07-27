@@ -20,7 +20,7 @@ export const ProfileResumes: FC<{
       ) : (
         <div className="flex flex-col gap-5">
           {resumes.map((resume) => (
-            <ResumeCard key={resume.id} resume={resume} />
+            <ResumeCard key={resume.id} resume={resume} view="user" />
           ))}
         </div>
       )}

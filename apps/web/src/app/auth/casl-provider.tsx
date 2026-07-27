@@ -5,10 +5,11 @@ import { UserRole, type User } from "@rh/database/browser";
 import type { FC, PropsWithChildren } from "react";
 
 function defineAbilitiesFor(user: User) {
-  const { can, build } = new AbilityBuilder(createMongoAbility);
+  const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
 
   if (user.role === UserRole.ADMINISTRATOR) {
     can("manage", "all");
+    cannot("manage", "Like");
   } else if (user.role === UserRole.RECRUITER) {
     can("manage", "Like");
     can("manage", "Position");

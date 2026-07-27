@@ -1,19 +1,18 @@
+import { LikesResumesPopover } from "@/app/users/likes/liked-resumes-popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Sheet, SheetDescription, SheetHeader, SheetPanel, SheetPopup, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
+import { useThemeStore } from "@/store/use-theme-store";
 import { fallbackName } from "@/utils/fallbackName";
-import { LikedResumesContent } from "@/app/users/likes/liked-resumes-popover";
 import { Can } from "@casl/react";
-import { HeartIcon, ListIcon, MoonIcon, ReadCvLogoIcon, SignOutIcon, SunIcon } from "@phosphor-icons/react";
+import { ListIcon, MoonIcon, ReadCvLogoIcon, SignOutIcon, SunIcon } from "@phosphor-icons/react";
 import { UserRole } from "@rh/database/browser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useThemeStore } from "@/store/use-theme-store";
 
 interface NavLinkItem {
   to: string;
@@ -48,7 +47,7 @@ export const AppHeader = () => {
       user
         ? [
             { to: "/positions", label: "Positions", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER, UserRole.CANDIDATE] },
-            { to: "/resumes", label: "Resumes", roles: [UserRole.CANDIDATE] },
+            { to: "/resumes", label: "Resumes", roles: [UserRole.CANDIDATE, UserRole.RECRUITER, UserRole.ADMINISTRATOR] },
             { to: "/users", label: "Users", roles: [UserRole.ADMINISTRATOR] },
             { to: "/candidates", label: "Candidates", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER] },
             { to: `/users/${user.id}/profile`, label: "Profile", roles: [UserRole.CANDIDATE] },
@@ -92,27 +91,20 @@ export const AppHeader = () => {
           </div>
 
           <Can I="read" a="Like">
-            <Popover>
-              <PopoverTrigger render={<Button size="icon" variant="ghost" title="Likes" />}>
-                <HeartIcon className="icon" />
-              </PopoverTrigger>
-              <PopoverContent side="bottom" align="end" sideOffset={8}>
-                <LikedResumesContent compact />
-              </PopoverContent>
-            </Popover>
+            <LikesResumesPopover />
           </Can>
 
           <Button size="icon" variant="ghost" onClick={toggleTheme} title="Toggle theme">
-            {theme === "dark" ? <MoonIcon className="icon" /> : <SunIcon className="icon" />}
+            {theme === "dark" ? <MoonIcon className="icon-md" /> : <SunIcon className="icon-md" />}
           </Button>
 
           <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">
-            <SignOutIcon className="icon" />
+            <SignOutIcon className="icon-md" />
           </Button>
 
           {isMobile && (
             <Button size="icon" variant="ghost" onClick={() => setMobileMenuOpen(true)}>
-              <ListIcon className="icon" />
+              <ListIcon className="icon-md" />
             </Button>
           )}
         </div>

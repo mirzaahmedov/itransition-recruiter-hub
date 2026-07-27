@@ -3,16 +3,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/use-auth-store";
-import { ArrowLeftIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { Can } from "@casl/react";
+import { ArrowLeftIcon, HeartIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { ResumeStatus } from "@rh/database/browser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteResume, fetchResume, publishResume } from "./api";
-import { ResumeView } from "./resume-view";
+import { createResumeLike, deleteResume, deleteResumeLike, fetchResume, publishResume } from "./api";
 import { ResumeForm } from "./resume-form";
-import { ResumeStatus } from "@rh/database/browser";
 import { ResumeProjects } from "./resume-projects";
+import { ResumeView } from "./resume-view";
 
 const ResumePage = () => {
   const { id } = useParams();
@@ -21,12 +22,16 @@ const ResumePage = () => {
   const user = useAuthStore((store) => store.user);
 
   const [editing, setEditing] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
-  const { data: resume, isFetching } = useQuery({
+  const { data: resume, isLoading } = useQuery({
     queryKey: ["resumes", id],
     queryFn: () => fetchResume(id!),
     enabled: !!id,
   });
+
+  const resumeData = resume?.data;
+  const isOwner = user && resumeData && user.id === resumeData.userId;
 
   const publishMutation = useMutation({
     mutationFn: () => publishResume(resumeData!.positionId, id!),
@@ -48,10 +53,40 @@ const ResumePage = () => {
     },
   });
 
-  const resumeData = resume?.data;
-  const isOwner = user && resumeData && user.id === resumeData.userId;
+  const createResumeLikeMutation = useMutation({
+    mutationFn: () => createResumeLike(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resumes", id] });
+      queryClient.invalidateQueries({ queryKey: ["resumeLikes"] });
+      setIsLiked(true);
+    },
+  });
+  const deleteResumeLikeMutation = useMutation({
+    mutationFn: () => deleteResumeLike(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resumes", id] });
+      queryClient.invalidateQueries({ queryKey: ["resumeLikes"] });
+      setIsLiked(false);
+    },
+  });
 
-  if (isFetching) {
+  const handleLike = () => {
+    if (isLiked) {
+      deleteResumeLikeMutation.mutate();
+    } else {
+      createResumeLikeMutation.mutate();
+    }
+  };
+
+  useEffect(() => {
+    if (resumeData?.likes?.length) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
+    }
+  }, [resumeData?.likes?.length]);
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <Spinner />
@@ -121,6 +156,19 @@ const ResumePage = () => {
               />
             </>
           )}
+          <Can I="manage" a="Like">
+            <Button variant="outline" onClick={handleLike} loading={createResumeLikeMutation.isPending || deleteResumeLikeMutation.isPending}>
+              {isLiked ? (
+                <>
+                  <HeartIcon weight="fill" /> Liked
+                </>
+              ) : (
+                <>
+                  <HeartIcon /> Like
+                </>
+              )}
+            </Button>
+          </Can>
         </div>
       </div>
       {editing ? (

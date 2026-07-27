@@ -15,7 +15,7 @@ const ResumesPage = () => {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold">My Resumes</h1>
-        <p className="text-sm text-muted-foreground mt-1">View and manage your submitted resumes</p>
+        <p className="text-sm text-muted-foreground mt-1">View and manage submitted resumes</p>
       </div>
 
       {isLoading ? (

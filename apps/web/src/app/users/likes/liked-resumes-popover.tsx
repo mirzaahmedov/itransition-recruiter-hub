@@ -1,9 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import type { Resume, ResumeLike, Position } from "@rh/database/browser";
-import { HeartIcon } from "@phosphor-icons/react";
+import { HeartIcon, HeartBreakIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useQuery } from "@tanstack/react-query";
+import { fetchResumeLikes } from "./api";
+import { Spinner } from "@/components/ui/spinner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
 
 export type LikedResume = ResumeLike & {
   resume: Resume & {
@@ -11,148 +16,70 @@ export type LikedResume = ResumeLike & {
   };
 };
 
-const mockLikedResumes: LikedResume[] = [
-  {
-    id: "like-1",
-    userId: "u1",
-    resumeId: "r1",
-    resume: {
-      id: "r1",
-      positionId: "p1",
-      userId: "u2",
-      status: "PUBLISHED",
-      attributes: [],
-      likes: [],
-      position: {
-        id: "p1",
-        title: "Senior Frontend Engineer",
-        description: "Build modern web applications with React and TypeScript.",
-        status: "ACTIVE",
-        resumes: [],
-        attributes: [],
-      },
-    },
-  },
-  {
-    id: "like-2",
-    userId: "u1",
-    resumeId: "r2",
-    resume: {
-      id: "r2",
-      positionId: "p2",
-      userId: "u3",
-      status: "DRAFT",
-      attributes: [],
-      likes: [],
-      position: {
-        id: "p2",
-        title: "Backend Developer",
-        description: "Design and implement scalable APIs with NestJS.",
-        status: "ACTIVE",
-        resumes: [],
-        attributes: [],
-      },
-    },
-  },
-  {
-    id: "like-3",
-    userId: "u1",
-    resumeId: "r3",
-    resume: {
-      id: "r3",
-      positionId: "p3",
-      userId: "u4",
-      status: "PUBLISHED",
-      attributes: [],
-      likes: [],
-      position: {
-        id: "p3",
-        title: "DevOps Engineer",
-        description: "Maintain CI/CD pipelines and cloud infrastructure.",
-        status: "ACTIVE",
-        resumes: [],
-        attributes: [],
-      },
-    },
-  },
-  {
-    id: "like-4",
-    userId: "u1",
-    resumeId: "r4",
-    resume: {
-      id: "r4",
-      positionId: "p4",
-      userId: "u5",
-      status: "PRIVATE",
-      attributes: [],
-      likes: [],
-      position: {
-        id: "p4",
-        title: "UI/UX Designer",
-        description: "Create intuitive user experiences for web platforms.",
-        status: "ARCHIVED",
-        resumes: [],
-        attributes: [],
-      },
-    },
-  },
-];
+export const LikesResumesPopover = () => {
+  const [open, setOpen] = useState(false);
 
-export const LikedResumesContent = ({ likes, isLoading, compact = false }: { likes?: LikedResume[]; isLoading?: boolean; compact?: boolean }) => {
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Spinner />
-      </div>
-    );
-  }
+  const { data, isLoading } = useQuery({
+    queryKey: ["resumeLikes"],
+    queryFn: fetchResumeLikes,
+  });
 
-  const items = likes ?? mockLikedResumes;
-
-  if (items.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        <HeartIcon className="size-8 text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">No liked resumes yet.</p>
-      </div>
-    );
-  }
+  const items = data?.data ?? [];
 
   return (
-    <div className={compact ? "w-72" : ""}>
-      {!compact && (
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-sm">Liked Resumes</h3>
-          <Button variant="ghost" size="sm" render={<Link to="/liked-resumes" />}>
-            View all
-          </Button>
-        </div>
-      )}
-      <div className="flex flex-col gap-1">
-        {items.map((like) => (
-          <Link
-            key={like.id}
-            to={`/resumes/${like.resume.id}`}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent"
-          >
-            <HeartIcon className="size-4 shrink-0 text-pink-500" weight="fill" />
-            <div className="flex-1 min-w-0">
-              <p className="font-medium truncate">{like.resume.position.title}</p>
-              <p className="text-xs text-muted-foreground truncate">{like.resume.position.description}</p>
-            </div>
-            <Badge variant={like.resume.status === "PUBLISHED" ? "success" : "warning"} size="sm">
-              {like.resume.status}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger render={<Button size="icon" variant="ghost" title="Likes" className="relative" />}>
+        <div className="absolute -top-1 -right-1 z-10">
+          {isLoading ? (
+            <Badge size="sm" className="rounded-full">
+              <Spinner className="size-3" />
             </Badge>
-          </Link>
-        ))}
-      </div>
-      {compact && items.length > 0 && (
-        <div className="mt-2 pt-2 border-t">
-          <Button variant="ghost" size="sm" className="w-full" render={<Link to="/liked-resumes" />}>
-            View all liked resumes
-          </Button>
+          ) : (
+            <Badge size="sm" className="rounded-full">
+              {items.length}
+            </Badge>
+          )}
         </div>
-      )}
-    </div>
+        <HeartIcon className="icon" />
+      </PopoverTrigger>
+      <PopoverContent side="bottom" align="end" sideOffset={8} className="w-80">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-sm">Liked Resumes</h3>
+            <Button variant="ghost" size="sm" render={<Link to="/liked-resumes" />} onClick={() => setOpen(false)}>
+              View <ArrowRightIcon className="icon" />
+            </Button>
+          </div>
+          {items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <HeartBreakIcon className="size-10 text-muted-foreground mb-3" />
+              <p className="text-sm text-muted-foreground">No liked resumes yet.</p>
+              <p className="text-xs text-muted-foreground mt-1">Browse resumes and like the ones you're interested in.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1">
+              {items.map((like) => (
+                <Link
+                  key={like.id}
+                  to={`/resumes/${like.resume.id}`}
+                  className="group flex items-center gap-3 rounded-lg border bg-card px-3 py-2.5 text-sm transition-all hover:shadow-sm hover:border-foreground/15"
+                >
+                  <Avatar className="size-9">
+                    <AvatarImage src={like.resume.user?.avatar ?? undefined} alt={like.resume.user?.name ?? "Avatar"} />
+                    <AvatarFallback>{(like.resume.user?.name ?? "U").charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-foreground group-hover:text-brand transition-colors truncate">
+                      {like.resume.user?.name ?? "Unnamed"}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">{like.resume.position.title}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };

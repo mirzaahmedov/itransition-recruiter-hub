@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User, UserRole } from '@rh/database/client';
 import { ResumeLikeService } from './resume-like.service';
 
-@Controller(`resumes/:resumeId`)
+@Controller(`resumes/:resumeId/likes`)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Roles(UserRole.RECRUITER)
 export class ResumeLikeController {
@@ -35,10 +35,10 @@ export class ResumeLikeController {
     });
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string, @AuthUser() user: User) {
+  @Delete()
+  remove(@Param('resumeId') resumeId: string, @AuthUser() user: User) {
     return this.resumeLikeService.remove({
-      id,
+      resumeId,
       userId: user.id,
     });
   }

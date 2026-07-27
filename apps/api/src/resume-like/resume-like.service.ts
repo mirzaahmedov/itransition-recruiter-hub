@@ -1,5 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { ResumeStatus } from '@rh/database/client';
 
 @Injectable()
 export class ResumeLikeService {
@@ -18,10 +19,15 @@ export class ResumeLikeService {
     return this.prisma.resumeLike.findMany({
       where: {
         userId,
+        resume: {
+          status: ResumeStatus.PUBLISHED,
+        },
       },
       include: {
+        user: true,
         resume: {
           include: {
+            user: true,
             position: true,
           },
         },
@@ -38,11 +44,13 @@ export class ResumeLikeService {
     });
   }
 
-  async remove({ id, userId }: { id: string; userId: string }) {
+  async remove({ resumeId, userId }: { resumeId: string; userId: string }) {
     return this.prisma.resumeLike.delete({
       where: {
-        id,
-        userId,
+        userId_resumeId: {
+          resumeId,
+          userId,
+        },
       },
     });
   }

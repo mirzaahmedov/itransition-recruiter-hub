@@ -1,6 +1,6 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@rh/shared/models";
-import type { User } from "@rh/database/browser";
+import type { ResumeLike, User } from "@rh/database/browser";
 import type { ResumeAttributeGetPayload, ResumeGetPayload, ResumeProjectGetPayload } from "@rh/database/models";
 
 type ResumeAttributeInclude = {
@@ -41,6 +41,7 @@ export type ResumeDetail = ResumeListItem & {
       project: true;
     };
   }>[];
+  likes: ResumeLike[] | null;
 };
 
 export async function fetchMyResumes() {
@@ -75,5 +76,15 @@ export async function updateResumeStatus(positionId: string, id: string, status:
 
 export async function deleteResume(positionId: string, id: string) {
   const res = await privateApi.delete<ApiResponse<void>>(`/positions/${positionId}/resumes/${id}`);
+  return res.data;
+}
+
+export async function createResumeLike(resumeId: string) {
+  const res = await privateApi.post<ApiResponse<void>>(`/resumes/${resumeId}/likes`);
+  return res.data;
+}
+
+export async function deleteResumeLike(resumeId: string) {
+  const res = await privateApi.delete<ApiResponse<void>>(`/resumes/${resumeId}/likes`);
   return res.data;
 }

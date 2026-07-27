@@ -142,6 +142,31 @@ export class ResumeService {
       where: { userId },
       include: {
         position: true,
+        user: true,
+        attributes: {
+          include: {
+            positionAttribute: {
+              include: {
+                attribute: true,
+              },
+            },
+            userAttribute: {
+              include: {
+                attribute: true,
+                choice: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async findAllPublished() {
+    return await this.prisma.resume.findMany({
+      include: {
+        position: true,
+        user: true,
         attributes: {
           include: {
             positionAttribute: {
@@ -172,10 +197,20 @@ export class ResumeService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user?: User) {
     const resume = await this.prisma.resume.findUnique({
       where: { id },
-      include: resumeDetailInclude,
+      include: {
+        ...resumeDetailInclude,
+        likes:
+          user && user.role === UserRole.RECRUITER
+            ? {
+                where: {
+                  userId: user.id,
+                },
+              }
+            : false,
+      },
     });
 
     if (!resume) {
