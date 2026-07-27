@@ -3,7 +3,8 @@ import {
   BulkIdsSchema,
   CreatePositionSchema,
   UpdatePositionSchema,
-} from '@rh/shared';
+  FindAllPositionParamsSchema,
+} from '@rh/shared/schemas';
 import { UpdatePositionStatusSchema } from '@rh/shared/schemas';
 
 export class CreatePositionDto extends createZodDto(CreatePositionSchema) {}
@@ -13,4 +14,8 @@ export class UpdatePositionStatusDto extends createZodDto(
 ) {}
 export class BulkCreatePositionAttributesDto extends createZodDto(
   BulkIdsSchema,
+) {}
+
+export class FindAllPositionParamsDto extends createZodDto(
+  FindAllPositionParamsSchema,
 ) {}

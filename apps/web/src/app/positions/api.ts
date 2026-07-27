@@ -2,7 +2,10 @@ import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@rh/shared/models";
 import type { PositionStatus, Resume } from "@rh/database/browser";
 import type { PositionGetPayload } from "@rh/database/models";
-import type { CreatePositionPayload, UpdatePositionPayload } from "@rh/shared";
+import type { CreatePositionPayload, UpdatePositionPayload, FindAllPositionParamsPayload } from "@rh/shared/schemas";
+
+export type SortBy = FindAllPositionParamsPayload["sortBy"];
+export type SortOrder = FindAllPositionParamsPayload["sortOrder"];
 
 export type PositionWithAttributes = PositionGetPayload<{
   include: {
@@ -17,10 +20,12 @@ export type PositionWithAttributes = PositionGetPayload<{
 
 export type PositionAttributeItem = PositionWithAttributes["attributes"][number];
 
-export async function fetchPositions(search: string) {
+export async function fetchPositions(search: string, sortBy: SortBy, sortOrder: SortOrder) {
   const res = await privateApi.get<ApiResponse<PositionWithAttributes[]>>("/positions", {
     params: {
       search,
+      sortBy,
+      sortOrder,
     },
   });
   return res.data;

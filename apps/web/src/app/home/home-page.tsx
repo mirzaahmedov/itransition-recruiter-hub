@@ -8,6 +8,7 @@ import { type Position } from "@rh/database/browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { fetchDashboardStats, fetchLatestPositions, fetchPopularPositions } from "./api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const statsOptions = [
   { key: "resume", label: "Resumes Created", icon: FilesIcon },
@@ -40,7 +41,7 @@ const HomePage = () => {
     queryClient.clear();
   };
 
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: isLoadingStats } = useQuery({
     queryKey: ["dashboard/stats"],
     queryFn: fetchDashboardStats,
   });
@@ -50,13 +51,13 @@ const HomePage = () => {
     candidate: 0,
   };
 
-  const { data: latestPositions } = useQuery({
+  const { data: latestPositions, isLoading: isLoadingLatestPositions } = useQuery({
     queryKey: ["dashboard/positions/latest"],
     queryFn: fetchLatestPositions,
   });
   const latestPositionsData = latestPositions?.data ?? [];
 
-  const { data: popularPositions } = useQuery({
+  const { data: popularPositions, isLoading: isLoadingPopularPositions } = useQuery({
     queryKey: ["dashboard/positions/popular"],
     queryFn: fetchPopularPositions,
   });
@@ -74,10 +75,12 @@ const HomePage = () => {
           </Link>
           {user ? (
             <div className="flex items-center gap-2">
-              <Avatar className="size-8">
-                <AvatarImage src={user?.avatar ?? undefined} alt={user?.name ?? "Avatar"} />
-                <AvatarFallback>{userInitials}</AvatarFallback>
-              </Avatar>
+              <Link to="/auth/redirect">
+                <Avatar className="size-8">
+                  <AvatarImage src={user?.avatar ?? undefined} alt={user?.name ?? "Avatar"} />
+                  <AvatarFallback>{userInitials}</AvatarFallback>
+                </Avatar>
+              </Link>
               <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">
                 <SignOutIcon className="icon" />
               </Button>
@@ -122,17 +125,19 @@ const HomePage = () => {
 
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="grid gap-4 sm:grid-cols-3">
-          {statsOptions.map(({ key, label, icon: Icon }) => (
-            <div key={label} className="flex items-center gap-4 rounded-2xl border bg-card p-6">
-              <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
-                <Icon className="icon-md" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{statsData[key as keyof typeof statsData].toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{label}</p>
-              </div>
-            </div>
-          ))}
+          {isLoadingStats
+            ? statsOptions.map((_, index) => <Skeleton key={index} className="h-24 rounded-2xl" />)
+            : statsOptions.map(({ key, label, icon: Icon }) => (
+                <div key={label} className="flex items-center gap-4 rounded-2xl border bg-card p-6">
+                  <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
+                    <Icon className="icon-md" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{statsData[key as keyof typeof statsData].toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">{label}</p>
+                  </div>
+                </div>
+              ))}
         </div>
       </section>
 
@@ -147,9 +152,9 @@ const HomePage = () => {
           </Button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {latestPositionsData.map((position) => (
-            <PositionCard key={position.id} position={position} />
-          ))}
+          {isLoadingLatestPositions
+            ? Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} className="h-24 rounded-2xl" />)
+            : latestPositionsData.map((position) => <PositionCard key={position.id} position={position} />)}
         </div>
       </section>
 
@@ -164,9 +169,9 @@ const HomePage = () => {
           </Button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {popularPositionsData.map((position) => (
-            <PositionCard key={position.id} position={position} />
-          ))}
+          {isLoadingPopularPositions
+            ? Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} className="h-24 rounded-2xl" />)
+            : popularPositionsData.map((position) => <PositionCard key={position.id} position={position} />)}
         </div>
       </section>
 

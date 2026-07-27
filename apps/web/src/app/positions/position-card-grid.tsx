@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { ArchiveIcon, ArrowRightIcon, CopySimpleIcon } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
-import type { PositionWithAttributes } from "./api";
+import type { PositionWithAttributes, SortBy, SortOrder } from "./api";
 import type { FC, MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { PositionStatus } from "@rh/database/browser";
@@ -56,10 +56,12 @@ const PositionCard = ({ position }: { position: PositionWithAttributes }) => {
 
 export const PositionCardGrid: FC<{
   search: string;
-}> = ({ search }) => {
+  sortBy: SortBy;
+  sortOrder: SortOrder;
+}> = ({ search, sortBy, sortOrder }) => {
   const { data: positions, isLoading } = useQuery({
-    queryKey: ["positions", { search }],
-    queryFn: () => fetchPositions(search),
+    queryKey: ["positions", { search, sortBy, sortOrder }],
+    queryFn: () => fetchPositions(search, sortBy, sortOrder),
   });
 
   if (isLoading) {

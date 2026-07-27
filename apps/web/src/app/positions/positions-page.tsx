@@ -1,16 +1,51 @@
-import { useNavigate } from "react-router-dom";
-import { PositionCardGrid } from "./position-card-grid";
 import { Button } from "@/components/ui/button";
-import { MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
-import { Can } from "@casl/react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { useState } from "react";
+import { Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Can } from "@casl/react";
+import { MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
+import { type FindAllPositionParamsPayload } from "@rh/shared/schemas";
 import { useDebounce } from "@uidotdev/usehooks";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import type { SortBy, SortOrder } from "./api";
+import { PositionCardGrid } from "./position-card-grid";
+
+const sortOptions: Array<{
+  value: `${FindAllPositionParamsPayload["sortBy"]}:${FindAllPositionParamsPayload["sortOrder"]}`;
+  label: string;
+}> = [
+  {
+    value: "createdAt:desc",
+    label: "Newest",
+  },
+  {
+    value: "createdAt:asc",
+    label: "Oldest",
+  },
+  {
+    value: "title:desc",
+    label: "Name Z-A",
+  },
+  {
+    value: "title:asc",
+    label: "Name A-Z",
+  },
+  {
+    value: "resumes:desc",
+    label: "Most popular",
+  },
+  {
+    value: "resumes:asc",
+    label: "Least popular",
+  },
+];
 
 const PositionsPage = () => {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<SortBy>("createdAt");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -28,15 +63,35 @@ const PositionsPage = () => {
               <MagnifyingGlassIcon aria-hidden="true" />
             </InputGroupAddon>
           </InputGroup>
+          <Select
+            items={sortOptions}
+            onValueChange={(value) => {
+              const [sortBy, sortOrder] = (value ?? ":")?.split(":") as [SortBy, SortOrder];
+              setSortBy(sortBy);
+              setSortOrder(sortOrder);
+            }}
+            value={`${sortBy}:${sortOrder}`}
+          >
+            <SelectTrigger aria-label="Select result range" className="w-fit min-w-none" size="lg">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectPopup>
+              {sortOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectPopup>
+          </Select>
           <Can I="create" a="Position">
             <Button onClick={() => navigate("/positions/new")}>
               <PlusIcon />
-              New Position
+              Create
             </Button>
           </Can>
         </div>
       </div>
-      <PositionCardGrid search={debouncedSearch} />
+      <PositionCardGrid search={debouncedSearch} sortBy={sortBy} sortOrder={sortOrder} />
     </div>
   );
 };

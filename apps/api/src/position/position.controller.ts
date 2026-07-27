@@ -18,6 +18,7 @@ import { makeResponse } from '@rh/shared/models';
 import {
   BulkCreatePositionAttributesDto,
   CreatePositionDto,
+  FindAllPositionParamsDto,
   UpdatePositionDto,
   UpdatePositionStatusDto,
 } from './position.dto';
@@ -35,12 +36,22 @@ export class PositionController {
   }
 
   @Get()
-  async findAll(@Query('search') search: string, @AuthUser() user: User) {
+  async findAll(
+    @AuthUser() user: User,
+    @Query() params: FindAllPositionParamsDto,
+  ) {
+    const { search = '', sortBy, sortOrder } = params;
     return makeResponse(
-      await this.positionService.findAll({
-        search,
-        user,
-      }),
+      await this.positionService.findAll(
+        {
+          search,
+          user,
+        },
+        {
+          sortBy,
+          sortOrder,
+        },
+      ),
     );
   }
 

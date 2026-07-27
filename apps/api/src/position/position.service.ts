@@ -10,6 +10,7 @@ import { ResumeService } from './resume/resume.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
 import { PositionStatus, User, UserRole } from '@rh/database/client';
 import { PositionFindManyArgs } from '@rh/database/models';
+import { FindAllPositionParamsPayload } from '@rh/shared/schemas';
 
 const positionInclude = {
   attributes: {
@@ -19,13 +20,18 @@ const positionInclude = {
   },
 } as const satisfies PositionFindManyArgs['include'];
 
-interface PositionFindOneArgs {
+interface FindOnePositionArgs {
   id: string;
   userId?: string;
 }
-interface PositionFindAllArgs {
+interface FindAllPositionArgs {
   search: string;
   user: User;
+}
+
+export interface FindAllSortingParams {
+  sortBy?: string;
+  sortOrder?: '';
 }
 
 @Injectable()
@@ -52,7 +58,10 @@ export class PositionService {
     });
   }
 
-  async findAll({ search, user }: PositionFindAllArgs) {
+  async findAll(
+    { search, user }: FindAllPositionArgs,
+    { sortBy = 'createdAt', sortOrder = 'desc' }: FindAllPositionParamsPayload,
+  ) {
     const where: PositionFindManyArgs['where'] = {};
     const searchTerm = search.trim();
 
@@ -78,10 +87,20 @@ export class PositionService {
     return await this.prisma.position.findMany({
       include: positionInclude,
       where,
+      orderBy:
+        sortBy !== 'resumes'
+          ? {
+              [sortBy]: sortOrder,
+            }
+          : {
+              resumes: {
+                _count: sortOrder,
+              },
+            },
     });
   }
 
-  async findOne({ id, userId }: PositionFindOneArgs) {
+  async findOne({ id, userId }: FindOnePositionArgs) {
     const position = await this.prisma.position.findUnique({
       where: {
         id,
