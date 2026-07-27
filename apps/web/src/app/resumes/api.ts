@@ -1,7 +1,7 @@
 import { privateApi } from "@/lib/api/client";
 import type { ApiResponse } from "@rh/shared/models";
 import type { User } from "@rh/database/browser";
-import type { ResumeAttributeGetPayload, ResumeGetPayload } from "@rh/database/models";
+import type { ResumeAttributeGetPayload, ResumeGetPayload, ResumeProjectGetPayload } from "@rh/database/models";
 
 type ResumeAttributeInclude = {
   positionAttribute: {
@@ -28,7 +28,7 @@ export type ResumeListItem = ResumeGetPayload<{
   include: {
     position: true;
     user: true;
-    resumeAttributes: {
+    attributes: {
       include: ResumeAttributeInclude;
     };
   };
@@ -36,6 +36,11 @@ export type ResumeListItem = ResumeGetPayload<{
 
 export type ResumeDetail = ResumeListItem & {
   user: User;
+  projects: ResumeProjectGetPayload<{
+    include: {
+      project: true;
+    };
+  }>[];
 };
 
 export async function fetchMyResumes() {
@@ -45,6 +50,11 @@ export async function fetchMyResumes() {
 
 export async function fetchResume(id: string) {
   const res = await privateApi.get<ApiResponse<ResumeDetail>>(`/resumes/${id}`);
+  return res.data;
+}
+
+export async function fetchResumeProjects(id: string) {
+  const res = await privateApi.get<ApiResponse<ResumeDetail>>(`/resumes/${id}/projects`);
   return res.data;
 }
 

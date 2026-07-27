@@ -20,6 +20,8 @@ const PositionPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  console.log("position page");
+
   const { data: position, isFetching } = useQuery({
     queryKey: ["positions", id],
     queryFn: () => fetchPosition(id!),

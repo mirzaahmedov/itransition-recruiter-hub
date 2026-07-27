@@ -52,8 +52,10 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Category: 'Category',
+  Tag: 'Tag',
   User: 'User',
   Project: 'Project',
+  ProjectTag: 'ProjectTag',
   Attribute: 'Attribute',
   AttributeChoice: 'AttributeChoice',
   UserAttribute: 'UserAttribute',
@@ -61,6 +63,7 @@ export const ModelName = {
   Position: 'Position',
   Resume: 'Resume',
   ResumeAttribute: 'ResumeAttribute',
+  ResumeProject: 'ResumeProject',
   ResumeLike: 'ResumeLike'
 } as const
 
@@ -89,6 +92,15 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -115,6 +127,16 @@ export const ProjectScalarFieldEnum = {
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectTagScalarFieldEnum = {
+  id: 'id',
+  tagId: 'tagId',
+  projectId: 'projectId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectTagScalarFieldEnum = (typeof ProjectTagScalarFieldEnum)[keyof typeof ProjectTagScalarFieldEnum]
 
 
 export const AttributeScalarFieldEnum = {
@@ -195,6 +217,16 @@ export const ResumeAttributeScalarFieldEnum = {
 } as const
 
 export type ResumeAttributeScalarFieldEnum = (typeof ResumeAttributeScalarFieldEnum)[keyof typeof ResumeAttributeScalarFieldEnum]
+
+
+export const ResumeProjectScalarFieldEnum = {
+  id: 'id',
+  resumeId: 'resumeId',
+  projectId: 'projectId',
+  createdAt: 'createdAt'
+} as const
+
+export type ResumeProjectScalarFieldEnum = (typeof ResumeProjectScalarFieldEnum)[keyof typeof ResumeProjectScalarFieldEnum]
 
 
 export const ResumeLikeScalarFieldEnum = {

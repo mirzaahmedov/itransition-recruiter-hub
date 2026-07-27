@@ -2,6 +2,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   S3Client,
+  GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
@@ -20,11 +21,20 @@ export class StorageService implements OnModuleInit {
     });
   }
 
+  async read(key: string) {
+    return await this.client.send(
+      new GetObjectCommand({
+        Key: key,
+        Bucket: process.env.S3_BUCKET,
+      }),
+    );
+  }
+
   async upload(key: string, file: Express.Multer.File) {
     return await this.client.send(
       new PutObjectCommand({
         Bucket: process.env.S3_BUCKET,
-        Key: `images/${key}`,
+        Key: key,
         Body: file.buffer,
         ContentType: file.mimetype,
       }),
@@ -35,7 +45,7 @@ export class StorageService implements OnModuleInit {
     return await this.client.send(
       new DeleteObjectCommand({
         Bucket: process.env.S3_BUCKET,
-        Key: `images/${key}`,
+        Key: key,
       }),
     );
   }

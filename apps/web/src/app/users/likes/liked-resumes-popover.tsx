@@ -21,7 +21,7 @@ const mockLikedResumes: LikedResume[] = [
       positionId: "p1",
       userId: "u2",
       status: "PUBLISHED",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p1",
@@ -42,7 +42,7 @@ const mockLikedResumes: LikedResume[] = [
       positionId: "p2",
       userId: "u3",
       status: "DRAFT",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p2",
@@ -63,7 +63,7 @@ const mockLikedResumes: LikedResume[] = [
       positionId: "p3",
       userId: "u4",
       status: "PUBLISHED",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p3",
@@ -84,7 +84,7 @@ const mockLikedResumes: LikedResume[] = [
       positionId: "p4",
       userId: "u5",
       status: "PRIVATE",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p4",
@@ -98,15 +98,7 @@ const mockLikedResumes: LikedResume[] = [
   },
 ];
 
-export const LikedResumesContent = ({
-  likes,
-  isLoading,
-  compact = false,
-}: {
-  likes?: LikedResume[];
-  isLoading?: boolean;
-  compact?: boolean;
-}) => {
+export const LikedResumesContent = ({ likes, isLoading, compact = false }: { likes?: LikedResume[]; isLoading?: boolean; compact?: boolean }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -146,14 +138,9 @@ export const LikedResumesContent = ({
             <HeartIcon className="size-4 shrink-0 text-pink-500" weight="fill" />
             <div className="flex-1 min-w-0">
               <p className="font-medium truncate">{like.resume.position.title}</p>
-              <p className="text-xs text-muted-foreground truncate">
-                {like.resume.position.description}
-              </p>
+              <p className="text-xs text-muted-foreground truncate">{like.resume.position.description}</p>
             </div>
-            <Badge
-              variant={like.resume.status === "PUBLISHED" ? "success" : "warning"}
-              size="sm"
-            >
+            <Badge variant={like.resume.status === "PUBLISHED" ? "success" : "warning"} size="sm">
               {like.resume.status}
             </Badge>
           </Link>

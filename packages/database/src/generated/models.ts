@@ -9,8 +9,10 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Category.js'
+export type * from './models/Tag.js'
 export type * from './models/User.js'
 export type * from './models/Project.js'
+export type * from './models/ProjectTag.js'
 export type * from './models/Attribute.js'
 export type * from './models/AttributeChoice.js'
 export type * from './models/UserAttribute.js'
@@ -18,5 +20,6 @@ export type * from './models/PositionAttribute.js'
 export type * from './models/Position.js'
 export type * from './models/Resume.js'
 export type * from './models/ResumeAttribute.js'
+export type * from './models/ResumeProject.js'
 export type * from './models/ResumeLike.js'
 export type * from './commonInputTypes.js'

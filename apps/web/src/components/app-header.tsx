@@ -8,11 +8,12 @@ import { useAuthStore } from "@/store/use-auth-store";
 import { fallbackName } from "@/utils/fallbackName";
 import { LikedResumesContent } from "@/app/users/likes/liked-resumes-popover";
 import { Can } from "@casl/react";
-import { HeartIcon, ListIcon, ReadCvLogoIcon, SignOutIcon } from "@phosphor-icons/react";
+import { HeartIcon, ListIcon, MoonIcon, ReadCvLogoIcon, SignOutIcon, SunIcon } from "@phosphor-icons/react";
 import { UserRole } from "@rh/database/browser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useThemeStore } from "@/store/use-theme-store";
 
 interface NavLinkItem {
   to: string;
@@ -26,6 +27,8 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export const AppHeader = () => {
   const user = useAuthStore((store) => store.user);
   const logOut = useAuthStore((store) => store.logOut);
+  const theme = useThemeStore((store) => store.theme);
+  const toggleTheme = useThemeStore((store) => store.toggleTheme);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("max-md");
@@ -85,7 +88,6 @@ export const AppHeader = () => {
             </Avatar>
             <div className="flex flex-col items-start">
               {!isMobile && <span className="text-sm font-medium max-w-30 truncate">{user?.name ?? "User"}</span>}
-              {user && !isMobile ? <span className="text-info text-xs font-bold capitalize">{user.role?.toLowerCase()}</span> : null}
             </div>
           </div>
 
@@ -99,6 +101,10 @@ export const AppHeader = () => {
               </PopoverContent>
             </Popover>
           </Can>
+
+          <Button size="icon" variant="ghost" onClick={toggleTheme} title="Toggle theme">
+            {theme === "dark" ? <MoonIcon className="icon" /> : <SunIcon className="icon" />}
+          </Button>
 
           <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">
             <SignOutIcon className="icon" />

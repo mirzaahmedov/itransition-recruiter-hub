@@ -33,6 +33,13 @@ model Category {
   @@map("categories")
 }
 
+model Tag {
+  id          String        @id
+  name        String
+  projectTags ProjectTag[]
+  createdAt   DateTime      @default(now())
+}
+
 model User {
   id           String          @id @default(cuid())
   email        String          @unique
@@ -54,16 +61,27 @@ model User {
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  url         String?
-  image       String?
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
+  id                String          @id @default(cuid())
+  name              String
+  description       String?
+  url               String?
+  image             String?
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags              ProjectTag[]
+  resumeProjects    ResumeProject[]
+  createdAt         DateTime        @default(now())
 
   @@map("projects")
+}
+
+model ProjectTag {
+  id                String          @id @default(cuid())
+  tagId             String
+  tag               Tag             @relation(references: [id], fields: [tagId], onDelete: Cascade)
+  projectId         String
+  project           Project         @relation(references: [id], fields: [projectId], onDelete: Cascade)
+  createdAt         DateTime        @default(now())
 }
 
 enum AttributeType {
@@ -117,7 +135,7 @@ model UserAttribute {
   choiceId         String?
   choice           AttributeChoice?  @relation(fields: [choiceId], references: [id])
   userId           String
-  user             User              @relation(fields: [userId], references: [id])
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt        DateTime          @default(now())
   version          Int               @default(1)
   resumeAttributes ResumeAttribute[]
@@ -167,7 +185,8 @@ model Resume {
   user             User              @relation(references: [id], fields: [userId], onDelete: Cascade)
   status           ResumeStatus      @default(DRAFT)
 
-  resumeAttributes ResumeAttribute[]
+  attributes       ResumeAttribute[]
+  projects         ResumeProject[]
   likes            ResumeLike[]
 
   @@unique([userId, positionId])
@@ -184,6 +203,16 @@ model ResumeAttribute {
   userAttributeId     String
   
   @@map("resume_attributes")
+}
+
+model ResumeProject {
+  id                  String            @id @default(cuid())
+  resumeId            String
+  resume              Resume            @relation(references: [id], fields: [resumeId], onDelete: Cascade)
+  projectId           String
+  project             Project           @relation(references: [id], fields: [projectId], onDelete: Cascade)
+  
+  createdAt           DateTime          @default(now())
 }
 
 model ResumeLike {

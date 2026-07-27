@@ -4,18 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { FileWithPreview } from "@/hooks/use-file-upload";
 import { fallbackName } from "@/utils/fallbackName";
-import { CheckIcon, FloppyDiskIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { CheckIcon, PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type FC } from "react";
 import toast from "react-hot-toast";
 import { updateUserProfile, uploadProfilePicture } from "./api";
+import { useAuthStore } from "@/store/use-auth-store";
 
 export const ProfileHeader: FC<{
   user: User;
 }> = ({ user }) => {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(user.name ?? "");
+
+  const { user: currentUser, setUserProfile } = useAuthStore();
 
   const queryClient = useQueryClient();
 
@@ -30,9 +33,15 @@ export const ProfileHeader: FC<{
   const handleUploadProfilePicture = (data: FileWithPreview) => {
     if (data.file instanceof File) {
       uploadProfilePictureMutation.mutate(data.file, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["users", user.id] });
+        onSuccess: (res) => {
+          const updatedUser = res.data;
+
+          queryClient.invalidateQueries({ queryKey: ["users", updatedUser.id] });
           toast.success("Profile picture updated successfully");
+
+          if (updatedUser && currentUser?.id === updatedUser.id) {
+            setUserProfile(updatedUser);
+          }
         },
       });
     }
@@ -83,13 +92,13 @@ export const ProfileHeader: FC<{
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           <div className="flex items-center gap-2 pb-1 absolute top-4 right-4">
-            <Button loading={updateProfileMutation.isPending} onClick={handleSaveProfile}>
-              <FloppyDiskIcon />
-              Save
-            </Button>
-            <Button variant="link" onClick={() => setEditing(false)}>
+            <Button variant="link" loading={updateProfileMutation.isPending} onClick={handleSaveProfile}>
               <CheckIcon />
               Done
+            </Button>
+            <Button variant="link" onClick={() => setEditing(false)}>
+              <XIcon />
+              Cancel
             </Button>
           </div>
         </div>

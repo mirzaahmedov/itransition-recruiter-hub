@@ -1,5 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserAttributeService } from '@/user/attribute/user-attribute.service';
+import { ProjectService } from '@/user/project/project.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -9,15 +10,15 @@ import {
 import { ResumeAttribute } from '@rh/database/browser';
 import { ResumeStatus, User } from '@rh/database/client';
 import { UserRole } from '@rh/database/enums';
+import { ResumeFindUniqueArgs } from '@rh/database/models';
+import { isDynamicValueFilled } from '@rh/shared';
 import { PositionService } from '../position.service';
 import { CreateResumeDto } from './resume.dto';
-import { ResumeFindManyArgs, ResumeFindUniqueArgs } from '@rh/database/models';
-import { isDynamicValueFilled } from '@rh/shared';
 
-const resumeInclude = {
+const resumeDetailInclude = {
   position: true,
   user: true,
-  resumeAttributes: {
+  attributes: {
     include: {
       positionAttribute: {
         include: {
@@ -36,6 +37,11 @@ const resumeInclude = {
       },
     },
   },
+  projects: {
+    include: {
+      project: true,
+    },
+  },
 } as const satisfies ResumeFindUniqueArgs['include'];
 
 @Injectable()
@@ -44,6 +50,7 @@ export class ResumeService {
     private readonly prisma: PrismaService,
     private readonly userAttributeService: UserAttributeService,
     private readonly positionService: PositionService,
+    private readonly projectService: ProjectService,
   ) {}
 
   async create(data: CreateResumeDto) {
@@ -53,12 +60,13 @@ export class ResumeService {
     const positionAttributes = await this.positionService.findOne({
       id: data.positionId,
     });
+    const userProjects = await this.projectService.findByUserId(data.userId);
 
     const resume = await this.prisma.resume.create({
       data: {
         positionId: data.positionId,
         userId: data.userId,
-        resumeAttributes: {
+        attributes: {
           create: positionAttributes.attributes.map((pa) => {
             const found = userAttributes.find(
               (ua) => ua.attributeId === pa.attributeId,
@@ -84,6 +92,11 @@ export class ResumeService {
             };
           }),
         },
+        projects: {
+          create: userProjects.slice(0, 3).map((r) => ({
+            projectId: r.id,
+          })),
+        },
       },
     });
 
@@ -103,7 +116,7 @@ export class ResumeService {
       where,
       include: {
         user: true,
-        resumeAttributes: {
+        attributes: {
           include: {
             userAttribute: {
               include: {
@@ -129,7 +142,7 @@ export class ResumeService {
       where: { userId },
       include: {
         position: true,
-        resumeAttributes: {
+        attributes: {
           include: {
             positionAttribute: {
               include: {
@@ -162,7 +175,7 @@ export class ResumeService {
   async findOne(id: string) {
     const resume = await this.prisma.resume.findUnique({
       where: { id },
-      include: resumeInclude,
+      include: resumeDetailInclude,
     });
 
     if (!resume) {
@@ -172,13 +185,21 @@ export class ResumeService {
     return resume;
   }
 
+  async findProjects(resumeId: string) {
+    return this.prisma.resumeProject.findMany({
+      where: {
+        resumeId,
+      },
+    });
+  }
+
   async updateStatus(id: string, status: ResumeStatus) {
     await this.findOne(id);
 
     return await this.prisma.resume.update({
       where: { id },
       data: { status },
-      include: resumeInclude,
+      include: resumeDetailInclude,
     });
   }
 
@@ -193,7 +214,7 @@ export class ResumeService {
       return resume;
     }
 
-    const emptyAttrs = resume.resumeAttributes.filter(
+    const emptyAttributes = resume.attributes.filter(
       (attribute) =>
         !isDynamicValueFilled(
           attribute.userAttribute,
@@ -201,8 +222,10 @@ export class ResumeService {
         ),
     );
 
-    if (emptyAttrs.length > 0) {
-      const names = emptyAttrs.map((ra) => ra.positionAttribute.attribute.name);
+    if (emptyAttributes.length > 0) {
+      const names = emptyAttributes.map(
+        (ra) => ra.positionAttribute.attribute.name,
+      );
       throw new BadRequestException(
         `Cannot publish: the following attributes are empty: ${names.join(', ')}`,
       );
@@ -211,7 +234,7 @@ export class ResumeService {
     return await this.prisma.resume.update({
       where: { id },
       data: { status: ResumeStatus.PUBLISHED },
-      include: resumeInclude,
+      include: resumeDetailInclude,
     });
   }
 

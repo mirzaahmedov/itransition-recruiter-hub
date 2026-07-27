@@ -12,6 +12,7 @@ import { deleteResume, fetchResume, publishResume } from "./api";
 import { ResumeView } from "./resume-view";
 import { ResumeForm } from "./resume-form";
 import { ResumeStatus } from "@rh/database/browser";
+import { ResumeProjects } from "./resume-projects";
 
 const ResumePage = () => {
   const { id } = useParams();
@@ -71,7 +72,7 @@ const ResumePage = () => {
     );
   }
 
-  const filledCount = resumeData.resumeAttributes.filter(
+  const filledCount = resumeData.attributes.filter(
     (ra) =>
       ra.userAttribute.textValue ||
       ra.userAttribute.numberValue != null ||
@@ -81,7 +82,7 @@ const ResumePage = () => {
       ra.userAttribute.choice,
   ).length;
 
-  const isFilledProperly = filledCount === resumeData.resumeAttributes.length;
+  const isFilledProperly = filledCount === resumeData.attributes.length;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
@@ -93,7 +94,7 @@ const ResumePage = () => {
           </Button>
 
           <Badge variant="info">
-            {filledCount}/{resumeData.resumeAttributes.length} fields filled
+            {filledCount}/{resumeData.attributes.length} fields filled
           </Badge>
         </div>
 
@@ -120,10 +121,6 @@ const ResumePage = () => {
               />
             </>
           )}
-          {/* <Button variant="outline" onClick={() => window.print()}>
-            <PrinterIcon />
-            Print
-          </Button> */}
         </div>
       </div>
       {editing ? (
@@ -140,10 +137,12 @@ const ResumePage = () => {
               });
             }}
           />
+          <ResumeProjects projects={resumeData.projects} />
         </div>
       ) : (
         <div className="resume-container rounded-2xl border bg-card shadow-sm">
           <ResumeView resume={resumeData} onEdit={() => setEditing(true)} />
+          <ResumeProjects projects={resumeData.projects} />
         </div>
       )}
     </div>

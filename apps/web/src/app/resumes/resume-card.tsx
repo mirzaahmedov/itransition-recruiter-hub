@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ResumeStatusBadge } from "@/components/resume-status";
 
 export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
-  const filledCount = resume.resumeAttributes.filter(
+  const filledCount = resume.attributes.filter(
     (ra) =>
       ra.userAttribute.textValue ||
       ra.userAttribute.numberValue != null ||
@@ -15,7 +15,7 @@ export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
       ra.userAttribute.choice,
   ).length;
 
-  const isValid = filledCount === resume.resumeAttributes.length;
+  const isValid = filledCount === resume.attributes.length;
 
   return (
     <div className="group relative rounded-2xl border bg-card p-5 transition-all hover:shadow-md hover:border-foreground/15">
@@ -28,7 +28,7 @@ export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
         <div className="mt-4 flex items-center gap-2">
           <ResumeStatusBadge status={resume.status} />
           <Badge variant={isValid ? "info" : "destructive"}>
-            {filledCount}/{resume.resumeAttributes.length} fields filled
+            {filledCount}/{resume.attributes.length} fields filled
           </Badge>
         </div>
       </Link>

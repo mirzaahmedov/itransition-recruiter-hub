@@ -30,14 +30,13 @@ import { UserService } from './user.service';
 
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
+import { parseObjectKeyFromImageURL } from '@/lib/storage';
 import { ResumeService } from '@/position/resume/resume.service';
 import { ResumeLikeService } from '@/resume-like/resume-like.service';
 import { StorageService } from '@/storage/storage.service';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { makePaginatedResponse } from '@rh/shared/models';
 import type { Request } from 'express';
-import path, { extname } from 'path';
-import { parseObjectKeyFromImageURL } from '@/lib/storage';
+import { extname } from 'path';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -100,11 +99,11 @@ export class UserController {
 
     const key = nanoid() + extname(image.originalname);
 
-    await this.storageService.upload(key, image);
+    await this.storageService.upload(`images/${key}`, image);
     if (user.avatar) {
       try {
         const key = parseObjectKeyFromImageURL(user.avatar);
-        const result = await this.storageService.delete(key);
+        const result = await this.storageService.delete(`images/${key}`);
         console.log(`deleted ${key}`, result);
       } catch (error) {
         console.log(error);

@@ -10,10 +10,9 @@ import { useRef, useState, type FC } from "react";
 import { createProject, deleteProject, uploadProjectImage } from "./api";
 
 export const ProfileProjects: FC<{
-  editing: boolean;
   user: User;
   projects: Project[];
-}> = ({ user, projects: initialProjects, editing }) => {
+}> = ({ user, projects: initialProjects }) => {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
 
   const [newProject, setNewProject] = useState<CreateProjectPayload>({ name: "", description: "", url: "" });
@@ -68,115 +67,78 @@ export const ProfileProjects: FC<{
 
   return (
     <div className="mt-6">
-      {!editing ? (
-        <div className="rounded-2xl border bg-card p-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
-          </div>
-          <div className="mt-4">
-            {projects.length > 0 ? (
-              <div className="space-y-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="flex items-start gap-4">
-                    {project.image && <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">{project.name}</h4>
-                        {project.url && (
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            <LinkIcon className="size-3.5" />
-                          </a>
-                        )}
-                      </div>
-                      {project.description && <p className="text-sm text-muted-foreground mt-1">{project.description}</p>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No projects added yet</p>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="rounded-2xl border bg-card p-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
+      <div className="rounded-2xl border bg-card p-6">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
 
-            <div className="flex items-center gap-1">
-              <Button variant="secondary" size="sm" onClick={projectDialog.openDialog} className="-my-2">
-                <PlusIcon />
-                Add
-              </Button>
-            </div>
-          </div>
-          <div className="mt-4">
-            {projects.length > 0 ? (
-              <div className="space-y-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="flex items-start gap-4">
-                    {project.image ? (
-                      <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
-                    ) : (
-                      <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleProjectImageUpload(project.id, file);
-                          }}
-                          id={`project-image-${project.id}`}
-                        />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-muted-foreground"
-                          onClick={() => document.getElementById(`project-image-${project.id}`)?.click()}
-                        >
-                          <UploadSimpleIcon className="size-4" />
-                        </Button>
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">{project.name}</h4>
-                        {project.url && (
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            <LinkIcon className="size-3.5" />
-                          </a>
-                        )}
-                      </div>
-                      {project.description && <p className="text-sm text-muted-foreground mt-1">{project.description}</p>}
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteProject(project.id)}
-                      className="text-muted-foreground hover:text-destructive"
-                    >
-                      <TrashIcon className="size-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No projects added yet</p>
-            )}
+          <div className="flex items-center gap-1">
+            <Button variant="secondary" size="sm" onClick={projectDialog.openDialog} className="-my-2">
+              <PlusIcon />
+              Add
+            </Button>
           </div>
         </div>
-      )}
+        <div className="mt-4">
+          {projects.length > 0 ? (
+            <div className="space-y-4">
+              {projects.map((project) => (
+                <div key={project.id} className="flex items-start gap-4">
+                  {project.image ? (
+                    <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
+                  ) : (
+                    <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleProjectImageUpload(project.id, file);
+                        }}
+                        id={`project-image-${project.id}`}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground"
+                        onClick={() => document.getElementById(`project-image-${project.id}`)?.click()}
+                      >
+                        <UploadSimpleIcon className="size-4" />
+                      </Button>
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-medium">{project.name}</h4>
+                      {project.url && (
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <LinkIcon className="size-3.5" />
+                        </a>
+                      )}
+                    </div>
+                    {project.description && <p className="text-sm text-muted-foreground mt-1">{project.description}</p>}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDeleteProject(project.id)}
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    <TrashIcon className="size-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-4">No projects added yet</p>
+          )}
+        </div>
+      </div>
       {projectDialog.open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-card rounded-2xl border p-6 w-full max-w-md mx-4">

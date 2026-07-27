@@ -3,7 +3,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardPanel, CardTitle } f
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
 import { SignInIcon, UserPlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 enum TabOption {
   REGISTER = "REGISTER",
@@ -12,14 +12,27 @@ enum TabOption {
 
 export const AuthFormLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
   const [tabValue, setTabValue] = useState(location.pathname.endsWith("register") ? TabOption.REGISTER : TabOption.LOGIN);
 
+  const returnTo = searchParams.get("returnTo");
+
   const handleLoginGoogle = () => {
+    sessionStorage.setItem("returnTo", returnTo ?? "");
     window.location.href = `${import.meta.env.VITE_API_HOST}/auth/google`;
   };
   const handleLoginGithub = () => {
+    sessionStorage.setItem("returnTo", returnTo ?? "");
     window.location.href = `${import.meta.env.VITE_API_HOST}/auth/github`;
+  };
+
+  const urlWithQueryParams = (url: string) => {
+    if (returnTo) {
+      url += `?returnTo=${returnTo}`;
+    }
+    return url;
   };
 
   return (
@@ -29,10 +42,10 @@ export const AuthFormLayout = () => {
           <CardHeader className="border-b">
             <div className="flex items-center justify-center">
               <TabsList variant="underline">
-                <TabsTab value={TabOption.REGISTER} render={<NavLink to="/auth/register" />}>
+                <TabsTab value={TabOption.REGISTER} onClick={() => navigate(urlWithQueryParams("/auth/register"))}>
                   <UserPlusIcon /> Register
                 </TabsTab>
-                <TabsTab value={TabOption.LOGIN} render={<NavLink to="/auth/login" />}>
+                <TabsTab value={TabOption.LOGIN} onClick={() => navigate(urlWithQueryParams("/auth/login"))}>
                   <SignInIcon />
                   Login
                 </TabsTab>

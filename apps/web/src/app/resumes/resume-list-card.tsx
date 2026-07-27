@@ -4,7 +4,7 @@ import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 
 export const ResumeListCard = ({ resume }: { resume: ResumeListItem }) => {
-  const filledCount = resume.resumeAttributes.filter(
+  const filledCount = resume.attributes.filter(
     (ra) =>
       ra.userAttribute.textValue ||
       ra.userAttribute.numberValue != null ||
@@ -25,7 +25,7 @@ export const ResumeListCard = ({ resume }: { resume: ResumeListItem }) => {
         <div className="mt-4 flex items-center gap-2">
           <Badge variant={resume.status === "PUBLISHED" ? "success" : "warning"}>{resume.status}</Badge>
           <Badge variant="info">
-            {filledCount}/{resume.resumeAttributes.length} fields filled
+            {filledCount}/{resume.attributes.length} fields filled
           </Badge>
         </div>
       </Link>

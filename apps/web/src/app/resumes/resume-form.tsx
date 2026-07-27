@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { useAutoSave } from "../../hooks/use-auto-save";
 import { bulkUpdateProfileAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "../users/profile/api";
 import type { ResumeAttributeItem, ResumeDetail } from "./api";
-import { styles } from "./data";
+import { styles } from "./styles";
 import { Badge } from "@/components/ui/badge";
 import { ResumeStatus } from "@rh/database/browser";
 import { AttributeConflictResolve } from "@/components/attribute/attribute-conflict-resolve";
@@ -133,7 +133,7 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
     },
   });
 
-  const groupedByCategory = resume.resumeAttributes.reduce(
+  const groupedByCategory = resume.attributes.reduce(
     (acc, ra) => {
       const categoryId = ra.positionAttribute.attribute.categoryId;
       if (!acc[categoryId]) acc[categoryId] = [];
@@ -210,11 +210,11 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
   }, []);
   const { queueUpdate, flush } = useAutoSave<UserAttributeUpdateArgs>(handleSave);
 
-  const { resumeAttributes } = resume;
+  const { attributes } = resume;
   useEffect(() => {
-    if (Array.isArray(resumeAttributes)) {
+    if (Array.isArray(attributes)) {
       form.reset({
-        attrs: resumeAttributes.reduce(
+        attrs: attributes.reduce(
           (result, item) => {
             const value =
               readDynamicValue(item.userAttribute.attribute.type, item.userAttribute) ?? getDynamicDefaultValue(item.userAttribute.attribute.type);
@@ -232,7 +232,7 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
         attrs: {},
       });
     }
-  }, [resumeAttributes]);
+  }, [attributes]);
 
   const readCategoryAttributes = (categoryId: string) => {
     const attrs = form.watch("attrs");

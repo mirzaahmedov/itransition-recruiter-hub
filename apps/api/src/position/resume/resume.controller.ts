@@ -29,11 +29,11 @@ export class ResumeController {
     @AuthUser() user: User,
     @Param('positionId') positionId: string,
   ) {
-    const existing = await this.resumeService.findOneByUserAndPosition(
+    const foundResume = await this.resumeService.findOneByUserAndPosition(
       user.id,
       positionId,
     );
-    if (existing) {
+    if (foundResume) {
       throw new ConflictException('You have already applied to this position');
     }
 
@@ -61,6 +61,11 @@ export class ResumeController {
     }
 
     return makeResponse(resume);
+  }
+
+  @Get(':id/projects')
+  async findProjects(@Param('id') id: string) {
+    return makeResponse(await this.resumeService.findProjects(id));
   }
 
   @Post(':id/publish')

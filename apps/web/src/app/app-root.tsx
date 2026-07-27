@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/use-auth-store";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { fetchMe } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { fetchCategories } from "./categories/api";
@@ -15,6 +15,7 @@ const AppRoot = () => {
   const logout = useAuthStore((store) => store.logOut);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchMeMutation = useMutation({
     mutationKey: ["users/me"],
@@ -29,7 +30,7 @@ const AppRoot = () => {
   useEffect(() => {
     const handleError = () => {
       logout();
-      navigate("/auth/login");
+      navigate(`/auth/login?returnTo=${location.pathname}`);
     };
     fetchMeMutation.mutate(undefined, {
       onSuccess(res) {
@@ -43,7 +44,7 @@ const AppRoot = () => {
         handleError();
       },
     });
-  }, [setUserProfile]);
+  }, [setUserProfile, location.pathname]);
 
   useEffect(() => {
     fetchCategoryMutation.mutateAsync().then((res) => {

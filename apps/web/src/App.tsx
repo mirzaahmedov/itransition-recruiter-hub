@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import AppRoot from "./app/app-root";
 import AttributesPage from "./app/attributes/attributes-page";
-import AuthOauthCallbackPage from "./app/auth/auth-provider-success";
+import AuthOauthCallbackPage from "./app/auth/auth-oauth-callback";
 import AuthRedirect from "./app/auth/auth-redirect";
 import LoginPage from "./app/auth/login/login-page";
 import RegisterPage from "./app/auth/register/register-page";
@@ -26,6 +26,8 @@ import { RouteGuard } from "./app/route-guard";
 import { AppLayout } from "./components/app-layout";
 
 import { queryClient } from "./lib/api/queryClient";
+import { useThemeStore } from "./store/use-theme-store";
+import { useEffect } from "react";
 
 const router = createBrowserRouter([
   {
@@ -142,6 +144,16 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const theme = useThemeStore((store) => store.theme);
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />

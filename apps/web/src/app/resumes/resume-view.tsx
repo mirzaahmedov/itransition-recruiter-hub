@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NotePencilIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
-import { styles } from "./data";
+import { styles } from "./styles";
 import type { ReactNode } from "react";
 import Markdown from "react-markdown";
 import { format } from "date-fns";
@@ -31,7 +31,7 @@ function ResumeSection({ title, items }: { title: string; items: ResumeAttribute
 export const ResumeView = ({ resume, onEdit }: { resume: ResumeDetail; onEdit: VoidFunction }) => {
   const categories = useCategoryStore((store) => store.categories);
 
-  const groupedByCategory = resume.resumeAttributes.reduce(
+  const groupedByCategory = resume.attributes.reduce(
     (acc, ra) => {
       const categoryId = ra.positionAttribute.attribute.categoryId;
       if (!acc[categoryId]) acc[categoryId] = [];

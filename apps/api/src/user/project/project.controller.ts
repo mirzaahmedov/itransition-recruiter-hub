@@ -1,5 +1,7 @@
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { makeResponse } from '@rh/shared/models';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { RolesGuard } from '@/auth/guards/roles.guard';
+import { parseObjectKeyFromImageURL } from '@/lib/storage';
 import { StorageService } from '@/storage/storage.service';
 import {
   Body,
@@ -16,18 +18,15 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { User, UserRole } from '@rh/database/client';
-import type { Express, Request } from 'express';
-import { extname } from 'path';
+import { makeResponse } from '@rh/shared/models';
+import type { Request } from 'express';
 import { nanoid } from 'nanoid';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { extname } from 'path';
 import { CreateProjectDto, UpdateProjectDto } from './project.dto';
 import { ProjectService } from './project.service';
-import { RolesGuard } from '@/auth/guards/roles.guard';
-import { Roles } from '@/auth/decorators/roles.decorator';
-import { parseObjectKeyFromImageURL } from '@/lib/storage';
 
 @Controller('users/:userId/projects')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -78,7 +77,7 @@ export class ProjectController {
     if (project.image) {
       try {
         const key = parseObjectKeyFromImageURL(project.image);
-        const result = await this.storageService.delete(key);
+        const result = await this.storageService.delete(`images/${key}`);
         console.log(`delete ${key}`, result);
       } catch (error) {
         console.log(error);

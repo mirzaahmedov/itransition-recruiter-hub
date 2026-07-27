@@ -6,7 +6,7 @@ import { fallbackName } from "@/utils/fallbackName";
 import { ArrowRightIcon, BriefcaseIcon, FilesIcon, ReadCvLogoIcon, SignOutIcon, UsersThreeIcon } from "@phosphor-icons/react";
 import { type Position } from "@rh/database/browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { fetchDashboardStats, fetchLatestPositions, fetchPopularPositions } from "./api";
 
 const statsOptions = [
@@ -31,14 +31,12 @@ const PositionCard = ({ position }: { position: Position }) => (
 const HomePage = () => {
   const user = useAuthStore((store) => store.user);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const logOut = useAuthStore((store) => store.logOut);
   const userInitials = fallbackName(user?.name ?? "U");
 
   const handleLogOut = () => {
     logOut();
     localStorage.removeItem("accessToken");
-    navigate("/auth/login");
     queryClient.clear();
   };
 

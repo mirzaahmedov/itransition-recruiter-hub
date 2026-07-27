@@ -13,7 +13,7 @@ const mockLikedResumes: any[] = [
       positionId: "p1",
       userId: "u2",
       status: "PUBLISHED",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p1",
@@ -33,7 +33,7 @@ const mockLikedResumes: any[] = [
       positionId: "p2",
       userId: "u3",
       status: "DRAFT",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p2",
@@ -54,7 +54,7 @@ const mockLikedResumes: any[] = [
       positionId: "p3",
       userId: "u4",
       status: "PUBLISHED",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p3",
@@ -75,7 +75,7 @@ const mockLikedResumes: any[] = [
       positionId: "p4",
       userId: "u5",
       status: "PRIVATE",
-      resumeAttributes: [],
+      attributes: [],
       likes: [],
       position: {
         id: "p4",

@@ -11,12 +11,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { login } from "../api";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 
 const LoginPage = () => {
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
   const [formErrors, setFormErrors] = useState<Record<string, string[] | string>>();
+  const [searchParams] = useSearchParams();
+
+  const returnTo = searchParams.get("returnTo");
 
   const setUserProfile = useAuthStore((store) => store.setUserProfile);
   const navigate = useNavigate();
@@ -33,7 +36,11 @@ const LoginPage = () => {
     onSuccess: (res) => {
       localStorage.setItem("accessToken", res.data.accessToken);
       setUserProfile(res.data.user);
-      navigate("/auth/redirect");
+      if (returnTo) {
+        navigate(returnTo);
+      } else {
+        navigate("/auth/redirect");
+      }
     },
     onError: (error: { response?: { status?: number } }) => {
       if (error.response?.status === 404) {
@@ -58,13 +65,11 @@ const LoginPage = () => {
 
   const togglePasswordHidden = () => setIsPasswordHidden((prev) => !prev);
 
-  console.log({ formErrors });
-
   return (
     <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit} errors={formErrors}>
       <Field>
         <InputGroup>
-          <Input size="lg" placeholder="Enter your email" type="email" {...form.register("email")} />
+          <Input autoComplete="email" size="lg" placeholder="Enter your email" type="email" {...form.register("email")} />
           <InputGroupAddon>
             <AtIcon />
           </InputGroupAddon>
@@ -73,7 +78,13 @@ const LoginPage = () => {
       </Field>
       <Field>
         <InputGroup>
-          <Input size="lg" placeholder="Enter your password" type={isPasswordHidden ? "password" : "text"} {...form.register("password")} />
+          <Input
+            autoComplete="current-password"
+            size="lg"
+            placeholder="Enter your password"
+            type={isPasswordHidden ? "password" : "text"}
+            {...form.register("password")}
+          />
           <InputGroupAddon>
             <KeyIcon />
           </InputGroupAddon>

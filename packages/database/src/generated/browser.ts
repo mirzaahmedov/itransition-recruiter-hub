@@ -23,6 +23,11 @@ export * from './enums.js';
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
  * Model User
  * 
  */
@@ -32,6 +37,11 @@ export type User = Prisma.UserModel
  * 
  */
 export type Project = Prisma.ProjectModel
+/**
+ * Model ProjectTag
+ * 
+ */
+export type ProjectTag = Prisma.ProjectTagModel
 /**
  * Model Attribute
  * 
@@ -67,6 +77,11 @@ export type Resume = Prisma.ResumeModel
  * 
  */
 export type ResumeAttribute = Prisma.ResumeAttributeModel
+/**
+ * Model ResumeProject
+ * 
+ */
+export type ResumeProject = Prisma.ResumeProjectModel
 /**
  * Model ResumeLike
  * 

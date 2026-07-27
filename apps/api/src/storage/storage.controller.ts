@@ -1,8 +1,7 @@
 import { Controller, Get, Param, Res } from '@nestjs/common';
-import { StorageService } from './storage.service';
-import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { Response } from 'express';
 import { Readable } from 'stream';
+import { StorageService } from './storage.service';
 
 @Controller('storage')
 export class StorageController {
@@ -10,12 +9,7 @@ export class StorageController {
 
   @Get(':key')
   async getByKey(@Param('key') key: string, @Res() res: Response) {
-    const file = await this.storageService.client.send(
-      new GetObjectCommand({
-        Key: 'images/' + key,
-        Bucket: process.env.S3_BUCKET,
-      }),
-    );
+    const file = await this.storageService.read(`images/${key}`);
 
     res.setHeader('Content-Type', file.ContentType ?? 'image/jpeg');
 

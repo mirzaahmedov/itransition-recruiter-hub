@@ -9,6 +9,13 @@ Table categories {
   attrs attributes [not null]
 }
 
+Table Tag {
+  id String [pk]
+  name String [not null]
+  projectTags ProjectTag [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Table users {
   id String [pk]
   email String [unique, not null]
@@ -33,6 +40,17 @@ Table projects {
   image String
   userId String [not null]
   user users [not null]
+  tags ProjectTag [not null]
+  resumeProjects ResumeProject [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table ProjectTag {
+  id String [pk]
+  tagId String [not null]
+  tag Tag [not null]
+  projectId String [not null]
+  project projects [not null]
   createdAt DateTime [default: `now()`, not null]
 }
 
@@ -111,7 +129,8 @@ Table resumes {
   userId String [not null]
   user users [not null]
   status ResumeStatus [not null, default: 'DRAFT']
-  resumeAttributes resume_attributes [not null]
+  attributes resume_attributes [not null]
+  projects ResumeProject [not null]
   likes resume_likes [not null]
 
   indexes {
@@ -127,6 +146,15 @@ Table resume_attributes {
   positionAttributeId String [not null]
   userAttribute user_attributes [not null]
   userAttributeId String [not null]
+}
+
+Table ResumeProject {
+  id String [pk]
+  resumeId String [not null]
+  resume resumes [not null]
+  projectId String [not null]
+  project projects [not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Table resume_likes {
@@ -171,6 +199,10 @@ Enum ResumeStatus {
 
 Ref: projects.userId > users.id [delete: Cascade]
 
+Ref: ProjectTag.tagId > Tag.id [delete: Cascade]
+
+Ref: ProjectTag.projectId > projects.id [delete: Cascade]
+
 Ref: attributes.categoryId > categories.id
 
 Ref: attribute_choices.attributeId > attributes.id
@@ -179,7 +211,7 @@ Ref: user_attributes.attributeId > attributes.id
 
 Ref: user_attributes.choiceId > attribute_choices.id
 
-Ref: user_attributes.userId > users.id
+Ref: user_attributes.userId > users.id [delete: Cascade]
 
 Ref: PositionAttribute.attributeId > attributes.id [delete: Cascade]
 
@@ -194,6 +226,10 @@ Ref: resume_attributes.resumeId > resumes.id [delete: Cascade]
 Ref: resume_attributes.positionAttributeId > PositionAttribute.id [delete: Cascade]
 
 Ref: resume_attributes.userAttributeId > user_attributes.id [delete: Cascade]
+
+Ref: ResumeProject.resumeId > resumes.id [delete: Cascade]
+
+Ref: ResumeProject.projectId > projects.id [delete: Cascade]
 
 Ref: resume_likes.userId > users.id [delete: Cascade]
 
