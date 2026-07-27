@@ -1,55 +1,35 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import AppRoot from "./app/app-root";
-import AuthRedirect from "./app/auth/auth-redirect";
-import UsersPage from "./app/users/users-page";
-import PositionsPage from "./app/positions/positions-page";
-import PositionPage from "./app/positions/position-page";
-import PositionCreatePage from "./app/positions/position-create-page";
-import UserProfilePage from "./app/users/profile/profile-page";
-import ResumesPage from "./app/resumes/resumes-page";
-import ResumePage from "./app/resumes/resume-page";
-import RegisterPage from "./app/auth/register/register-page";
-import LoginPage from "./app/auth/login/login-page";
-import AuthOauthCallbackPage from "./app/auth/auth-provider-success";
-import axios from "axios";
-import CandidatesPage from "./app/users/candidates/candidates-page";
-import NotFoundPage from "./app/not-found/not-found-page";
 import AttributesPage from "./app/attributes/attributes-page";
+import AuthOauthCallbackPage from "./app/auth/auth-provider-success";
+import AuthRedirect from "./app/auth/auth-redirect";
+import LoginPage from "./app/auth/login/login-page";
+import RegisterPage from "./app/auth/register/register-page";
 import HomePage from "./app/home/home-page";
+import NotFoundPage from "./app/not-found/not-found-page";
+import PositionCreatePage from "./app/positions/position-create-page";
+import PositionPage from "./app/positions/position-page";
+import PositionsPage from "./app/positions/positions-page";
+import ResumePage from "./app/resumes/resume-page";
+import ResumesPage from "./app/resumes/resumes-page";
+import CandidatesPage from "./app/users/candidates/candidates-page";
 import LikedResumesPage from "./app/users/likes/liked-resumes-page";
+import UserProfilePage from "./app/users/profile/profile-page";
+import UsersPage from "./app/users/users-page";
 
-import { AppLayout } from "./components/app-layout";
+import { UserRole } from "@rh/database/browser";
 import { AuthFormLayout } from "./app/auth/auth-form-layout";
 import { RouteGuard } from "./app/route-guard";
-import { UserRole } from "@rh/database/browser";
+import { AppLayout } from "./components/app-layout";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnReconnect: false,
-      refetchInterval: Infinity,
-      refetchOnWindowFocus: false,
-      retry: (failureCount, error) => {
-        if (axios.isAxiosError(error)) {
-          const status = error.response?.status;
-
-          if (status === 401 || status === 403) {
-            return false;
-          }
-        }
-
-        return failureCount < 3;
-      },
-    },
-  },
-});
+import { queryClient } from "./lib/api/queryClient";
 
 const router = createBrowserRouter([
   {
-    path: "home",
+    path: "/",
     element: <HomePage />,
   },
   {
@@ -89,7 +69,7 @@ const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           {
-            path: "/",
+            path: "/auth/redirect",
             element: <AuthRedirect />,
           },
           {

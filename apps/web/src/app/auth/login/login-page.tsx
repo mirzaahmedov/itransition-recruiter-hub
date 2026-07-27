@@ -33,7 +33,7 @@ const LoginPage = () => {
     onSuccess: (res) => {
       localStorage.setItem("accessToken", res.data.accessToken);
       setUserProfile(res.data.user);
-      navigate("/");
+      navigate("/auth/redirect");
     },
     onError: (error: { response?: { status?: number } }) => {
       if (error.response?.status === 404) {

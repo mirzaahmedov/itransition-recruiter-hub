@@ -59,7 +59,7 @@ export const AppHeader = () => {
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-8">
-          <Link to="/positions" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <span className="size-8 shrink-0 bg-brand text-white rounded-xl grid place-items-center">
               <ReadCvLogoIcon className="icon" />
             </span>

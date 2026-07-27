@@ -13,7 +13,7 @@ const AuthOauthCallbackPage = () => {
   useEffect(() => {
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      navigate("/");
+      navigate("/auth/redirect");
     } else {
       navigate("/auth/login");
       localStorage.removeItem("accessToken");

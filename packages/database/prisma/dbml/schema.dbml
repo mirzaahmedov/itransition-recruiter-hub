@@ -101,6 +101,7 @@ Table positions {
   status PositionStatus [not null, default: 'ACTIVE']
   resumes resumes [not null]
   attributes PositionAttribute [not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Table resumes {

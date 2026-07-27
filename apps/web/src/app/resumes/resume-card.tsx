@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { ResumeListItem } from "./api";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
+import { ResumeStatusBadge } from "@/components/resume-status";
 
 export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
   const filledCount = resume.resumeAttributes.filter(
@@ -25,7 +26,7 @@ export const ResumeCard = ({ resume }: { resume: ResumeListItem }) => {
         </div>
         <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{resume.position.description}</p>
         <div className="mt-4 flex items-center gap-2">
-          <Badge variant={resume.status === "PUBLISHED" ? "success" : "warning"}>{resume.status}</Badge>
+          <ResumeStatusBadge status={resume.status} />
           <Badge variant={isValid ? "info" : "destructive"}>
             {filledCount}/{resume.resumeAttributes.length} fields filled
           </Badge>

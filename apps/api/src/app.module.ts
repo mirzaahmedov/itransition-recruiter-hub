@@ -18,6 +18,7 @@ import { ResumeModule } from './position/resume/resume.module';
 import { UserResumeModule } from './resume/resume.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { ResumeLikeModule } from './resume-like/resume-like.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ResumeLikeModule } from './resume-like/resume-like.module';
     ResumeModule,
     UserResumeModule,
     ResumeLikeModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [

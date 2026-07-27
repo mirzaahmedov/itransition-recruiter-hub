@@ -148,6 +148,8 @@ model Position {
   resumes     Resume[]
   attributes  PositionAttribute[]
 
+  createdAt   DateTime            @default(now())
+
   @@map("positions")
 }
 
