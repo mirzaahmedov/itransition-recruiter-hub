@@ -109,7 +109,7 @@ const UserProfilePage = () => {
             </div>
             <TabsPanel value={TabOption.DETAILS}>
               <ProfileAttributes user={userData} attributes={userAttributesData} editing={editing} />
-              <ProfileProjects user={userData} projects={userProjectsData} editing={editing} />
+              <ProfileProjects user={userData} projects={userProjectsData} />
             </TabsPanel>
             <TabsPanel value={TabOption.RESUMES}>
               <ProfileResumes resumes={userResumesData} isLoading={isLoadingUserResumes} />
