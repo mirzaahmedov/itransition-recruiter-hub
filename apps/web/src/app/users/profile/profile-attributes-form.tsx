@@ -62,7 +62,7 @@ const ProfileAttibutesForm: FC<{
   });
 
   const handleSave = useCallback(async (values: UserAttributeUpdateArgs[]) => {
-    updateProfileAttributeMutation
+    await updateProfileAttributeMutation
       .mutateAsync({
         data: values.map((value) => ({
           data: value.payload,

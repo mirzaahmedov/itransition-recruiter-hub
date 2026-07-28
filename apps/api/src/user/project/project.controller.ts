@@ -1,7 +1,10 @@
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
-import { parseObjectKeyFromImageURL } from '@/lib/storage';
+import {
+  buildStorageImageURL,
+  parseObjectKeyFromImageURL,
+} from '@/lib/storage';
 import { StorageService } from '@/storage/storage.service';
 import {
   Body,
@@ -38,14 +41,33 @@ export class ProjectController {
 
   @Post()
   @Roles(UserRole.ADMINISTRATOR, UserRole.CANDIDATE)
+  @UseInterceptors(FileInterceptor('image'))
   async create(
     @AuthUser() user: User,
+    @Req() req: Request,
     @Param('userId') userId: string,
     @Body() data: CreateProjectDto,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
     if (userId !== user.id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException('You can only create projects for yourself');
     }
+
+    if (image) {
+      const key = nanoid() + extname(image.originalname);
+
+      await this.storageService.upload(`images/${key}`, image);
+
+      const imageUrl = buildStorageImageURL(req, key);
+
+      return makeResponse(
+        await this.projectService.create(user.id, {
+          ...data,
+          image: imageUrl,
+        }),
+      );
+    }
+
     return makeResponse(await this.projectService.create(user.id, data));
   }
 
@@ -84,8 +106,7 @@ export class ProjectController {
       }
     }
 
-    const baseUrl = `${req.protocol}://${req.headers.host}`;
-    const imageUrl = `${baseUrl}/storage/${key}`;
+    const imageUrl = buildStorageImageURL(req, key);
 
     const updated = await this.projectService.update(user.id, id, {
       image: imageUrl,

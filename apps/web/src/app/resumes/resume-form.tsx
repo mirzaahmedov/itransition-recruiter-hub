@@ -124,6 +124,7 @@ const ResumeSection: FC<ResumeSectionProps> = ({ userId, title, items, form, con
 export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; onDoneEditing: VoidFunction }) => {
   const categories = useCategoryStore((store) => store.categories);
 
+  const [saving, setSaving] = useState(false);
   const [conflicts, setConflicts] = useState<Record<string, BulkUpdateUserProfileAttributePayload[number]>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -154,7 +155,7 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
   });
 
   const handleSave = useCallback(async (values: UserAttributeUpdateArgs[]) => {
-    updateProfileAttributeMutation
+    await updateProfileAttributeMutation
       .mutateAsync({
         data: values.map((value) => ({
           data: value.payload,
@@ -239,6 +240,17 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
     return Object.entries(attrs).filter(([, item]) => item.attr.attribute.categoryId === categoryId);
   };
 
+  const handleDoneEditing = () => {
+    setSaving(true);
+    flush()
+      .then(() => {
+        onDoneEditing();
+      })
+      .finally(() => {
+        setSaving(false);
+      });
+  };
+
   return (
     <>
       <div className="resume-page">
@@ -266,7 +278,7 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
               {resume.position.title}
             </Link>
             <div className="no-print mt-5">
-              <Button variant="link" onClick={onDoneEditing}>
+              <Button variant="link" loading={saving} onClick={handleDoneEditing}>
                 <CheckIcon />
                 Done
               </Button>

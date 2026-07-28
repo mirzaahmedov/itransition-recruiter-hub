@@ -68,7 +68,7 @@ export async function removePositionAttribute(positionId: string, attributeId: s
   return res.data;
 }
 
-export async function applyToPosition(positionId: string) {
+export async function genResumePosition(positionId: string) {
   const res = await privateApi.post<ApiResponse<Resume>>(`/positions/${positionId}/resumes`);
   return res.data;
 }

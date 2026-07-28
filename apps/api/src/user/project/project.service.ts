@@ -1,18 +1,54 @@
 import { PrismaService } from '@/prisma/prisma.service';
+import { StorageService } from '@/storage/storage.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ResumeProjectCreateInput } from '@rh/database/models';
 import { CreateProjectPayload, UpdateProjectPayload } from '@rh/shared/schemas';
 
 @Injectable()
 export class ProjectService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private storageService: StorageService,
+  ) {}
 
-  async create(userId: string, data: CreateProjectPayload) {
-    return this.prisma.project.create({
+  async create(
+    userId: string,
+    data: CreateProjectPayload & {
+      image?: string;
+    },
+  ) {
+    const newProject = await this.prisma.project.create({
       data: {
         ...data,
         userId,
       },
     });
+
+    const userResumes = await this.prisma.resume.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    const userProjects = await this.findByUserId(userId);
+
+    userResumes.forEach((resume) => {
+      this.prisma.$transaction(async (tx) => {
+        await tx.resumeProject.deleteMany({
+          where: {
+            resumeId: resume.id,
+          },
+        });
+        await tx.resumeProject.createMany({
+          data: userProjects.slice(0, 3).map((project) => ({
+            projectId: project.id,
+            resumeId: resume.id,
+          })),
+        });
+      });
+    });
+
+    return newProject;
   }
 
   async findById(userId: string, id: string) {

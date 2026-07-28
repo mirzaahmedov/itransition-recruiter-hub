@@ -128,7 +128,7 @@ const ResumePage = () => {
             Back to resumes
           </Button>
 
-          <Badge variant="info">
+          <Badge variant={filledCount === resumeData.attributes.length ? "info" : "destructive"}>
             {filledCount}/{resumeData.attributes.length} fields filled
           </Badge>
         </div>

@@ -15,6 +15,7 @@ import { ProfileResumes } from "./profile-resumes";
 enum TabOption {
   DETAILS = "DETAILS",
   RESUMES = "RESUMES",
+  PROJECTS = "PROJECTS",
 }
 
 const UserProfilePage = () => {
@@ -92,27 +93,35 @@ const UserProfilePage = () => {
                   Resumes
                   <Badge>{userResumesData.length}</Badge>
                 </TabsTrigger>
+                <TabsTrigger value={TabOption.PROJECTS}>
+                  Projects
+                  <Badge>{userProjectsData.length}</Badge>
+                </TabsTrigger>
               </TabsList>
               {tabValue === TabOption.DETAILS ? (
-                editing ? (
-                  <Button variant="link" onClick={handleStopEditing}>
-                    <CheckIcon />
-                    Done
-                  </Button>
-                ) : (
-                  <Button variant="link" onClick={handleEdit}>
-                    <PencilSimpleLineIcon />
-                    Edit
-                  </Button>
-                )
+                <>
+                  {editing ? (
+                    <Button variant="link" onClick={handleStopEditing}>
+                      <CheckIcon />
+                      Done
+                    </Button>
+                  ) : (
+                    <Button variant="link" onClick={handleEdit}>
+                      <PencilSimpleLineIcon />
+                      Edit
+                    </Button>
+                  )}
+                </>
               ) : null}
             </div>
             <TabsPanel value={TabOption.DETAILS}>
               <ProfileAttributes user={userData} attributes={userAttributesData} editing={editing} />
-              <ProfileProjects user={userData} projects={userProjectsData} />
             </TabsPanel>
             <TabsPanel value={TabOption.RESUMES}>
               <ProfileResumes resumes={userResumesData} isLoading={isLoadingUserResumes} />
+            </TabsPanel>
+            <TabsPanel value={TabOption.PROJECTS}>
+              <ProfileProjects user={userData} projects={userProjectsData} />
             </TabsPanel>
           </Tabs>
         </div>

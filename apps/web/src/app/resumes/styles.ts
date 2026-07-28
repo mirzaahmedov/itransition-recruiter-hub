@@ -172,42 +172,7 @@ export const styles = `
         text-align: center;
     }
 
-    .resume-projects-list *:not(:first) {
+    .resume-projects-list>*:not(:first) {
         margin-top: 1rem;
-    }
-    
-    .resume-projects-list__item {
-        display: flex; 
-        gap: 1rem; 
-        align-items: flex-start; 
-    }
-
-    .resume-projects-list__image {
-        object-fit: cover; 
-        shrink: 0; 
-        border-radius: 0.5rem;
-    }
-    .resume-projects-list__item-content {
-        flex: 1;
-        min-width: 0px;
-    }
-    .resume-projects-list__title-container {
-        display: flex; 
-        gap: 0.5rem; 
-        align-items: center; 
-    }
-    .resume-projects-list__title {
-        font-size: 0.875rem;
-        line-height: 1.25rem; 
-        font-weight: 500; 
-    }
-    .resume-projects-list__link {
-        color: var(--color-muted-foreground);
-        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 300ms; 
-    }
-    .resume-projects-list__link:hover {
-        color: var(--color-foreground);
     }
 `;

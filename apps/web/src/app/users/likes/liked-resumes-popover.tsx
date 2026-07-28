@@ -54,7 +54,7 @@ export const LikesResumesPopover = () => {
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <HeartBreakIcon className="size-10 text-muted-foreground mb-3" />
               <p className="text-sm text-muted-foreground">No liked resumes yet.</p>
-              <p className="text-xs text-muted-foreground mt-1">Browse resumes and like the ones you're interested in.</p>
+              <p className="text-xs text-muted-foreground mt-1 max-w-40">Browse resumes and like the ones you're interested in.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-1">

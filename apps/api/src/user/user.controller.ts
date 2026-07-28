@@ -30,7 +30,10 @@ import { UserService } from './user.service';
 
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
-import { parseObjectKeyFromImageURL } from '@/lib/storage';
+import {
+  buildStorageImageURL,
+  parseObjectKeyFromImageURL,
+} from '@/lib/storage';
 import { ResumeService } from '@/position/resume/resume.service';
 import { ResumeLikeService } from '@/resume-like/resume-like.service';
 import { StorageService } from '@/storage/storage.service';
@@ -110,12 +113,11 @@ export class UserController {
       }
     }
 
-    const baseUrl = `${req.protocol}://${req.headers.host}`;
-    const avatarUrl = `${baseUrl}/storage/${key}`;
+    const imageUrl = buildStorageImageURL(req, key);
 
     return makeResponse(
       await this.userService.update(user.id, {
-        avatar: avatarUrl,
+        avatar: imageUrl,
       }),
     );
   }

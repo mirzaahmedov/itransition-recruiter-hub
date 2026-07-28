@@ -3,16 +3,12 @@ import { Module } from '@nestjs/common';
 import { PositionService } from '../position.service';
 import { ResumeController } from './resume.controller';
 import { ResumeService } from './resume.service';
-import { ProjectService } from '@/user/project/project.service';
+import { ProjectModule } from '@/user/project/project.module';
 
 @Module({
   controllers: [ResumeController],
-  providers: [
-    ResumeService,
-    UserAttributeService,
-    PositionService,
-    ProjectService,
-  ],
+  imports: [ProjectModule],
+  providers: [ResumeService, UserAttributeService, PositionService],
   exports: [ResumeService],
 })
 export class ResumeModule {}

@@ -15,7 +15,7 @@ export const ResumeProjects: FC<{
         <h3 className="resume-section-title">Projects</h3>
         <div className="resume-projects">
           {projects.length > 0 ? (
-            <div className="resume-projects-list">
+            <div className="space-y-4">
               {projects.map(({ id, project }) => (
                 <div key={id} className="flex items-start gap-4">
                   {project.image && <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />}

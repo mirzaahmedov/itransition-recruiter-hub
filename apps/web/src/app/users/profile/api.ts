@@ -99,8 +99,14 @@ export async function fetchUserProjects(userId: string) {
   return res.data;
 }
 
-export async function createProject(userId: string, data: CreateProjectPayload) {
-  const res = await privateApi.post<ApiResponse<Project>>(`/users/${userId}/projects`, data);
+export async function createProject(userId: string, data: CreateProjectPayload, image: File | null) {
+  const formData = new FormData();
+  formData.set("name", data.name);
+  if (data.description) formData.set("description", data.description);
+  if (data.url) formData.set("url", data.url);
+  if (image) formData.set("image", image);
+
+  const res = await privateApi.post<ApiResponse<Project>>(`/users/${userId}/projects`, formData);
   return res.data;
 }
 

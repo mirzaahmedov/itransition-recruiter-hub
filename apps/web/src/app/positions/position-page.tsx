@@ -6,7 +6,7 @@ import { ArchiveIcon, ArrowLeftIcon, ArrowRightIcon, ReadCvLogoIcon, TrashIcon }
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { applyToPosition, deletePosition, fetchPosition, updatePositionStatus } from "./api";
+import { genResumePosition, deletePosition, fetchPosition, updatePositionStatus } from "./api";
 import { PositionHeader } from "./position-header";
 import { PositionAttributes } from "./position-attributes";
 import { Badge } from "@/components/ui/badge";
@@ -19,8 +19,6 @@ const PositionPage = () => {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  console.log("position page");
 
   const { data: position, isFetching } = useQuery({
     queryKey: ["positions", id],
@@ -42,14 +40,14 @@ const PositionPage = () => {
     mutationFn: (status: PositionStatus) => updatePositionStatus(id!, status),
   });
 
-  const applyMutation = useMutation({
-    mutationFn: () => applyToPosition(id!),
+  const genResumeMutation = useMutation({
+    mutationFn: () => genResumePosition(id!),
   });
 
-  const handleApply = () => {
-    applyMutation.mutate(undefined, {
+  const handleGenResume = () => {
+    genResumeMutation.mutate(undefined, {
       onSuccess: (res) => {
-        toast.success("Application sent");
+        toast.success("Resume generated");
         queryClient.invalidateQueries({ queryKey: ["positions"] });
         queryClient.invalidateQueries({ queryKey: ["positions", id, "resumes"] });
         queryClient.invalidateQueries({ queryKey: ["resumes"] });
@@ -148,9 +146,9 @@ const PositionPage = () => {
               </Can>
               <Can I="apply" a="Position">
                 {positionData.resumes?.length === 0 ? (
-                  <Button onClick={handleApply} loading={applyMutation.isPending}>
+                  <Button onClick={handleGenResume} loading={genResumeMutation.isPending}>
                     <ReadCvLogoIcon />
-                    Apply
+                    Generate Resume
                   </Button>
                 ) : null}
               </Can>
