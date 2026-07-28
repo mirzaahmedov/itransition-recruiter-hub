@@ -2,6 +2,7 @@ import { Switch } from "@/components/ui/switch";
 import { AttributeType, type UserAttribute } from "@rh/database/browser";
 import { format } from "date-fns";
 import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 export function renderDynamicValue(type: AttributeType, record: UserAttribute): any {
   switch (type) {
@@ -20,7 +21,7 @@ export function renderDynamicValue(type: AttributeType, record: UserAttribute): 
     case AttributeType.MARKDOWN:
       return record.textValue ? (
         <div className="w-full prose dark:prose-invert prose-strong:text-foreground text-foreground text-sm">
-          <Markdown>{record.textValue}</Markdown>
+          <Markdown rehypePlugins={[rehypeRaw]}>{record.textValue}</Markdown>
         </div>
       ) : (
         ""

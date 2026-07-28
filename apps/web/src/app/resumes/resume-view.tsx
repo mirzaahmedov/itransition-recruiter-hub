@@ -7,11 +7,12 @@ import { NotePencilIcon, PencilSimpleLineIcon, WarningCircleIcon } from "@phosph
 import { styles } from "./styles";
 import type { ReactNode } from "react";
 import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { ResumeStatus } from "@rh/database/browser";
 import { Can } from "@casl/react";
-import { isDynamicValueEmpty } from "@rh/shared";
+import { isDynamicValueEmpty } from "@rh/shared/utils";
 
 function ResumeSection({ title, items }: { title: string; items: ResumeAttributeItem[] }) {
   return (
@@ -107,7 +108,7 @@ function formatValue(ra: ResumeAttributeItem): ReactNode {
     case "TEXT":
       return userAttribute.textValue ?? "—";
     case "MARKDOWN":
-      return <Markdown>{userAttribute.textValue}</Markdown>;
+      return <Markdown rehypePlugins={[rehypeRaw]}>{userAttribute.textValue}</Markdown>;
     case "NUMERIC":
       return userAttribute.numberValue != null ? String(userAttribute.numberValue) : "—";
     case "BOOLEAN":
