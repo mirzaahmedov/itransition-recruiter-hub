@@ -56,6 +56,18 @@ export function getDynamicValueObject(value: any, type: AttributeType): Partial<
   }
 }
 
-export function isDynamicValueFilled(value: any, type: AttributeType): boolean {
-  return Boolean(readDynamicValue(type, value));
+export function isDynamicValueFilled(value: any): boolean {
+  return !isDynamicValueEmpty(value);
+}
+
+export function isDynamicValueEmpty(value: Partial<UserAttribute>): boolean {
+  return (
+    (value.booleanValue === undefined || value.booleanValue === null) &&
+    !value.choiceId &&
+    !value.textValue &&
+    !value.dateValue &&
+    !value.startDateValue &&
+    !value.endDateValue &&
+    (value.numberValue === undefined || value.numberValue === null)
+  );
 }

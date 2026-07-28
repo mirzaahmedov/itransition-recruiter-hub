@@ -253,11 +253,7 @@ export class ResumeService {
     }
 
     const emptyAttributes = resume.attributes.filter(
-      (attribute) =>
-        !isDynamicValueFilled(
-          attribute.userAttribute,
-          attribute.positionAttribute.attribute.type,
-        ),
+      (attribute) => !isDynamicValueFilled(attribute.userAttribute),
     );
 
     if (emptyAttributes.length > 0) {

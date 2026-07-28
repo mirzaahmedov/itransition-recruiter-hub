@@ -3,7 +3,7 @@ import type { ResumeAttributeItem, ResumeDetail } from "./api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { NotePencilIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { NotePencilIcon, PencilSimpleLineIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import { styles } from "./styles";
 import type { ReactNode } from "react";
 import Markdown from "react-markdown";
@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { ResumeStatus } from "@rh/database/browser";
 import { Can } from "@casl/react";
+import { isDynamicValueEmpty } from "@rh/shared";
 
 function ResumeSection({ title, items }: { title: string; items: ResumeAttributeItem[] }) {
   return (
@@ -21,7 +22,13 @@ function ResumeSection({ title, items }: { title: string; items: ResumeAttribute
           <div key={ra.id} className="resume-attribute-row">
             <dt className="resume-attribute-name">{ra.positionAttribute.attribute.name}</dt>
             <dd className="resume-attribute-value">{formatValue(ra)}</dd>
-            <div className="resume-attribute-meta"></div>
+            <div className="resume-attribute-meta">
+              {isDynamicValueEmpty(ra.userAttribute) && (
+                <Badge variant="warning">
+                  <WarningCircleIcon /> Not provided
+                </Badge>
+              )}
+            </div>
           </div>
         ))}
       </dl>

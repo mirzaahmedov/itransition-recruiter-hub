@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => Promise<any>, delay = 2000) {
+export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => Promise<any>, delay = 2500) {
   const dirtyQueue = useRef<Record<string, T>>({});
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 

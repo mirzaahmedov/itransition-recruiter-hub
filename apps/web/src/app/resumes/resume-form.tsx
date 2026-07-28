@@ -80,7 +80,7 @@ const ResumeSection: FC<ResumeSectionProps> = ({ userId, title, items, form, con
                           field.onChange(value);
                         }
                       }}
-                      onBlur={() => {
+                      flush={() => {
                         flush();
                         field.onBlur();
                       }}
@@ -155,59 +155,57 @@ export const ResumeForm = ({ resume, onDoneEditing }: { resume: ResumeDetail; on
   });
 
   const handleSave = useCallback(async (values: UserAttributeUpdateArgs[]) => {
-    await updateProfileAttributeMutation
-      .mutateAsync({
-        data: values.map((value) => ({
-          data: value.payload,
-          version: value.version,
-          id: value.id,
-        })),
-      })
-      .then((res) => {
-        const { concurrent_modification = [], modified, failed_unknown } = res?.data ?? {};
+    const res = await updateProfileAttributeMutation.mutateAsync({
+      data: values.map((value) => ({
+        data: value.payload,
+        version: value.version,
+        id: value.id,
+      })),
+    });
 
-        if (concurrent_modification.length) {
-          setConflicts((prevValues) => {
-            const newValues = { ...prevValues };
+    const { concurrent_modification = [], modified, failed_unknown } = res?.data ?? {};
 
-            modified.forEach((modified) => {
-              if (newValues[modified.id]) {
-                delete newValues[modified.id];
-              }
-            });
+    if (concurrent_modification.length) {
+      setConflicts((prevValues) => {
+        const newValues = { ...prevValues };
 
-            failed_unknown.forEach((fail) => {
-              if (newValues[fail.id]) {
-                delete newValues[fail.id];
-              }
-            });
-
-            concurrent_modification.forEach((failModif) => {
-              newValues[failModif.id] = failModif;
-            });
-
-            return newValues;
-          });
-        }
-
-        if (failed_unknown.length) {
-          setErrors((prevValues) => {
-            const newValues = { ...prevValues };
-
-            failed_unknown.forEach((fail) => {
-              newValues[fail.id] = "Unknown error";
-            });
-
-            return newValues;
-          });
-        }
-
-        modified.forEach((item) => {
-          if (form.getValues(`attrs.${item.id}.attr.version`) < item.version) {
-            form.setValue(`attrs.${item.id}.attr.version`, item.version);
+        modified.forEach((modified) => {
+          if (newValues[modified.id]) {
+            delete newValues[modified.id];
           }
         });
+
+        failed_unknown.forEach((fail) => {
+          if (newValues[fail.id]) {
+            delete newValues[fail.id];
+          }
+        });
+
+        concurrent_modification.forEach((failModif) => {
+          newValues[failModif.id] = failModif;
+        });
+
+        return newValues;
       });
+    }
+
+    if (failed_unknown.length) {
+      setErrors((prevValues) => {
+        const newValues = { ...prevValues };
+
+        failed_unknown.forEach((fail) => {
+          newValues[fail.id] = "Unknown error";
+        });
+
+        return newValues;
+      });
+    }
+
+    modified.forEach((item) => {
+      if (form.getValues(`attrs.${item.id}.attr.version`) < item.version) {
+        form.setValue(`attrs.${item.id}.attr.version`, item.version);
+      }
+    });
   }, []);
   const { queueUpdate, flush } = useAutoSave<UserAttributeUpdateArgs>(handleSave);
 

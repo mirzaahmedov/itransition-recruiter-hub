@@ -52,7 +52,7 @@ export const PositionHeader: FC<{
           </Can>
         </div>
       </div>
-      <p className="text-xs md:text-sm mt-1 text-muted-foreground leading-relaxed">{position.description}</p>
+      <p className="text-xs md:text-sm mt-2 text-muted-foreground leading-relaxed">{position.description}</p>
     </div>
   ) : (
     <Form className="contents" onSubmit={handleSave}>

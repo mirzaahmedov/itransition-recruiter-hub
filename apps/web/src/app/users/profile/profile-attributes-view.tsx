@@ -2,6 +2,9 @@ import { useCategoryStore } from "@/store/use-category-store";
 import { renderDynamicValue } from "@/utils/renderDynamicValue";
 import type { FC } from "react";
 import type { UserAttributeWithJoins } from "./api";
+import { isDynamicValueEmpty } from "@rh/shared";
+import { Badge } from "@/components/ui/badge";
+import { WarningCircleIcon } from "@phosphor-icons/react";
 
 export const ProfileAttributesView: FC<{
   userAttributes: UserAttributeWithJoins[];
@@ -33,7 +36,13 @@ export const ProfileAttributesView: FC<{
                       <div className="min-w-0 flex-1">
                         <dd className="text-sm font-medium">{renderDynamicValue(attr.attribute.type, attr)}</dd>
                       </div>
-                      <div className="md:w-28 md:shrink-0"></div>
+                      <div className="md:w-28 md:shrink-0 self-center">
+                        {isDynamicValueEmpty(attr) && (
+                          <Badge variant="warning">
+                            <WarningCircleIcon /> Not provided
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </dl>

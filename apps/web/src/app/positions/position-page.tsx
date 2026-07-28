@@ -12,10 +12,14 @@ import { PositionAttributes } from "./position-attributes";
 import { Badge } from "@/components/ui/badge";
 import { Can } from "@casl/react";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
-import { PositionStatus } from "@rh/database/browser";
+import { PositionStatus, UserRole } from "@rh/database/browser";
+import { useAuthStore } from "@/store/use-auth-store";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const PositionPage = () => {
   const { id } = useParams();
+
+  const currentUser = useAuthStore((store) => store.user);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -175,10 +179,18 @@ const PositionPage = () => {
                         className="flex items-center justify-between gap-4 rounded-lg border p-3 transition-colors hover:bg-accent/50"
                       >
                         <div className="flex items-center gap-3">
+                          {currentUser?.role !== UserRole.CANDIDATE && (
+                            <Avatar className="size-10">
+                              <AvatarImage src={resume.user.avatar ?? undefined} alt={resume.user.name ?? "Avatar"} />
+                              <AvatarFallback>{(resume.user.name ?? "U").charAt(0).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                          )}
                           <span className="text-sm font-medium">{resume.user?.name ?? "Unnamed"}</span>
-                          <Badge variant={resume.status === "PUBLISHED" ? "success" : "warning"} size="sm">
-                            {resume.status}
-                          </Badge>
+                          {currentUser?.role === UserRole.CANDIDATE ? (
+                            <Badge variant={resume.status === "PUBLISHED" ? "success" : "warning"} size="sm">
+                              {resume.status}
+                            </Badge>
+                          ) : null}
                         </div>
                         <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" />
                       </Link>
