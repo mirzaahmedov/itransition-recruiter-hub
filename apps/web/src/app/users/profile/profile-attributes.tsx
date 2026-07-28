@@ -1,13 +1,18 @@
 import type { User } from "@rh/database/browser";
-import { type FC } from "react";
+import { type FC, type RefObject } from "react";
 import type { UserAttributeWithJoins } from "./api";
-import ProfileAttibutesForm from "./profile-attributes-form";
+import ProfileAttibutesForm, { type ProfileAttibutesFormHandlers } from "./profile-attributes-form";
 import { ProfileAttributesView } from "./profile-attributes-view";
 
 export const ProfileAttributes: FC<{
+  methods: RefObject<ProfileAttibutesFormHandlers>;
   editing: boolean;
   user: User;
   attributes: UserAttributeWithJoins[];
-}> = ({ user, attributes, editing }) => {
-  return editing ? <ProfileAttibutesForm user={user} userAttributes={attributes} /> : <ProfileAttributesView userAttributes={attributes} />;
+}> = ({ methods, user, attributes, editing }) => {
+  return editing ? (
+    <ProfileAttibutesForm methods={methods} user={user} userAttributes={attributes} />
+  ) : (
+    <ProfileAttributesView userAttributes={attributes} />
+  );
 };

@@ -167,7 +167,7 @@ export const AttributePicker: FC<{
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogPopup className="w-full max-w-6xl min-h-150">
+      <DialogPopup className="w-full max-w-6xl min-h-100">
         <DialogHeader>
           <DialogTitle>Find attributes</DialogTitle>
         </DialogHeader>

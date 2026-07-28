@@ -6,18 +6,20 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useDialogState } from "@/hooks/use-dialog-state";
-import { LinkIcon, PlusIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
+import { parseApiErrorMessage } from "@/lib/api/error";
+import { normalizeUrl } from "@/lib/format/string";
+import { Can } from "@casl/react";
+import { CameraPlusIcon, ImageIcon, LinkIcon, PlusIcon, TrashIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import type { Project, User } from "@rh/database/browser";
 import type { CreateProjectPayload } from "@rh/shared/schemas";
 import { CreateProjectSchema } from "@rh/shared/schemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type FC, type SubmitEvent } from "react";
 import { Controller, useForm, type UseFormReturn } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { createProject, deleteProject, uploadProjectImage } from "./api";
-import { normalizeUrl } from "@/lib/format/string";
-import toast from "react-hot-toast";
-import { parseApiErrorMessage } from "@/lib/api/error";
+import { subject } from "@casl/ability";
 
 export const ProfileProjects: FC<{
   user: User;
@@ -94,6 +96,8 @@ export const ProfileProjects: FC<{
 
     if (values.url) {
       values.url = normalizeUrl(values.url);
+    } else {
+      delete values.url;
     }
 
     const result = CreateProjectSchema.safeParse(values);
@@ -120,10 +124,12 @@ export const ProfileProjects: FC<{
           <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Projects</h3>
 
           <div className="flex items-center gap-1">
-            <Button variant="secondary" size="sm" onClick={projectDialog.openDialog} className="-my-2">
-              <PlusIcon />
-              Add
-            </Button>
+            <Can I="create" a="Project">
+              <Button variant="secondary" size="sm" onClick={projectDialog.openDialog} className="-my-2">
+                <PlusIcon />
+                Add
+              </Button>
+            </Can>
           </div>
         </div>
         <div className="mt-4">
@@ -131,31 +137,42 @@ export const ProfileProjects: FC<{
             <div className="space-y-4">
               {projects.map((project) => (
                 <div key={project.id} className="flex items-start gap-4">
-                  {project.image ? (
-                    <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
-                  ) : (
-                    <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleProjectImageUpload(project.id, file);
-                        }}
-                        id={`project-image-${project.id}`}
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground"
-                        loading={uploadProjectImageMutation.isPending}
-                        onClick={() => document.getElementById(`project-image-${project.id}`)?.click()}
-                      >
-                        <UploadSimpleIcon className="size-4" />
-                      </Button>
-                    </div>
-                  )}
+                  <Can I="update" this={subject("Project", project)}>
+                    {project.image ? (
+                      <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
+                    ) : (
+                      <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleProjectImageUpload(project.id, file);
+                          }}
+                          id={`project-image-${project.id}`}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground"
+                          loading={uploadProjectImageMutation.isPending}
+                          onClick={() => document.getElementById(`project-image-${project.id}`)?.click()}
+                        >
+                          <CameraPlusIcon className="size-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </Can>
+                  <Can not I="update" this={subject("Project", project)}>
+                    {project.image ? (
+                      <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
+                    ) : (
+                      <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                        <ImageIcon className="size-4" />
+                      </div>
+                    )}
+                  </Can>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h4 className="text-sm font-medium">{project.name}</h4>
@@ -172,15 +189,17 @@ export const ProfileProjects: FC<{
                     </div>
                     {project.description && <p className="text-sm text-muted-foreground mt-1">{project.description}</p>}
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    loading={deleteProjectMutation.isPending && deleteProjectMutation.variables === project.id}
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="text-muted-foreground hover:text-destructive"
-                  >
-                    <TrashIcon className="size-4" />
-                  </Button>
+                  <Can I="delete" a="Project">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      loading={deleteProjectMutation.isPending && deleteProjectMutation.variables === project.id}
+                      onClick={() => handleDeleteProject(project.id)}
+                      className="text-muted-foreground hover:text-destructive"
+                    >
+                      <TrashIcon className="size-4" />
+                    </Button>
+                  </Can>
                 </div>
               ))}
             </div>

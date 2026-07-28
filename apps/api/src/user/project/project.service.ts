@@ -1,7 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { StorageService } from '@/storage/storage.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ResumeProjectCreateInput } from '@rh/database/models';
 import { CreateProjectPayload, UpdateProjectPayload } from '@rh/shared/schemas';
 
 @Injectable()
@@ -47,6 +46,8 @@ export class ProjectService {
         });
       });
     });
+
+    console.log({ userResumes });
 
     return newProject;
   }

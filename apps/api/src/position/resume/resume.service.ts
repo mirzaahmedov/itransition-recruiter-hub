@@ -164,6 +164,9 @@ export class ResumeService {
 
   async findAllPublished() {
     return await this.prisma.resume.findMany({
+      where: {
+        status: ResumeStatus.PUBLISHED,
+      },
       include: {
         position: true,
         user: true,

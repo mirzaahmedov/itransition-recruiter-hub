@@ -94,7 +94,7 @@ export class UserController {
     @Param('id') id: string,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    if (user.id !== id) {
+    if (user.id !== id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException(
         'You can only update your own profile picture',
       );
@@ -116,7 +116,7 @@ export class UserController {
     const imageUrl = buildStorageImageURL(req, key);
 
     return makeResponse(
-      await this.userService.update(user.id, {
+      await this.userService.update(id, {
         avatar: imageUrl,
       }),
     );

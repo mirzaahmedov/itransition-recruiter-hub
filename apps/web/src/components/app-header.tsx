@@ -31,6 +31,7 @@ export const AppHeader = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("max-md");
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogOut = () => {
@@ -47,7 +48,7 @@ export const AppHeader = () => {
       user
         ? [
             { to: "/positions", label: "Positions", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER, UserRole.CANDIDATE] },
-            { to: "/resumes", label: "Resumes", roles: [UserRole.CANDIDATE, UserRole.RECRUITER, UserRole.ADMINISTRATOR] },
+            { to: "/resumes", label: "Resumes", roles: [UserRole.ADMINISTRATOR, UserRole.CANDIDATE, UserRole.RECRUITER] },
             { to: "/users", label: "Users", roles: [UserRole.ADMINISTRATOR] },
             { to: "/candidates", label: "Candidates", roles: [UserRole.ADMINISTRATOR, UserRole.RECRUITER] },
             { to: `/users/${user.id}/profile`, label: "Profile", roles: [UserRole.CANDIDATE] },

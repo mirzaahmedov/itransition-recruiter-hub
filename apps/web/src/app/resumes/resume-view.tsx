@@ -10,6 +10,7 @@ import Markdown from "react-markdown";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { ResumeStatus } from "@rh/database/browser";
+import { Can } from "@casl/react";
 
 function ResumeSection({ title, items }: { title: string; items: ResumeAttributeItem[] }) {
   return (
@@ -70,10 +71,12 @@ export const ResumeView = ({ resume, onEdit }: { resume: ResumeDetail; onEdit: V
               {resume.position.title}
             </Link>
             <div className="no-print mt-5">
-              <Button variant="link" onClick={onEdit}>
-                <PencilSimpleLineIcon />
-                Edit
-              </Button>
+              <Can I="update" a="Resume">
+                <Button variant="link" onClick={onEdit}>
+                  <PencilSimpleLineIcon />
+                  Edit
+                </Button>
+              </Can>
             </div>
           </div>
         </header>

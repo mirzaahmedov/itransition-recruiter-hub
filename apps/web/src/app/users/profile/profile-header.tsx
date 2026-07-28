@@ -11,6 +11,9 @@ import { useState, type FC } from "react";
 import toast from "react-hot-toast";
 import { updateUserProfile, uploadProfilePicture } from "./api";
 import { useAuthStore } from "@/store/use-auth-store";
+import { parseApiErrorMessage } from "@/lib/api/error";
+import { Can } from "@casl/react";
+import { subject } from "@casl/ability";
 
 export const ProfileHeader: FC<{
   user: User;
@@ -43,6 +46,10 @@ export const ProfileHeader: FC<{
             setUserProfile(updatedUser);
           }
         },
+        onError(res) {
+          const message = parseApiErrorMessage(res);
+          toast.error(message ?? "Could not upload profile image");
+        },
       });
     }
   };
@@ -50,7 +57,10 @@ export const ProfileHeader: FC<{
   const handleSaveProfile = async () => {
     const nameChanged = name !== (user.name ?? "");
     if (nameChanged) {
-      await updateProfileMutation.mutateAsync({ name });
+      await updateProfileMutation.mutateAsync({ name }).catch((res) => {
+        const message = parseApiErrorMessage(res);
+        toast.error(message ?? "Could not upload profile image");
+      });
     }
     queryClient.invalidateQueries({ queryKey: ["users", user.id] });
     setEditing(false);
@@ -69,10 +79,12 @@ export const ProfileHeader: FC<{
             <h1 className="text-3xl font-bold">{user.name}</h1>
             <p className="mt-2 text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <Button variant="link" onClick={() => setEditing(true)} className="absolute top-4 right-4">
-            <PencilSimpleLineIcon />
-            Edit
-          </Button>
+          <Can I="update" this={subject("Profile", user)}>
+            <Button variant="link" onClick={() => setEditing(true)} className="absolute top-4 right-4">
+              <PencilSimpleLineIcon />
+              Edit
+            </Button>
+          </Can>
         </div>
       </div>
     </div>

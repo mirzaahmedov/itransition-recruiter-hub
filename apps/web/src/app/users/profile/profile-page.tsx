@@ -4,13 +4,17 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsPanel, TabsTrigger } from "@/components/ui/tabs";
 import { CheckIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchUser, fetchUserAttributes, fetchUserProjects, fetchUserResumes } from "./api";
 import { ProfileAttributes } from "./profile-attributes";
 import { ProfileHeader } from "./profile-header";
 import { ProfileProjects } from "./profile-projects";
 import { ProfileResumes } from "./profile-resumes";
+import type { ProfileAttibutesFormHandlers } from "./profile-attributes-form";
+import { UserRole } from "@rh/database/browser";
+import { Can } from "@casl/react";
+import { subject } from "@casl/ability";
 
 enum TabOption {
   DETAILS = "DETAILS",
@@ -23,7 +27,11 @@ const UserProfilePage = () => {
 
   const [tabValue, setTabValue] = useState(TabOption.DETAILS);
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
+  const methods = useRef<ProfileAttibutesFormHandlers>({
+    async flush() {},
+  });
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: isLoadingUser } = useQuery({
@@ -60,13 +68,21 @@ const UserProfilePage = () => {
   };
 
   const handleStopEditing = () => {
-    setEditing(false);
-    queryClient.invalidateQueries({
-      queryKey: ["users", userId, "attributes"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["users", userId, "projects"],
-    });
+    setSaving(true);
+    methods.current
+      .flush()
+      .then(() => {
+        setEditing(false);
+        queryClient.invalidateQueries({
+          queryKey: ["users", userId, "attributes"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["users", userId, "projects"],
+        });
+      })
+      .finally(() => {
+        setSaving(false);
+      });
   };
 
   return (
@@ -78,52 +94,58 @@ const UserProfilePage = () => {
       ) : userData && userAttributesData ? (
         <div className="mx-auto max-w-4xl px-4 py-8">
           <ProfileHeader user={userData} />
-          <Tabs
-            className="mt-8"
-            value={tabValue}
-            onValueChange={(value) => {
-              setEditing(false);
-              setTabValue(value);
-            }}
-          >
-            <div className="flex items-center justify-between px-4">
-              <TabsList variant="underline">
-                <TabsTrigger value={TabOption.DETAILS}>Details</TabsTrigger>
-                <TabsTrigger value={TabOption.RESUMES}>
-                  Resumes
-                  <Badge>{userResumesData.length}</Badge>
-                </TabsTrigger>
-                <TabsTrigger value={TabOption.PROJECTS}>
-                  Projects
-                  <Badge>{userProjectsData.length}</Badge>
-                </TabsTrigger>
-              </TabsList>
-              {tabValue === TabOption.DETAILS ? (
-                <>
-                  {editing ? (
-                    <Button variant="link" onClick={handleStopEditing}>
-                      <CheckIcon />
-                      Done
-                    </Button>
-                  ) : (
-                    <Button variant="link" onClick={handleEdit}>
-                      <PencilSimpleLineIcon />
-                      Edit
-                    </Button>
-                  )}
-                </>
-              ) : null}
-            </div>
-            <TabsPanel value={TabOption.DETAILS}>
-              <ProfileAttributes user={userData} attributes={userAttributesData} editing={editing} />
-            </TabsPanel>
-            <TabsPanel value={TabOption.RESUMES}>
-              <ProfileResumes resumes={userResumesData} isLoading={isLoadingUserResumes} />
-            </TabsPanel>
-            <TabsPanel value={TabOption.PROJECTS}>
-              <ProfileProjects user={userData} projects={userProjectsData} />
-            </TabsPanel>
-          </Tabs>
+          {userData.role === UserRole.CANDIDATE ? (
+            <Tabs
+              className="mt-8"
+              value={tabValue}
+              onValueChange={(value) => {
+                setEditing(false);
+                setTabValue(value);
+              }}
+            >
+              <div className="flex items-center justify-between px-4">
+                <TabsList variant="underline">
+                  <TabsTrigger value={TabOption.DETAILS}>Details</TabsTrigger>
+                  <TabsTrigger value={TabOption.RESUMES}>
+                    Resumes
+                    <Badge>{userResumesData.length}</Badge>
+                  </TabsTrigger>
+                  <TabsTrigger value={TabOption.PROJECTS}>
+                    Projects
+                    <Badge>{userProjectsData.length}</Badge>
+                  </TabsTrigger>
+                </TabsList>
+                <Can I="update" this={subject("Profile", userData)}>
+                  {tabValue === TabOption.DETAILS ? (
+                    <>
+                      {editing ? (
+                        <Button loading={saving} variant="link" onClick={handleStopEditing}>
+                          <CheckIcon />
+                          Done
+                        </Button>
+                      ) : (
+                        <Button variant="link" onClick={handleEdit}>
+                          <PencilSimpleLineIcon />
+                          Edit
+                        </Button>
+                      )}
+                    </>
+                  ) : null}
+                </Can>
+              </div>
+              <TabsPanel value={TabOption.DETAILS}>
+                <ProfileAttributes methods={methods} user={userData} attributes={userAttributesData} editing={editing} />
+              </TabsPanel>
+              <TabsPanel value={TabOption.RESUMES}>
+                <ProfileResumes resumes={userResumesData} isLoading={isLoadingUserResumes} />
+              </TabsPanel>
+              <TabsPanel value={TabOption.PROJECTS}>
+                <ProfileProjects user={userData} projects={userProjectsData} />
+              </TabsPanel>
+            </Tabs>
+          ) : (
+            <div className="text-center py-20 text-muted-foreground">Nothing to show</div>
+          )}
         </div>
       ) : (
         <div className="text-center py-20 text-muted-foreground">Nothing to show</div>

@@ -61,14 +61,14 @@ export class ProjectController {
       const imageUrl = buildStorageImageURL(req, key);
 
       return makeResponse(
-        await this.projectService.create(user.id, {
+        await this.projectService.create(userId, {
           ...data,
           image: imageUrl,
         }),
       );
     }
 
-    return makeResponse(await this.projectService.create(user.id, data));
+    return makeResponse(await this.projectService.create(userId, data));
   }
 
   @Post(':id/image')
@@ -108,7 +108,7 @@ export class ProjectController {
 
     const imageUrl = buildStorageImageURL(req, key);
 
-    const updated = await this.projectService.update(user.id, id, {
+    const updated = await this.projectService.update(userId, id, {
       image: imageUrl,
     });
 
@@ -130,7 +130,7 @@ export class ProjectController {
     if (userId !== user.id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException('You can only update your own projects');
     }
-    return makeResponse(await this.projectService.update(user.id, id, data));
+    return makeResponse(await this.projectService.update(userId, id, data));
   }
 
   @Delete(':id')
@@ -142,6 +142,6 @@ export class ProjectController {
     if (userId !== user.id && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException('You can only delete your own projects');
     }
-    return makeResponse(await this.projectService.delete(user.id, id));
+    return makeResponse(await this.projectService.delete(userId, id));
   }
 }

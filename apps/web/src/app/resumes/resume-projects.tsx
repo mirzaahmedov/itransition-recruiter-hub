@@ -1,4 +1,4 @@
-import { LinkIcon } from "@phosphor-icons/react";
+import { ImageIcon, LinkIcon } from "@phosphor-icons/react";
 import type { ResumeProjectGetPayload } from "@rh/database/models";
 import { type FC } from "react";
 
@@ -18,7 +18,13 @@ export const ResumeProjects: FC<{
             <div className="space-y-4">
               {projects.map(({ id, project }) => (
                 <div key={id} className="flex items-start gap-4">
-                  {project.image && <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />}
+                  {project.image ? (
+                    <img src={project.image} alt={project.name} className="size-16 rounded-lg object-cover shrink-0" />
+                  ) : (
+                    <div className="size-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                      <ImageIcon className="size-4" />
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h4 className="text-sm font-medium">{project.name}</h4>

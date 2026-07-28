@@ -2,8 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchMyResumes } from "./api";
 import { Spinner } from "@/components/ui/spinner";
 import { ResumeCard } from "./resume-card";
+import { useAuthStore } from "@/store/use-auth-store";
+import { UserRole } from "@rh/database/browser";
 
 const ResumesPage = () => {
+  const user = useAuthStore((store) => store.user);
+
   const { data: resumes, isLoading } = useQuery({
     queryKey: ["resumes"],
     queryFn: fetchMyResumes,
@@ -30,7 +34,7 @@ const ResumesPage = () => {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((resume) => (
-            <ResumeCard key={resume.id} resume={resume} />
+            <ResumeCard key={resume.id} resume={resume} view={user?.role === UserRole.CANDIDATE ? "user" : "recruiter"} />
           ))}
         </div>
       )}

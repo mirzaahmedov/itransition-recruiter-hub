@@ -45,7 +45,7 @@ export class UserAttributeController {
     return makeResponse(
       await this.userAttributeService.bulkCreate({
         ids: data.ids,
-        userId: user.id,
+        userId,
       }),
     );
   }

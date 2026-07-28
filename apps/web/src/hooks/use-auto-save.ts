@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => Promise<any>, delay = 2500) {
+export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => Promise<any>, delay = 2000) {
   const dirtyQueue = useRef<Record<string, T>>({});
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -16,7 +16,9 @@ export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => 
   const flush = useCallback(async () => {
     clearTimer();
     const itemsToSave = Object.values(dirtyQueue.current);
-    if (itemsToSave.length === 0) return;
+    if (itemsToSave.length === 0) {
+      return;
+    }
 
     setIsSaving(true);
     try {

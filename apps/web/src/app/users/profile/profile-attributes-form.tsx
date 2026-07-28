@@ -10,10 +10,14 @@ import type { User } from "@rh/database/browser";
 import type { BulkUpdateUserProfileAttributePayload, UpdateUserProfileAttributePayload } from "@rh/shared/schemas";
 import { getDynamicDefaultValue, getDynamicValueObject, readDynamicValue } from "@rh/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useState, type FC } from "react";
+import { useCallback, useEffect, useImperativeHandle, useMemo, useState, type FC, type RefObject } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { bulkUpdateProfileAttributes, createBulkUserAttributes, type BulkUpdateUserAttributeArgs, type UserAttributeWithJoins } from "./api";
 import { Badge } from "@/components/ui/badge";
+
+export interface ProfileAttibutesFormHandlers {
+  flush: () => Promise<void>;
+}
 
 interface UserAttributeUpdateArgs {
   id: string;
@@ -32,8 +36,9 @@ interface ProfileFormData {
 
 const ProfileAttibutesForm: FC<{
   user: User;
+  methods: RefObject<ProfileAttibutesFormHandlers>;
   userAttributes: UserAttributeWithJoins[];
-}> = ({ user, userAttributes }) => {
+}> = ({ methods, user, userAttributes }) => {
   const queryClient = useQueryClient();
 
   const [conflicts, setConflicts] = useState<Record<string, BulkUpdateUserProfileAttributePayload[number]>>({});
@@ -166,6 +171,16 @@ const ProfileAttibutesForm: FC<{
       {} as Record<string, boolean>,
     );
   }, [userAttributes]);
+
+  useImperativeHandle(
+    methods,
+    () => ({
+      async flush() {
+        await flush();
+      },
+    }),
+    [],
+  );
 
   return (
     <>
