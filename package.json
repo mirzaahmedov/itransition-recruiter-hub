@@ -41,6 +41,8 @@
     "typescript-eslint": "^8.62.1"
   },
   "dependencies": {
+    "dropbox": "^10.38.0",
+    "fetch-polyfill": "^0.8.2",
     "react-number-format": "^5.4.5",
     "rollup-plugin-dts": "^6.4.1",
     "zod": "^4.4.3"

@@ -197,6 +197,12 @@ Enum ResumeStatus {
   PRIVATE
 }
 
+Enum TicketPriority {
+  HIGH
+  AVERAGE
+  LOW
+}
+
 Ref: projects.userId > users.id [delete: Cascade]
 
 Ref: ProjectTag.tagId > Tag.id [delete: Cascade]

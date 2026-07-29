@@ -18,3 +18,5 @@ export * from "./update-project.schema.js";
 export * from "./attribute-choice.schema.js";
 export * from "./update-position-status.schema.js";
 export * from "./position/find-all-position-params.schema.js";
+export * from "./create-support-ticket.schema.js";
+export * from "./support-ticket-file-contents.schema.js";

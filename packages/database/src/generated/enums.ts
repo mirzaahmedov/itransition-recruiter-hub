@@ -47,3 +47,12 @@ export const ResumeStatus = {
 } as const
 
 export type ResumeStatus = (typeof ResumeStatus)[keyof typeof ResumeStatus]
+
+
+export const TicketPriority = {
+  HIGH: 'HIGH',
+  AVERAGE: 'AVERAGE',
+  LOW: 'LOW'
+} as const
+
+export type TicketPriority = (typeof TicketPriority)[keyof typeof TicketPriority]

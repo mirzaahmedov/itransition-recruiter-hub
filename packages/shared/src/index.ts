@@ -12,3 +12,4 @@ export * from "./schemas/bulk-update-user-profile-attribute.schema.js";
 export * from "./schemas/bulk-ids.schema.js";
 export * from "./schemas/attribute-choice.schema.js";
 export * from "./utils/index.js";
+export * from "./schemas/create-support-ticket.schema.js";

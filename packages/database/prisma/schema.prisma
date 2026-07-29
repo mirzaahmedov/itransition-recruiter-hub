@@ -51,10 +51,10 @@ model User {
   password     String?
   createdAt    DateTime        @default(now())
 
-  profileAttrs UserAttribute[]
-  projects     Project[]
-  resumes      Resume[]
-  likes        ResumeLike[]
+  profileAttrs    UserAttribute[]
+  projects        Project[]
+  resumes         Resume[]
+  likes           ResumeLike[]
 
 
   @@map("users")
@@ -163,10 +163,10 @@ model Position {
   title       String
   description String
   status      PositionStatus      @default(ACTIVE)
-  resumes     Resume[]
-  attributes  PositionAttribute[]
+  resumes         Resume[]
+  attributes      PositionAttribute[]
 
-  createdAt   DateTime            @default(now())
+  createdAt       DateTime            @default(now())
 
   @@map("positions")
 }
@@ -226,4 +226,10 @@ model ResumeLike {
 
   @@unique([userId, resumeId])
   @@map("resume_likes")    
+}
+
+enum TicketPriority {
+  HIGH
+  AVERAGE
+  LOW
 }

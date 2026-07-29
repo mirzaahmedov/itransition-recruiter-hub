@@ -1,17 +1,21 @@
+import { createSupportTicket } from "@/app/support-ticket/api";
 import { LikesResumesPopover } from "@/app/users/likes/liked-resumes-popover";
+import { SupportTicketDialog } from "@/components/support-ticket-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetDescription, SheetHeader, SheetPanel, SheetPopup, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { parseApiErrorMessage } from "@/lib/api/error";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
 import { useThemeStore } from "@/store/use-theme-store";
 import { fallbackName } from "@/utils/fallbackName";
 import { Can } from "@casl/react";
-import { ListIcon, MoonIcon, ReadCvLogoIcon, SignOutIcon, SunIcon } from "@phosphor-icons/react";
+import { ListIcon, MoonIcon, QuestionIcon, ReadCvLogoIcon, SignOutIcon, SunIcon } from "@phosphor-icons/react";
 import { UserRole } from "@rh/database/browser";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 interface NavLinkItem {
@@ -33,6 +37,27 @@ export const AppHeader = () => {
   const isMobile = useMediaQuery("max-md");
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [supportDialogOpen, setSupportDialogOpen] = useState(false);
+
+  const supportMutation = useMutation({
+    mutationFn: createSupportTicket,
+  });
+
+  const handleSupportSubmit = (values: { title: string; link: string; priority: string }) => {
+    supportMutation.mutate(
+      { ...values, priority: values.priority as "HIGH" | "AVERAGE" | "LOW" },
+      {
+        onSuccess: () => {
+          toast.success("Support ticket created");
+          setSupportDialogOpen(false);
+        },
+        onError: (res) => {
+          const message = parseApiErrorMessage(res);
+          toast.error(message ?? "Failed to create support ticket");
+        },
+      },
+    );
+  };
 
   const handleLogOut = () => {
     logOut();
@@ -81,6 +106,20 @@ export const AppHeader = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <Can I="read" a="Like">
+            <LikesResumesPopover />
+          </Can>
+
+          <div className="flex items-center gap-1">
+            <Button size="icon" variant="ghost" onClick={toggleTheme} title="Toggle theme">
+              {theme === "dark" ? <MoonIcon className="icon-md" /> : <SunIcon className="icon-md" />}
+            </Button>
+
+            <Button size="icon" variant="ghost" onClick={() => setSupportDialogOpen(true)} title="Support">
+              <QuestionIcon className="icon-md" />
+            </Button>
+          </div>
+
           <div className="flex items-center gap-2">
             <Avatar className="size-8">
               <AvatarImage src={user?.avatar ?? undefined} alt={user?.name ?? "Avatar"} />
@@ -90,14 +129,6 @@ export const AppHeader = () => {
               {!isMobile && <span className="text-sm font-medium max-w-30 truncate">{user?.name ?? "User"}</span>}
             </div>
           </div>
-
-          <Can I="read" a="Like">
-            <LikesResumesPopover />
-          </Can>
-
-          <Button size="icon" variant="ghost" onClick={toggleTheme} title="Toggle theme">
-            {theme === "dark" ? <MoonIcon className="icon-md" /> : <SunIcon className="icon-md" />}
-          </Button>
 
           <Button size="icon" variant="ghost" onClick={handleLogOut} title="Sign out">
             <SignOutIcon className="icon-md" />
@@ -135,6 +166,13 @@ export const AppHeader = () => {
           </SheetPanel>
         </SheetPopup>
       </Sheet>
+
+      <SupportTicketDialog
+        open={supportDialogOpen}
+        onOpenChange={setSupportDialogOpen}
+        onSubmit={handleSupportSubmit}
+        isSubmitting={supportMutation.isPending}
+      />
     </header>
   );
 };

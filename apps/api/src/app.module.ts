@@ -19,6 +19,7 @@ import { UserResumeModule } from './resume/resume.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { ResumeLikeModule } from './resume-like/resume-like.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SupportTicketModule } from './support-ticket/support-ticket.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     UserResumeModule,
     ResumeLikeModule,
     DashboardModule,
+    SupportTicketModule,
   ],
   controllers: [AppController],
   providers: [

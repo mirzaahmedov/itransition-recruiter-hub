@@ -17,6 +17,8 @@ declare global {
       S3_KEY: string;
       S3_HOST: string;
       S3_BUCKET: string;
+
+      DROPBOX_ACCESS_TOKEN: string;
     }
   }
 }

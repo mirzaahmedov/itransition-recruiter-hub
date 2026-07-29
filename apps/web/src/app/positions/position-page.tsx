@@ -1,20 +1,23 @@
 import { fetchPositionResumes } from "@/app/resumes/api";
+import { createSupportTicket } from "@/app/support-ticket/api";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { SupportTicketDialog } from "@/components/support-ticket-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { parseApiErrorMessage } from "@/lib/api/error";
-import { ArchiveIcon, ArrowLeftIcon, ArrowRightIcon, ReadCvLogoIcon, TrashIcon } from "@phosphor-icons/react";
+import { useAuthStore } from "@/store/use-auth-store";
+import { Can } from "@casl/react";
+import { ArchiveIcon, ArrowLeftIcon, ArrowRightIcon, QuestionIcon, ReadCvLogoIcon, TrashIcon } from "@phosphor-icons/react";
+import { PositionStatus, UserRole } from "@rh/database/browser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { genResumePosition, deletePosition, fetchPosition, updatePositionStatus } from "./api";
-import { PositionHeader } from "./position-header";
+import { deletePosition, fetchPosition, genResumePosition, updatePositionStatus } from "./api";
 import { PositionAttributes } from "./position-attributes";
-import { Badge } from "@/components/ui/badge";
-import { Can } from "@casl/react";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
-import { PositionStatus, UserRole } from "@rh/database/browser";
-import { useAuthStore } from "@/store/use-auth-store";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PositionHeader } from "./position-header";
 
 const PositionPage = () => {
   const { id } = useParams();
@@ -23,6 +26,27 @@ const PositionPage = () => {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [supportDialogOpen, setSupportDialogOpen] = useState(false);
+
+  const supportMutation = useMutation({
+    mutationFn: createSupportTicket,
+  });
+
+  const handleSupportSubmit = (values: { title: string; link: string; priority: string }) => {
+    supportMutation.mutate(
+      { ...values, positionId: id, priority: values.priority as "HIGH" | "AVERAGE" | "LOW" },
+      {
+        onSuccess: () => {
+          toast.success("Support ticket created");
+          setSupportDialogOpen(false);
+        },
+        onError: (res) => {
+          const message = parseApiErrorMessage(res);
+          toast.error(message ?? "Failed to create support ticket");
+        },
+      },
+    );
+  };
 
   const { data: position, isFetching } = useQuery({
     queryKey: ["positions", id],
@@ -156,6 +180,9 @@ const PositionPage = () => {
                   </Button>
                 ) : null}
               </Can>
+              <Button variant="ghost" onClick={() => setSupportDialogOpen(true)}>
+                <QuestionIcon />
+              </Button>
             </div>
           </div>
 
@@ -213,6 +240,14 @@ const PositionPage = () => {
           </div>
         )
       )}
+
+      <SupportTicketDialog
+        open={supportDialogOpen}
+        onOpenChange={setSupportDialogOpen}
+        onSubmit={handleSupportSubmit}
+        isSubmitting={supportMutation.isPending}
+        positionTitle={positionData?.title}
+      />
     </div>
   );
 };
