@@ -6,6 +6,8 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
+  Headers,
   Param,
   Patch,
   Post,
@@ -23,6 +25,7 @@ import {
   UpdatePositionStatusDto,
 } from './position.dto';
 import { PositionService } from './position.service';
+import { createHash, randomBytes } from 'crypto';
 
 @Controller('positions')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -53,6 +56,14 @@ export class PositionController {
         },
       ),
     );
+  }
+
+  @Post(':id/api-keys')
+  async createApiKey(@Param('id') positionId: string) {
+    const { rawToken } = await this.positionService.createApiKey(positionId);
+    return makeResponse({
+      rawToken,
+    });
   }
 
   @Get(':id')

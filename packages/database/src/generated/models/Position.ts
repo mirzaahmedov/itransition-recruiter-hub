@@ -184,6 +184,7 @@ export type PositionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Position"> | Date | string
   resumes?: Prisma.ResumeListRelationFilter
   attributes?: Prisma.PositionAttributeListRelationFilter
+  apiKeys?: Prisma.PositionIntegrationApiKeysListRelationFilter
 }
 
 export type PositionOrderByWithRelationInput = {
@@ -194,6 +195,7 @@ export type PositionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   resumes?: Prisma.ResumeOrderByRelationAggregateInput
   attributes?: Prisma.PositionAttributeOrderByRelationAggregateInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysOrderByRelationAggregateInput
 }
 
 export type PositionWhereUniqueInput = Prisma.AtLeast<{
@@ -207,6 +209,7 @@ export type PositionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Position"> | Date | string
   resumes?: Prisma.ResumeListRelationFilter
   attributes?: Prisma.PositionAttributeListRelationFilter
+  apiKeys?: Prisma.PositionIntegrationApiKeysListRelationFilter
 }, "id">
 
 export type PositionOrderByWithAggregationInput = {
@@ -239,6 +242,7 @@ export type PositionCreateInput = {
   createdAt?: Date | string
   resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysCreateNestedManyWithoutPositionInput
 }
 
 export type PositionUncheckedCreateInput = {
@@ -249,6 +253,7 @@ export type PositionUncheckedCreateInput = {
   createdAt?: Date | string
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
   attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUncheckedCreateNestedManyWithoutPositionInput
 }
 
 export type PositionUpdateInput = {
@@ -259,6 +264,7 @@ export type PositionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionUncheckedUpdateInput = {
@@ -269,6 +275,7 @@ export type PositionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUncheckedUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionCreateManyInput = {
@@ -356,6 +363,20 @@ export type PositionUpdateOneRequiredWithoutResumesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PositionUpdateToOneWithWhereWithoutResumesInput, Prisma.PositionUpdateWithoutResumesInput>, Prisma.PositionUncheckedUpdateWithoutResumesInput>
 }
 
+export type PositionCreateNestedOneWithoutApiKeysInput = {
+  create?: Prisma.XOR<Prisma.PositionCreateWithoutApiKeysInput, Prisma.PositionUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.PositionCreateOrConnectWithoutApiKeysInput
+  connect?: Prisma.PositionWhereUniqueInput
+}
+
+export type PositionUpdateOneRequiredWithoutApiKeysNestedInput = {
+  create?: Prisma.XOR<Prisma.PositionCreateWithoutApiKeysInput, Prisma.PositionUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.PositionCreateOrConnectWithoutApiKeysInput
+  upsert?: Prisma.PositionUpsertWithoutApiKeysInput
+  connect?: Prisma.PositionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PositionUpdateToOneWithWhereWithoutApiKeysInput, Prisma.PositionUpdateWithoutApiKeysInput>, Prisma.PositionUncheckedUpdateWithoutApiKeysInput>
+}
+
 export type PositionCreateWithoutAttributesInput = {
   id?: string
   title: string
@@ -363,6 +384,7 @@ export type PositionCreateWithoutAttributesInput = {
   status?: $Enums.PositionStatus
   createdAt?: Date | string
   resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysCreateNestedManyWithoutPositionInput
 }
 
 export type PositionUncheckedCreateWithoutAttributesInput = {
@@ -372,6 +394,7 @@ export type PositionUncheckedCreateWithoutAttributesInput = {
   status?: $Enums.PositionStatus
   createdAt?: Date | string
   resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUncheckedCreateNestedManyWithoutPositionInput
 }
 
 export type PositionCreateOrConnectWithoutAttributesInput = {
@@ -397,6 +420,7 @@ export type PositionUpdateWithoutAttributesInput = {
   status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionUncheckedUpdateWithoutAttributesInput = {
@@ -406,6 +430,7 @@ export type PositionUncheckedUpdateWithoutAttributesInput = {
   status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUncheckedUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionCreateWithoutResumesInput = {
@@ -415,6 +440,7 @@ export type PositionCreateWithoutResumesInput = {
   status?: $Enums.PositionStatus
   createdAt?: Date | string
   attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysCreateNestedManyWithoutPositionInput
 }
 
 export type PositionUncheckedCreateWithoutResumesInput = {
@@ -424,6 +450,7 @@ export type PositionUncheckedCreateWithoutResumesInput = {
   status?: $Enums.PositionStatus
   createdAt?: Date | string
   attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUncheckedCreateNestedManyWithoutPositionInput
 }
 
 export type PositionCreateOrConnectWithoutResumesInput = {
@@ -449,6 +476,7 @@ export type PositionUpdateWithoutResumesInput = {
   status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUpdateManyWithoutPositionNestedInput
 }
 
 export type PositionUncheckedUpdateWithoutResumesInput = {
@@ -457,6 +485,63 @@ export type PositionUncheckedUpdateWithoutResumesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
+  apiKeys?: Prisma.PositionIntegrationApiKeysUncheckedUpdateManyWithoutPositionNestedInput
+}
+
+export type PositionCreateWithoutApiKeysInput = {
+  id?: string
+  title: string
+  description: string
+  status?: $Enums.PositionStatus
+  createdAt?: Date | string
+  resumes?: Prisma.ResumeCreateNestedManyWithoutPositionInput
+  attributes?: Prisma.PositionAttributeCreateNestedManyWithoutPositionInput
+}
+
+export type PositionUncheckedCreateWithoutApiKeysInput = {
+  id?: string
+  title: string
+  description: string
+  status?: $Enums.PositionStatus
+  createdAt?: Date | string
+  resumes?: Prisma.ResumeUncheckedCreateNestedManyWithoutPositionInput
+  attributes?: Prisma.PositionAttributeUncheckedCreateNestedManyWithoutPositionInput
+}
+
+export type PositionCreateOrConnectWithoutApiKeysInput = {
+  where: Prisma.PositionWhereUniqueInput
+  create: Prisma.XOR<Prisma.PositionCreateWithoutApiKeysInput, Prisma.PositionUncheckedCreateWithoutApiKeysInput>
+}
+
+export type PositionUpsertWithoutApiKeysInput = {
+  update: Prisma.XOR<Prisma.PositionUpdateWithoutApiKeysInput, Prisma.PositionUncheckedUpdateWithoutApiKeysInput>
+  create: Prisma.XOR<Prisma.PositionCreateWithoutApiKeysInput, Prisma.PositionUncheckedCreateWithoutApiKeysInput>
+  where?: Prisma.PositionWhereInput
+}
+
+export type PositionUpdateToOneWithWhereWithoutApiKeysInput = {
+  where?: Prisma.PositionWhereInput
+  data: Prisma.XOR<Prisma.PositionUpdateWithoutApiKeysInput, Prisma.PositionUncheckedUpdateWithoutApiKeysInput>
+}
+
+export type PositionUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resumes?: Prisma.ResumeUpdateManyWithoutPositionNestedInput
+  attributes?: Prisma.PositionAttributeUpdateManyWithoutPositionNestedInput
+}
+
+export type PositionUncheckedUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPositionStatusFieldUpdateOperationsInput | $Enums.PositionStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resumes?: Prisma.ResumeUncheckedUpdateManyWithoutPositionNestedInput
   attributes?: Prisma.PositionAttributeUncheckedUpdateManyWithoutPositionNestedInput
 }
 
@@ -468,11 +553,13 @@ export type PositionUncheckedUpdateWithoutResumesInput = {
 export type PositionCountOutputType = {
   resumes: number
   attributes: number
+  apiKeys: number
 }
 
 export type PositionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resumes?: boolean | PositionCountOutputTypeCountResumesArgs
   attributes?: boolean | PositionCountOutputTypeCountAttributesArgs
+  apiKeys?: boolean | PositionCountOutputTypeCountApiKeysArgs
 }
 
 /**
@@ -499,6 +586,13 @@ export type PositionCountOutputTypeCountAttributesArgs<ExtArgs extends runtime.T
   where?: Prisma.PositionAttributeWhereInput
 }
 
+/**
+ * PositionCountOutputType without action
+ */
+export type PositionCountOutputTypeCountApiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PositionIntegrationApiKeysWhereInput
+}
+
 
 export type PositionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -508,6 +602,7 @@ export type PositionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   resumes?: boolean | Prisma.Position$resumesArgs<ExtArgs>
   attributes?: boolean | Prisma.Position$attributesArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.Position$apiKeysArgs<ExtArgs>
   _count?: boolean | Prisma.PositionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["position"]>
 
@@ -539,6 +634,7 @@ export type PositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type PositionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resumes?: boolean | Prisma.Position$resumesArgs<ExtArgs>
   attributes?: boolean | Prisma.Position$attributesArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.Position$apiKeysArgs<ExtArgs>
   _count?: boolean | Prisma.PositionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PositionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -549,6 +645,7 @@ export type $PositionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     resumes: Prisma.$ResumePayload<ExtArgs>[]
     attributes: Prisma.$PositionAttributePayload<ExtArgs>[]
+    apiKeys: Prisma.$PositionIntegrationApiKeysPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -952,6 +1049,7 @@ export interface Prisma__PositionClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   resumes<T extends Prisma.Position$resumesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Position$resumesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attributes<T extends Prisma.Position$attributesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Position$attributesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionAttributePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  apiKeys<T extends Prisma.Position$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Position$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PositionIntegrationApiKeysPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1424,6 +1522,30 @@ export type Position$attributesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.PositionAttributeScalarFieldEnum | Prisma.PositionAttributeScalarFieldEnum[]
+}
+
+/**
+ * Position.apiKeys
+ */
+export type Position$apiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PositionIntegrationApiKeys
+   */
+  select?: Prisma.PositionIntegrationApiKeysSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PositionIntegrationApiKeys
+   */
+  omit?: Prisma.PositionIntegrationApiKeysOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PositionIntegrationApiKeysInclude<ExtArgs> | null
+  where?: Prisma.PositionIntegrationApiKeysWhereInput
+  orderBy?: Prisma.PositionIntegrationApiKeysOrderByWithRelationInput | Prisma.PositionIntegrationApiKeysOrderByWithRelationInput[]
+  cursor?: Prisma.PositionIntegrationApiKeysWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PositionIntegrationApiKeysScalarFieldEnum | Prisma.PositionIntegrationApiKeysScalarFieldEnum[]
 }
 
 /**

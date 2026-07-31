@@ -68,7 +68,12 @@ export async function removePositionAttribute(positionId: string, attributeId: s
   return res.data;
 }
 
-export async function genResumePosition(positionId: string) {
+export async function createPositionResume(positionId: string) {
   const res = await privateApi.post<ApiResponse<Resume>>(`/positions/${positionId}/resumes`);
+  return res.data;
+}
+
+export async function createApiKey(positionId: string) {
+  const res = await privateApi.post<ApiResponse<{ rawToken: string }>>(`/positions/${positionId}/api-keys`);
   return res.data;
 }

@@ -10,5 +10,6 @@ import { ProjectModule } from '@/user/project/project.module';
   controllers: [PositionController],
   imports: [ProjectModule],
   providers: [PositionService, UserAttributeService, ResumeService],
+  exports: [PositionService],
 })
 export class PositionModule {}

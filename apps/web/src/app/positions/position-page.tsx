@@ -6,16 +6,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { useDialogState } from "@/hooks/use-dialog-state";
 import { parseApiErrorMessage } from "@/lib/api/error";
 import { useAuthStore } from "@/store/use-auth-store";
 import { Can } from "@casl/react";
-import { ArchiveIcon, ArrowLeftIcon, ArrowRightIcon, QuestionIcon, ReadCvLogoIcon, TrashIcon } from "@phosphor-icons/react";
+import { ArchiveIcon, ArrowLeftIcon, ArrowRightIcon, KeyIcon, QuestionIcon, ReadCvLogoIcon, TrashIcon } from "@phosphor-icons/react";
 import { PositionStatus, UserRole } from "@rh/database/browser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { deletePosition, fetchPosition, genResumePosition, updatePositionStatus } from "./api";
+import { createApiKey, createPositionResume, deletePosition, fetchPosition, updatePositionStatus } from "./api";
+import { PositionApiKeyDialog } from "./position-api-key-dialog";
 import { PositionAttributes } from "./position-attributes";
 import { PositionHeader } from "./position-header";
 
@@ -26,7 +28,9 @@ const PositionPage = () => {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [supportDialogOpen, setSupportDialogOpen] = useState(false);
+  const supportDialog = useDialogState();
+
+  const [apiKey, setApiKey] = useState<string>();
 
   const supportMutation = useMutation({
     mutationFn: createSupportTicket,
@@ -38,7 +42,7 @@ const PositionPage = () => {
       {
         onSuccess: () => {
           toast.success("Support ticket created");
-          setSupportDialogOpen(false);
+          supportDialog.closeDialog();
         },
         onError: (res) => {
           const message = parseApiErrorMessage(res);
@@ -68,12 +72,16 @@ const PositionPage = () => {
     mutationFn: (status: PositionStatus) => updatePositionStatus(id!, status),
   });
 
-  const genResumeMutation = useMutation({
-    mutationFn: () => genResumePosition(id!),
+  const createPositionResumeMutation = useMutation({
+    mutationFn: () => createPositionResume(id!),
   });
 
-  const handleGenResume = () => {
-    genResumeMutation.mutate(undefined, {
+  const createApiKeyMutation = useMutation({
+    mutationFn: () => createApiKey(id!),
+  });
+
+  const handleCreateResume = () => {
+    createPositionResumeMutation.mutate(undefined, {
       onSuccess: (res) => {
         toast.success("Resume generated");
         queryClient.invalidateQueries({ queryKey: ["positions"] });
@@ -132,6 +140,10 @@ const PositionPage = () => {
     });
   };
 
+  const handleCreateApiKey = async () => {
+    createApiKeyMutation.mutateAsync().then((res) => setApiKey(res.data.rawToken ?? ""));
+  };
+
   const positionData = position?.data;
   const resumes = resumesData?.data ?? [];
 
@@ -174,13 +186,18 @@ const PositionPage = () => {
               </Can>
               <Can I="apply" a="Position">
                 {positionData.resumes?.length === 0 ? (
-                  <Button onClick={handleGenResume} loading={genResumeMutation.isPending}>
+                  <Button onClick={handleCreateResume} loading={createPositionResumeMutation.isPending}>
                     <ReadCvLogoIcon />
                     Generate Resume
                   </Button>
                 ) : null}
               </Can>
-              <Button variant="ghost" onClick={() => setSupportDialogOpen(true)}>
+
+              <Button loading={createApiKeyMutation.isPending} onClick={handleCreateApiKey}>
+                <KeyIcon className="icon" />
+                Get API Key
+              </Button>
+              <Button variant="ghost" onClick={() => supportDialog.openDialog()}>
                 <QuestionIcon />
               </Button>
             </div>
@@ -242,11 +259,21 @@ const PositionPage = () => {
       )}
 
       <SupportTicketDialog
-        open={supportDialogOpen}
-        onOpenChange={setSupportDialogOpen}
+        open={supportDialog.open}
+        onOpenChange={supportDialog.setOpen}
         onSubmit={handleSupportSubmit}
         isSubmitting={supportMutation.isPending}
         positionTitle={positionData?.title}
+      />
+
+      <PositionApiKeyDialog
+        open={!!apiKey}
+        onOpenChange={(open) => {
+          if (!open) {
+            setApiKey(undefined);
+          }
+        }}
+        apiKey={apiKey}
       />
     </div>
   );

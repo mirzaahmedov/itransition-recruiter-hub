@@ -87,3 +87,8 @@ export type ResumeProject = Prisma.ResumeProjectModel
  * 
  */
 export type ResumeLike = Prisma.ResumeLikeModel
+/**
+ * Model PositionIntegrationApiKeys
+ * 
+ */
+export type PositionIntegrationApiKeys = Prisma.PositionIntegrationApiKeysModel

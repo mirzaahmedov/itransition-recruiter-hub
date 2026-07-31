@@ -64,7 +64,8 @@ export const ModelName = {
   Resume: 'Resume',
   ResumeAttribute: 'ResumeAttribute',
   ResumeProject: 'ResumeProject',
-  ResumeLike: 'ResumeLike'
+  ResumeLike: 'ResumeLike',
+  PositionIntegrationApiKeys: 'PositionIntegrationApiKeys'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -236,6 +237,16 @@ export const ResumeLikeScalarFieldEnum = {
 } as const
 
 export type ResumeLikeScalarFieldEnum = (typeof ResumeLikeScalarFieldEnum)[keyof typeof ResumeLikeScalarFieldEnum]
+
+
+export const PositionIntegrationApiKeysScalarFieldEnum = {
+  id: 'id',
+  hashToken: 'hashToken',
+  positionId: 'positionId',
+  createdAt: 'createdAt'
+} as const
+
+export type PositionIntegrationApiKeysScalarFieldEnum = (typeof PositionIntegrationApiKeysScalarFieldEnum)[keyof typeof PositionIntegrationApiKeysScalarFieldEnum]
 
 
 export const SortOrder = {

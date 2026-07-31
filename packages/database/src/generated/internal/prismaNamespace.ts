@@ -397,7 +397,8 @@ export const ModelName = {
   Resume: 'Resume',
   ResumeAttribute: 'ResumeAttribute',
   ResumeProject: 'ResumeProject',
-  ResumeLike: 'ResumeLike'
+  ResumeLike: 'ResumeLike',
+  PositionIntegrationApiKeys: 'PositionIntegrationApiKeys'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "tag" | "user" | "project" | "projectTag" | "attribute" | "attributeChoice" | "userAttribute" | "positionAttribute" | "position" | "resume" | "resumeAttribute" | "resumeProject" | "resumeLike"
+    modelProps: "category" | "tag" | "user" | "project" | "projectTag" | "attribute" | "attributeChoice" | "userAttribute" | "positionAttribute" | "position" | "resume" | "resumeAttribute" | "resumeProject" | "resumeLike" | "positionIntegrationApiKeys"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1453,6 +1454,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PositionIntegrationApiKeys: {
+      payload: Prisma.$PositionIntegrationApiKeysPayload<ExtArgs>
+      fields: Prisma.PositionIntegrationApiKeysFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PositionIntegrationApiKeysFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PositionIntegrationApiKeysFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>
+        }
+        findFirst: {
+          args: Prisma.PositionIntegrationApiKeysFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PositionIntegrationApiKeysFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>
+        }
+        findMany: {
+          args: Prisma.PositionIntegrationApiKeysFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>[]
+        }
+        create: {
+          args: Prisma.PositionIntegrationApiKeysCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>
+        }
+        createMany: {
+          args: Prisma.PositionIntegrationApiKeysCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PositionIntegrationApiKeysCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>[]
+        }
+        delete: {
+          args: Prisma.PositionIntegrationApiKeysDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>
+        }
+        update: {
+          args: Prisma.PositionIntegrationApiKeysUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>
+        }
+        deleteMany: {
+          args: Prisma.PositionIntegrationApiKeysDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PositionIntegrationApiKeysUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PositionIntegrationApiKeysUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>[]
+        }
+        upsert: {
+          args: Prisma.PositionIntegrationApiKeysUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PositionIntegrationApiKeysPayload>
+        }
+        aggregate: {
+          args: Prisma.PositionIntegrationApiKeysAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePositionIntegrationApiKeys>
+        }
+        groupBy: {
+          args: Prisma.PositionIntegrationApiKeysGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PositionIntegrationApiKeysGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PositionIntegrationApiKeysCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PositionIntegrationApiKeysCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1645,6 +1720,16 @@ export const ResumeLikeScalarFieldEnum = {
 } as const
 
 export type ResumeLikeScalarFieldEnum = (typeof ResumeLikeScalarFieldEnum)[keyof typeof ResumeLikeScalarFieldEnum]
+
+
+export const PositionIntegrationApiKeysScalarFieldEnum = {
+  id: 'id',
+  hashToken: 'hashToken',
+  positionId: 'positionId',
+  createdAt: 'createdAt'
+} as const
+
+export type PositionIntegrationApiKeysScalarFieldEnum = (typeof PositionIntegrationApiKeysScalarFieldEnum)[keyof typeof PositionIntegrationApiKeysScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1919,6 +2004,7 @@ export type GlobalOmitConfig = {
   resumeAttribute?: Prisma.ResumeAttributeOmit
   resumeProject?: Prisma.ResumeProjectOmit
   resumeLike?: Prisma.ResumeLikeOmit
+  positionIntegrationApiKeys?: Prisma.PositionIntegrationApiKeysOmit
 }
 
 /* Types for Logging */

@@ -119,6 +119,7 @@ Table positions {
   status PositionStatus [not null, default: 'ACTIVE']
   resumes resumes [not null]
   attributes PositionAttribute [not null]
+  apiKeys position_integration_api_keys [not null]
   createdAt DateTime [default: `now()`, not null]
 }
 
@@ -169,6 +170,14 @@ Table resume_likes {
   }
 }
 
+Table position_integration_api_keys {
+  id String [pk]
+  hashToken String [unique, not null]
+  positionId String [not null]
+  position positions [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
 Enum UserRole {
   CANDIDATE
   RECRUITER
@@ -195,12 +204,6 @@ Enum ResumeStatus {
   DRAFT
   PUBLISHED
   PRIVATE
-}
-
-Enum TicketPriority {
-  HIGH
-  AVERAGE
-  LOW
 }
 
 Ref: projects.userId > users.id [delete: Cascade]
@@ -240,3 +243,5 @@ Ref: ResumeProject.projectId > projects.id [delete: Cascade]
 Ref: resume_likes.userId > users.id [delete: Cascade]
 
 Ref: resume_likes.resumeId > resumes.id [delete: Cascade]
+
+Ref: position_integration_api_keys.positionId > positions.id

@@ -39,8 +39,6 @@ export class SupportTicketService {
       emails: adminEmails,
     };
 
-    console.log(contents);
-
     const validResult = SupportTicketFileContentsSchema.safeParse(contents);
     if (!validResult.success) {
       console.log(validResult.error);

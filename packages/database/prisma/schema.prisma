@@ -159,14 +159,15 @@ enum PositionStatus {
 }
 
 model Position {
-  id          String              @id @default(cuid())
-  title       String
-  description String
-  status      PositionStatus      @default(ACTIVE)
+  id              String                        @id @default(cuid())
+  title           String
+  description     String
+  status          PositionStatus                @default(ACTIVE)
   resumes         Resume[]
   attributes      PositionAttribute[]
+  apiKeys         PositionIntegrationApiKeys[]
 
-  createdAt       DateTime            @default(now())
+  createdAt       DateTime                      @default(now())
 
   @@map("positions")
 }
@@ -228,8 +229,12 @@ model ResumeLike {
   @@map("resume_likes")    
 }
 
-enum TicketPriority {
-  HIGH
-  AVERAGE
-  LOW
+model PositionIntegrationApiKeys {
+  id                  String            @id() @default(cuid())
+  hashToken         String            @unique()
+  positionId          String
+  position            Position          @relation(references: [id], fields: [positionId])
+  createdAt           DateTime          @default(now())
+
+  @@map("position_integration_api_keys")
 }

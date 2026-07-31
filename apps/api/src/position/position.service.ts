@@ -11,6 +11,8 @@ import { UserAttributeService } from '@/user/attribute/user-attribute.service';
 import { PositionStatus, User, UserRole } from '@rh/database/client';
 import { PositionFindManyArgs } from '@rh/database/models';
 import { FindAllPositionParamsPayload } from '@rh/shared/schemas';
+import { createHash, randomBytes } from 'crypto';
+import { hashString } from '@/lib/hash';
 
 const positionInclude = {
   attributes: {
@@ -225,4 +227,23 @@ export class PositionService {
       where: { id },
     });
   }
+
+  async createApiKey(positionId: string) {
+    const rawToken = `int_tok_${randomBytes(32).toString('hex')}`;
+    const hashToken = hashString(rawToken);
+
+    await this.prisma.positionIntegrationApiKeys.create({
+      data: {
+        positionId,
+        hashToken,
+      },
+    });
+
+    return {
+      rawToken,
+      hashToken,
+    };
+  }
+
+  async findAggregation() {}
 }
