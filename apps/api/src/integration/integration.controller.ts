@@ -4,12 +4,14 @@ import {
   Headers,
   Param,
   Query,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { IntegrationService } from './integration.service';
 import { makeResponse } from '@rh/shared/models';
 import { PrismaService } from '@/prisma/prisma.service';
 import { hashString } from '@/lib/hash';
+import { Request } from 'express';
 
 @Controller('integration')
 export class IntegrationController {
@@ -22,6 +24,7 @@ export class IntegrationController {
   async getAggregatePositionData(
     @Param('positionId') positionId: string,
     @Headers('x-api-key') apiKey: string,
+    @Req() req: Request,
   ) {
     if (!apiKey) {
       throw new UnauthorizedException();
