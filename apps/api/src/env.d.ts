@@ -18,6 +18,9 @@ declare global {
       S3_HOST: string;
       S3_BUCKET: string;
 
+      SF_CLIENT_ID: string;
+      SF_CLIENT_SECRET: string;
+
       DROPBOX_ACCESS_TOKEN: string;
     }
   }
