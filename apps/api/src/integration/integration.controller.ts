@@ -65,7 +65,7 @@ export class IntegrationController {
     @Body() data: CreateSalesforceDto,
     @AuthUser() user: User,
   ) {
-    if (user.id !== userId && user.role === UserRole.ADMINISTRATOR) {
+    if (user.id !== userId && user.role !== UserRole.ADMINISTRATOR) {
       throw new ForbiddenException();
     }
 
