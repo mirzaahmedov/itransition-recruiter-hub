@@ -22,8 +22,8 @@ export function useAutoSave<T extends { id: string }>(onSave: (payload: T[]) => 
 
     setIsSaving(true);
     try {
-      await onSave(itemsToSave);
       dirtyQueue.current = {};
+      await onSave(itemsToSave);
     } catch (error) {
       console.error("Autosave failed:", error);
     } finally {

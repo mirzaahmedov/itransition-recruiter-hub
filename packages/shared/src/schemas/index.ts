@@ -20,3 +20,4 @@ export * from "./update-position-status.schema.js";
 export * from "./position/find-all-position-params.schema.js";
 export * from "./create-support-ticket.schema.js";
 export * from "./support-ticket-file-contents.schema.js";
+export * from "./integration/create-salesforce-schema.js";

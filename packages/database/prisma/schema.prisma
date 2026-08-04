@@ -25,31 +25,34 @@ enum UserRole {
 }
 
 model Category {
-  id        String      @id
-  name      String
-  sortOrder Int
-  attrs     Attribute[]
+  id              String            @id
+  name            String
+  sortOrder       Int
+  attrs           Attribute[]
 
   @@map("categories")
 }
 
 model Tag {
-  id          String        @id
-  name        String
-  projectTags ProjectTag[]
-  createdAt   DateTime      @default(now())
+  id              String            @id
+  name            String
+  projectTags     ProjectTag[]
+  createdAt       DateTime          @default(now())
+  
+  @@map("tags")
 }
 
 model User {
-  id           String          @id @default(cuid())
-  email        String          @unique
-  name         String?
-  avatar       String?
-  googleId     String?         @unique
-  githubId     String?         @unique
-  role         UserRole
-  password     String?
-  createdAt    DateTime        @default(now())
+  id              String            @id @default(cuid())
+  email           String            @unique
+  name            String?
+  avatar          String?
+  googleId        String?           @unique
+  githubId        String?           @unique
+  salesforceId    String?           @unique
+  role            UserRole
+  password        String?
+  createdAt       DateTime          @default(now())
 
   profileAttrs    UserAttribute[]
   projects        Project[]
@@ -82,6 +85,8 @@ model ProjectTag {
   projectId         String
   project           Project         @relation(references: [id], fields: [projectId], onDelete: Cascade)
   createdAt         DateTime        @default(now())
+
+  @@map("project_tags") 
 }
 
 enum AttributeType {
@@ -96,61 +101,63 @@ enum AttributeType {
 }
 
 model Attribute {
-  id                 String              @id @default(cuid())
-  name               String
-  type               AttributeType
-  system             Boolean             @default(false)
-  categoryId         String
-  category           Category            @relation(fields: [categoryId], references: [id])
-  createdAt          DateTime            @default(now())
-  choices            AttributeChoice[]
-  values             UserAttribute[]
-  positionAttributes PositionAttribute[]
+  id                    String              @id @default(cuid())
+  name                  String
+  type                  AttributeType
+  system                Boolean             @default(false)
+  categoryId            String
+  category              Category            @relation(fields: [categoryId], references: [id])
+  createdAt             DateTime            @default(now())
+  choices               AttributeChoice[]
+  values                UserAttribute[]
+  positionAttributes    PositionAttribute[]
 
   @@map("attributes")
 }
 
 model AttributeChoice {
-  id          String          @id @default(cuid())
-  value       String
-  attribute   Attribute       @relation(fields: [attributeId], references: [id])
-  attributeId String
-  createdAt   DateTime        @default(now())
-  values      UserAttribute[]
+  id                    String          @id @default(cuid())
+  value                 String
+  attribute             Attribute       @relation(fields: [attributeId], references: [id])
+  attributeId           String
+  createdAt             DateTime        @default(now())
+  values                UserAttribute[]
 
   @@unique([attributeId, value])
   @@map("attribute_choices")
 }
 
 model UserAttribute {
-  id               String            @id @default(cuid())
-  attributeId      String
-  attribute        Attribute         @relation(fields: [attributeId], references: [id])
-  textValue        String?
-  numberValue      Float?
-  booleanValue     Boolean?
-  dateValue        DateTime?
-  startDateValue   DateTime?
-  endDateValue     DateTime?
-  choiceId         String?
-  choice           AttributeChoice?  @relation(fields: [choiceId], references: [id])
-  userId           String
-  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt        DateTime          @default(now())
-  version          Int               @default(1)
-  resumeAttributes ResumeAttribute[]
+  id                    String            @id @default(cuid())
+  attributeId           String
+  attribute             Attribute         @relation(fields: [attributeId], references: [id])
+  textValue             String?
+  numberValue           Float?
+  booleanValue          Boolean?
+  dateValue             DateTime?
+  startDateValue        DateTime?
+  endDateValue          DateTime?
+  choiceId              String?
+  choice                AttributeChoice?  @relation(fields: [choiceId], references: [id])
+  userId                String
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime          @default(now())
+  version               Int               @default(1)
+  resumeAttributes      ResumeAttribute[]
 
   @@unique([attributeId, userId])
   @@map("user_attributes")
 }
 
 model PositionAttribute {
-  id              String            @id @default(cuid())
-  attribute       Attribute         @relation(fields: [attributeId], references: [id], onDelete: Cascade)
-  attributeId     String
-  position        Position          @relation(fields: [positionId], references: [id], onDelete: Cascade)
-  positionId      String
-  resumeAttribute ResumeAttribute[]
+  id                    String            @id @default(cuid())
+  attribute             Attribute         @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  attributeId           String
+  position              Position          @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  positionId            String
+  resumeAttribute       ResumeAttribute[]
+  
+  @@map("position_attributes")
 }
 
 enum PositionStatus {
@@ -214,6 +221,8 @@ model ResumeProject {
   project             Project           @relation(references: [id], fields: [projectId], onDelete: Cascade)
   
   createdAt           DateTime          @default(now())
+
+  @@map("resume_projects")
 }
 
 model ResumeLike {

@@ -1,5 +1,6 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Connection } from 'jsforce';
+import { CreateSalesforceDto } from './salesforce.dto';
 
 @Injectable()
 export class SalesforceService implements OnModuleInit, OnModuleDestroy {
@@ -24,5 +25,32 @@ export class SalesforceService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy() {
     this.conn.logout();
+  }
+
+  async findContactById(sfId: string) {
+    return await this.conn.sobject('Contact').findOne({
+      Id: sfId,
+    });
+  }
+
+  async updateContact(id: string, data: CreateSalesforceDto) {
+    return await this.conn.sobject('Contact').update({
+      Id: id,
+      FirstName: data.firstName,
+      LastName: data.lastName,
+      Email: data.email,
+      Phone: data.phone,
+      Title: data.title,
+    });
+  }
+
+  async createContact(data: CreateSalesforceDto) {
+    return await this.conn.sobject('Contact').create({
+      FirstName: data.firstName,
+      LastName: data.lastName,
+      Email: data.email,
+      Phone: data.phone,
+      Title: data.title,
+    });
   }
 }

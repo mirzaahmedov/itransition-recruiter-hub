@@ -10,6 +10,7 @@ import type {
   UpdateUserProfilePayload,
   CreateProjectPayload,
   UpdateProjectPayload,
+  CreateSalesforcePayload,
 } from "@rh/shared/schemas";
 
 export interface UserAttributeWithJoins extends UserAttributeGetPayload<{
@@ -134,5 +135,10 @@ export async function fetchUserResumes(userId: string) {
 
 export async function fetchUserAttributeById(userId: string, id: string) {
   const res = await privateApi.get<ApiResponse<UserAttributeDetailed>>(`/users/${userId}/attributes/${id}`);
+  return res.data;
+}
+
+export async function connectSalesforce(userId: string, data: CreateSalesforcePayload) {
+  const res = await privateApi.post<ApiResponse<void>>(`/integration/salesforce/${userId}`, data);
   return res.data;
 }

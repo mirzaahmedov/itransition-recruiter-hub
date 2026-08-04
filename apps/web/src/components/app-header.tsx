@@ -84,7 +84,7 @@ export const AppHeader = () => {
   );
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-lg h-14">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">

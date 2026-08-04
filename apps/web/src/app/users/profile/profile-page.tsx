@@ -15,6 +15,7 @@ import type { ProfileAttibutesFormHandlers } from "./profile-attributes-form";
 import { UserRole } from "@rh/database/browser";
 import { Can } from "@casl/react";
 import { subject } from "@casl/ability";
+import { useAuthStore } from "@/store/use-auth-store";
 
 enum TabOption {
   DETAILS = "DETAILS",
@@ -28,6 +29,8 @@ const UserProfilePage = () => {
   const [tabValue, setTabValue] = useState(TabOption.DETAILS);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const authUser = useAuthStore((store) => store.user);
 
   const methods = useRef<ProfileAttibutesFormHandlers>({
     async flush() {},
@@ -94,7 +97,7 @@ const UserProfilePage = () => {
       ) : userData && userAttributesData ? (
         <div className="mx-auto max-w-4xl px-4 py-8">
           <ProfileHeader user={userData} />
-          {userData.role === UserRole.CANDIDATE ? (
+          {userData.role === UserRole.CANDIDATE || authUser?.role === UserRole.ADMINISTRATOR ? (
             <Tabs
               className="mt-8"
               value={tabValue}

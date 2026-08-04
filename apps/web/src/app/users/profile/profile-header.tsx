@@ -4,16 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { FileWithPreview } from "@/hooks/use-file-upload";
 import { fallbackName } from "@/utils/fallbackName";
-import { CheckIcon, PencilSimpleLineIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, PencilSimpleLineIcon, PlugsConnectedIcon, PlugsIcon, XIcon } from "@phosphor-icons/react";
 import type { User } from "@rh/database/browser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type FC } from "react";
 import toast from "react-hot-toast";
-import { updateUserProfile, uploadProfilePicture } from "./api";
+import { connectSalesforce, updateUserProfile, uploadProfilePicture } from "./api";
 import { useAuthStore } from "@/store/use-auth-store";
 import { parseApiErrorMessage } from "@/lib/api/error";
 import { Can } from "@casl/react";
 import { subject } from "@casl/ability";
+import type { CreateSalesforcePayload } from "@rh/shared/schemas";
+import { ProfileConnectSalesforceDialog } from "./profile-connect-salesforce-dialog";
+import { useDialogState } from "@/hooks/use-dialog-state";
 
 export const ProfileHeader: FC<{
   user: User;
@@ -24,6 +27,7 @@ export const ProfileHeader: FC<{
   const { user: currentUser, setUserProfile } = useAuthStore();
 
   const queryClient = useQueryClient();
+  const salesforceDialog = useDialogState();
 
   const uploadProfilePictureMutation = useMutation({
     mutationFn: (file: File) => uploadProfilePicture(user.id, file),
@@ -31,6 +35,10 @@ export const ProfileHeader: FC<{
 
   const updateProfileMutation = useMutation({
     mutationFn: (data: { name?: string }) => updateUserProfile(user.id, data),
+  });
+
+  const connectSalesforceMutation = useMutation({
+    mutationFn: (data: CreateSalesforcePayload) => connectSalesforce(user.id, data),
   });
 
   const handleUploadProfilePicture = (data: FileWithPreview) => {
@@ -66,6 +74,22 @@ export const ProfileHeader: FC<{
     setEditing(false);
   };
 
+  const handleConnectSalesforce = async (data: CreateSalesforcePayload) => {
+    connectSalesforceMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toast.success("Connected to salesforce");
+        queryClient.invalidateQueries({
+          queryKey: ["users", user.id],
+        });
+        salesforceDialog.closeDialog();
+      },
+      onError: (res) => {
+        const message = parseApiErrorMessage(res);
+        toast.error(message ?? "Failed to connect salesforce");
+      },
+    });
+  };
+
   return !editing ? (
     <div className="overflow-hidden relative">
       <div className="h-32 bg-linear-to-br from-brand/20 via-brand/10 to-transparent rounded-2xl" />
@@ -80,10 +104,39 @@ export const ProfileHeader: FC<{
             <p className="mt-2 text-sm text-muted-foreground">{user.email}</p>
           </div>
           <Can I="update" this={subject("Profile", user)}>
-            <Button variant="link" onClick={() => setEditing(true)} className="absolute top-4 right-4">
-              <PencilSimpleLineIcon />
-              Edit
-            </Button>
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <ProfileConnectSalesforceDialog
+                open={salesforceDialog.open}
+                onOpenChange={salesforceDialog.setOpen}
+                isSubmitting={connectSalesforceMutation.isPending}
+                defaultValues={{
+                  email: user.email,
+                  firstName: parseUserFirstname(user.name ?? ""),
+                  lastName: parseUserLastname(user.name ?? ""),
+                }}
+
+                trigger={
+                  <Button variant="outline" disabled={!!user.salesforceId}>
+                    {user.salesforceId ? (
+                      <>
+                        <PlugsConnectedIcon className="icon" />
+                        Salesforce connected
+                      </>
+                    ) : (
+                      <>
+                        <PlugsIcon className="icon" />
+                        Connect Salesforce
+                      </>
+                    )}
+                  </Button>
+                }
+                onSubmit={handleConnectSalesforce}
+              />
+              <Button variant="link" onClick={() => setEditing(true)}>
+                <PencilSimpleLineIcon className="icon" />
+                Edit
+              </Button>
+            </div>
           </Can>
         </div>
       </div>
@@ -118,3 +171,12 @@ export const ProfileHeader: FC<{
     </div>
   );
 };
+
+function parseUserFirstname(userName: string): string {
+  const names = userName?.split(" ");
+  return names?.[0] ?? "";
+}
+function parseUserLastname(userName: string): string {
+  const names = userName?.split(" ");
+  return names?.[1] ?? "";
+}
