@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Get,
   Headers,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -69,9 +70,13 @@ export class IntegrationController {
       throw new ForbiddenException();
     }
 
-    if (user.salesforceId) {
+    const foundUser = await this.userService.findById(userId);
+    if (!foundUser) {
+      throw new NotFoundException();
+    }
+
+    if (foundUser.salesforceId) {
       throw new BadRequestException();
-      return;
     }
 
     const result = await this.salesforceService.createContact(data);
